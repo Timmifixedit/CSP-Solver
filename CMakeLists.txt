@@ -14,8 +14,7 @@ else()
 endif ()
 
 project(CSP_Solver)
-set(SOURCES
-        )
+set(SOURCES )
 set(LIBS
 
         )
