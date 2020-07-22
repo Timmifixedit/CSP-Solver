@@ -1,30 +1,23 @@
 #include <iostream>
+#include <functional>
 
 #include "Variable.h"
+#include "Arc.h"
 #include "solver.h"
 
+using intComperator = std::function<bool(int, int)>;
 
-class SudokuNode : public csp::Variable<int, SudokuNode> {
+class Test : public csp::Variable<int, intComperator> {
 public:
-    SudokuNode(int x, int y) : csp::Variable<int, SudokuNode>({1, 2, 3, 4, 5, 6, 7, 8, 9}), x(x), y(y) {}
-
-    [[nodiscard]] bool assignmentValid(const int &val) const {
-        return val != 4;
-    }
-
-private:
-    int x, y;
+    Test() : Variable({}) {}
 };
 
 
 int main() {
-    SudokuNode s1(0, 2);
-    SudokuNode s2(1, 1);
-    csp::Variable<int, SudokuNode> &tmp = s2;
-    std::cout << tmp.isAssigned();
-    tmp.assign(2);
-    std::cout << tmp.isAssigned();
-    std::cout << s2.isAssigned();
-    //csp::removeInconsistent(s1, s2);
+    auto t1 = std::make_shared<Test>();
+    std::queue<csp::Arc<int, intComperator>> arcs;
+    arcs.emplace(t1, t1, [](int, int){return true;});
+    csp::ac3(arcs);
     return 0;
 }
+

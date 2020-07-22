@@ -4,41 +4,57 @@
 
 #ifndef CSP_SOLVER_SOLVER_H
 #define CSP_SOLVER_SOLVER_H
-#include <cassert>
+#include <queue>
 
 #include "Variable.h"
+#include "Arc.h"
+
 namespace csp {
-    template<typename T, typename Derived>
+    template<typename T, typename Constraint>
     class MrvStrategy {
-        bool operator() (const Variable<T, Derived> &lhs, const Variable<T, Derived> &rhs) const noexcept {
+        bool operator() (const Variable<T, Constraint> &lhs, const Variable<T, Constraint> &rhs) const noexcept {
             return lhs.valueDomain().size() < rhs.valueDomain().size();
         }
     };
 
-    template<typename T, typename Derived>
-    bool removeInconsistent(Variable<T, Derived> &x, const Variable<T, Derived> &y) {
-        assert(!x.isAssigned() && !y.isAssigned());
+    template<typename T, typename Constraint>
+    bool removeInconsistent(Arc<T, Constraint> &arc) {
         bool removed = false;
-        for (auto it = x.valueDomain().begin(); it != x.valueDomain().end();) {
+        VarPtr<T, Constraint> from = arc.from;
+        cVarPtr<T, Constraint> to = arc.to;
+        for (auto it = from->valueDomain().begin(); it != from->valueDomain().end();) {
             bool consistent = false;
-            x.assign(*it);
-            for (const auto &val : y.valueDomain()) {
-                if (y.assignmentValid(val)) {
+            for (const auto &val : to->valueDomain()) {
+                if (arc.constraint(*it, val)) {
                     consistent = true;
                     break;
                 }
             }
 
             if (!consistent) {
-                it = x.valueDomain().erase(it);
+                it = from->valueDomain().erase(it);
                 removed = true;
             } else {
                 ++it;
             }
         }
 
-        x.clearAssignment();
         return removed;
+    }
+
+    template<typename T, typename Constraint>
+    void ac3(std::queue<Arc<T, Constraint>> &arcs) {
+        using ArcT = Arc<T, Constraint>;
+        while (!arcs.empty()) {
+            ArcT current = std::move(arcs.front());
+            arcs.pop();
+            if (removeInconsistent(current)) {
+                auto neighbourArcs = createArcs(current.from);
+                for (auto &arc : neighbourArcs) {
+                    arcs.emplace(std::move(arc));
+                }
+            }
+        }
     }
 }
 

@@ -4,45 +4,38 @@
 
 #ifndef CSP_SOLVER_VARIABLE_H
 #define CSP_SOLVER_VARIABLE_H
-#include <optional>
 #include <list>
 #include <vector>
 #include <memory>
 
 namespace csp {
 
-    template<typename T, typename Derived>
+    template<typename T, typename Constraint>
     class Variable;
 
-    template<typename T, typename Derived>
-    using VarPtr = std::shared_ptr<Variable<T, Derived>>;
+    template<typename T, typename Constraint>
+    using VarPtr = std::shared_ptr<Variable<T, Constraint>>;
 
-    template<typename T, typename Derived>
+    template<typename T, typename Constraint>
+    using cVarPtr = std::shared_ptr<const Variable<T, Constraint>>;
+
+    template<typename T, typename Constraint>
+    using Neighbour = std::pair<VarPtr<T, Constraint>, Constraint>;
+
+    template<typename T, typename Constraint>
     class Variable {
     public:
-        Variable(std::optional<T> value, std::list<T> domain, std::vector<VarPtr<T, Derived>> dependencies) :
-                value(std::move(value)),
-                domain(std::move(domain)),
-                deps(std::move(dependencies)) {}
+        Variable(std::list<T> domain, std::vector<Neighbour<T, Constraint>> neighbours) :
+                domain(std::move(domain)), adjacent(std::move(neighbours)) {}
 
-        explicit Variable(std::list<T> domain) : Variable(std::nullopt, domain, {}) {}
-
-        Variable(std::optional<T> value, std::list<T> domain) : Variable(value, domain, {}) {}
-
-        [[nodiscard]] bool assignmentValid(const T &val) const {
-            return static_cast<const Derived*>(this)->assignmentValid(val);
-        }
+        explicit Variable(std::list<T> domain) : Variable(domain, {}) {}
 
         void assign(T val) noexcept {
-            value.emplace(val);
-        }
-
-        void clearAssignment() noexcept {
-            value.reset();
+            domain = {val};
         }
 
         [[nodiscard]] bool isAssigned() const noexcept {
-            return value.has_value();
+            return domain.size() == 1;
         }
 
         [[nodiscard]] auto valueDomain() const noexcept -> const std::list<T>& {
@@ -53,22 +46,21 @@ namespace csp {
             return domain;
         }
 
-        void setDependencies(std::vector<VarPtr<T, Derived>> dependencies) noexcept {
-            this->deps = std::move(dependencies);
+        void addNeighbour(Neighbour<T, Constraint> neighbour) {
+            adjacent.emplace_back(std::move(neighbour));
         }
 
-        auto getDependencies() const noexcept -> const std::vector<VarPtr<T, Derived>>& {
-            return deps;
+        void setNeighbours(std::vector<Neighbour<T, Constraint>> neighbours) {
+            this->adjacent = std::move(neighbours);
         }
 
-        [[nodiscard]] auto getVal() const noexcept -> std::optional<T> {
-            return value;
+        [[nodiscard]] auto getNeighbours() const noexcept -> const std::vector<Neighbour<T, Constraint>> & {
+            return adjacent;
         }
 
     private:
-        std::optional<T> value;
         std::list<T> domain;
-        std::vector<VarPtr<T, Derived>> deps;
+        std::vector<Neighbour<T, Constraint>> adjacent;
     };
 }
 
