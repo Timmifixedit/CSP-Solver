@@ -49,7 +49,7 @@ namespace csp {
             ArcT current = std::move(arcs.front());
             arcs.pop();
             if (removeInconsistent(current)) {
-                auto neighbourArcs = createArcs(current.from);
+                auto neighbourArcs = createIncomingArcs(current.from);
                 for (auto &arc : neighbourArcs) {
                     arcs.emplace(std::move(arc));
                 }

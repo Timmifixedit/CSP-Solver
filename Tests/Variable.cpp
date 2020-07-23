@@ -7,9 +7,8 @@
 
 #include "TestVar.h"
 
-
 TEST(variable_test, ctor) {
-    TestVar a("A", {1, 2, 3, 4});
+    TestVar a({1, 2, 3, 4});
     int val = 1;
     for (int i : a.valueDomain()) {
         EXPECT_EQ(val++, i);
@@ -17,12 +16,11 @@ TEST(variable_test, ctor) {
 
     EXPECT_FALSE(a.isAssigned());
     EXPECT_TRUE(a.getNeighbours().empty());
-    EXPECT_EQ(a.name, "A");
 }
 
 TEST(variable_test, neighbours) {
-    auto a = std::make_shared<TestVar>("A");
-    auto b = std::make_shared<TestVar>("B");
+    auto a = std::make_shared<TestVar>(std::list{1, 2, 3});
+    auto b = std::make_shared<TestVar>(std::list{1, 2, 3});
     a->addNeighbour({b, std::less<>()});
     EXPECT_EQ(a->getNeighbours().size(), 1);
     EXPECT_EQ(a->getNeighbours()[0].first.lock(), b);
@@ -32,9 +30,9 @@ TEST(variable_test, neighbours) {
 }
 
 TEST(variable_test, assign) {
-    TestVar a("A");
-    a.assign(4);
+    TestVar a(std::list<int>{1, 2, 3});
+    a.assign(2);
     EXPECT_TRUE(a.isAssigned());
     EXPECT_EQ(a.valueDomain().size(), 1);
-    EXPECT_EQ(a.valueDomain().front(), 4);
+    EXPECT_EQ(a.valueDomain().front(), 2);
 }

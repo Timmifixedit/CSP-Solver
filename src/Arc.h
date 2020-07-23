@@ -29,8 +29,9 @@ namespace csp {
 
 
     template<typename T, typename Constraint>
-    auto createArcs(const VarPtr<T, Constraint> &variable) -> std::vector<Arc<T, Constraint>> {
+    auto createIncomingArcs(const VarPtr<T, Constraint> &variable) -> std::vector<Arc<T, Constraint>> {
         std::vector<Arc<T, Constraint>> ret;
+        ret.reserve(variable->getNeighbours().size());
         for (const auto &neighbour : variable->getNeighbours()) {
             ret.emplace_back(neighbour.first.lock(), variable, neighbour.second);
         }
