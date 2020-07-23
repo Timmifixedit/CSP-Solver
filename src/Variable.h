@@ -20,7 +20,10 @@ namespace csp {
     using cVarPtr = std::shared_ptr<const Variable<T, Constraint>>;
 
     template<typename T, typename Constraint>
-    using Neighbour = std::pair<VarPtr<T, Constraint>, Constraint>;
+    using weakVarPtr = std::weak_ptr<Variable<T, Constraint>>;
+
+    template<typename T, typename Constraint>
+    using Neighbour = std::pair<weakVarPtr<T, Constraint>, Constraint>;
 
     template<typename T, typename Constraint>
     class Variable {
