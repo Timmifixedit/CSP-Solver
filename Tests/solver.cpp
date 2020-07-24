@@ -4,6 +4,7 @@
 
 #include <gtest/gtest.h>
 #include <memory>
+#include <iostream>
 
 #include "solver.h"
 #include "TestTypes.h"
@@ -76,4 +77,16 @@ TEST(solver_test, ac3) {
     EXPECT_EQ(varA->valueDomain(), (std::list{2, 1}));
     EXPECT_EQ(varB->valueDomain(), (std::list{2, 3}));
     EXPECT_EQ(varC->valueDomain(), (std::list{2, 3}));
+}
+
+TEST(solver_test, ac3_unsolvable) {
+    using namespace csp::util;
+    auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varC = std::make_shared<TestVar>(std::list{2, 3, 1});
+    TestConstraint aLessB(varA, varB, std::less<>());
+    TestConstraint bLessC(varB, varC, std::less<>());
+    TestConstraint cLessA(varC, varA, std::less<>());
+    Csp problem = createCsp(std::list{aLessB, bLessC, cLessA});
+    EXPECT_FALSE(ac3(problem));
 }
