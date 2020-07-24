@@ -4,9 +4,8 @@
 
 #include <gtest/gtest.h>
 #include <memory>
-#include <iostream>
 
-#include "solver.h"
+#include "util.h"
 #include "TestTypes.h"
 
 TEST(solver_test, remove_inconsistent_values) {

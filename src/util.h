@@ -2,8 +2,8 @@
 // Created by tim on 11.07.20.
 //
 
-#ifndef CSP_SOLVER_SOLVER_H
-#define CSP_SOLVER_SOLVER_H
+#ifndef CSP_SOLVER_UTIL_H
+#define CSP_SOLVER_UTIL_H
 #include <unordered_map>
 #include <vector>
 #include <list>
@@ -86,4 +86,4 @@ namespace csp::util {
     }
 }
 
-#endif //CSP_SOLVER_SOLVER_H
+#endif //CSP_SOLVER_UTIL_H
