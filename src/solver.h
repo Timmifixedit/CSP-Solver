@@ -9,23 +9,17 @@
 #include "Variable.h"
 #include "Arc.h"
 
-namespace csp {
-    template<typename T, typename Constraint>
-    class MrvStrategy {
-        bool operator() (const Variable<T, Constraint> &lhs, const Variable<T, Constraint> &rhs) const noexcept {
-            return lhs.valueDomain().size() < rhs.valueDomain().size();
-        }
-    };
+namespace csp::util {
 
-    template<typename T, typename Constraint>
-    bool removeInconsistent(Arc<T, Constraint> &arc) {
+    template<typename T, typename Predicate>
+    bool removeInconsistent(const Arc<T, Predicate> &arc) {
         bool removed = false;
-        VarPtr<T, Constraint> from = arc.from;
-        cVarPtr<T, Constraint> to = arc.to;
+        VarPtr<T> from = arc.from();
+        cVarPtr<T> to = arc.to();
         for (auto it = from->valueDomain().begin(); it != from->valueDomain().end();) {
             bool consistent = false;
             for (const auto &val : to->valueDomain()) {
-                if (arc.constraint(*it, val)) {
+                if (arc.constraintSatisfied(*it, val)) {
                     consistent = true;
                     break;
                 }
@@ -40,21 +34,6 @@ namespace csp {
         }
 
         return removed;
-    }
-
-    template<typename T, typename Constraint>
-    void ac3(std::queue<Arc<T, Constraint>> &arcs) {
-        using ArcT = Arc<T, Constraint>;
-        while (!arcs.empty()) {
-            ArcT current = std::move(arcs.front());
-            arcs.pop();
-            if (removeInconsistent(current)) {
-                auto neighbourArcs = createIncomingArcs(current.from);
-                for (auto &arc : neighbourArcs) {
-                    arcs.emplace(std::move(arc));
-                }
-            }
-        }
     }
 }
 
