@@ -8,10 +8,14 @@
 #include <type_traits>
 #include <vector>
 #include <cassert>
+#include <utility>
 
 #include "Variable.h"
 
 namespace csp {
+
+    template<typename T, typename Predicate>
+    class Arc;
 
     template<typename T, typename Predicate>
     class Constraint {
@@ -20,6 +24,15 @@ namespace csp {
     public:
         Constraint(VarPtr<T> v1, VarPtr<T> v2, Predicate predicate) : var1(std::move(v1)),
             var2(std::move(v2)), predicate(std::move(predicate)) {}
+
+        using ArcT = Arc<T, Predicate>;
+        auto getArcs() const noexcept -> std::pair<ArcT, ArcT> {
+            ArcT normal(var1, var2, predicate);
+            ArcT reversed = normal;
+            reversed.reverse();
+            return {normal, reversed};
+        }
+
     protected:
         const VarPtr<T> var1, var2;
         const Predicate predicate;

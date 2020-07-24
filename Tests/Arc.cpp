@@ -35,3 +35,14 @@ TEST(arc_test, reverse) {
     EXPECT_TRUE(a.constraintSatisfied(3, 2));
     EXPECT_FALSE(a.constraintSatisfied(2, 3));
 }
+
+TEST(arc_test, create_arcs_from_constraint) {
+    auto varA = std::make_shared<TestVar>(std::list{1, 2, 3});
+    auto varB = std::make_shared<TestVar>(std::list{1, 2, 3});
+    TestConstraint test(varA, varB, std::less<>());
+    auto [aLessB, bGreaterA] = test.getArcs();
+    EXPECT_EQ(varA, aLessB.from());
+    EXPECT_EQ(varB, aLessB.to());
+    EXPECT_EQ(varA, bGreaterA.to());
+    EXPECT_EQ(varB, bGreaterA.from());
+}

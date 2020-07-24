@@ -13,5 +13,6 @@
 using IntComparator = std::function<bool(int, int)>;
 using TestVar = csp::Variable<int>;
 using TestArc = csp::Arc<int, IntComparator>;
+using TestConstraint = csp::Constraint<int, IntComparator>;
 
 #endif //CSP_SOLVER_TESTTYPES_H
