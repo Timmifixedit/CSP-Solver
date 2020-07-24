@@ -2,8 +2,8 @@
 // Created by tim on 23.07.20.
 //
 
-#ifndef CSP_SOLVER_TESTVAR_H
-#define CSP_SOLVER_TESTVAR_H
+#ifndef CSP_SOLVER_TESTTYPES_H
+#define CSP_SOLVER_TESTTYPES_H
 
 #include <functional>
 
@@ -11,7 +11,7 @@
 #include "Arc.h"
 
 using IntComparator = std::function<bool(int, int)>;
-using TestVar = csp::Variable<int, IntComparator>;
+using TestVar = csp::Variable<int>;
 using TestArc = csp::Arc<int, IntComparator>;
 
-#endif //CSP_SOLVER_TESTVAR_H
+#endif //CSP_SOLVER_TESTTYPES_H

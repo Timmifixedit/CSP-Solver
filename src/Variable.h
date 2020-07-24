@@ -10,28 +10,19 @@
 
 namespace csp {
 
-    template<typename T, typename Constraint>
+    template<typename T>
     class Variable;
 
-    template<typename T, typename Constraint>
-    using VarPtr = std::shared_ptr<Variable<T, Constraint>>;
+    template<typename T>
+    using VarPtr = std::shared_ptr<Variable<T>>;
 
-    template<typename T, typename Constraint>
-    using cVarPtr = std::shared_ptr<const Variable<T, Constraint>>;
+    template<typename T>
+    using cVarPtr = std::shared_ptr<const Variable<T>>;
 
-    template<typename T, typename Constraint>
-    using weakVarPtr = std::weak_ptr<Variable<T, Constraint>>;
-
-    template<typename T, typename Constraint>
-    using Neighbour = std::pair<weakVarPtr<T, Constraint>, Constraint>;
-
-    template<typename T, typename Constraint>
+    template<typename T>
     class Variable {
     public:
-        Variable(std::list<T> domain, std::vector<Neighbour<T, Constraint>> neighbours) :
-                domain(std::move(domain)), adjacent(std::move(neighbours)) {}
-
-        explicit Variable(std::list<T> domain) : Variable(domain, {}) {}
+        explicit Variable(std::list<T> domain) : domain(std::move(domain)) {}
 
         void assign(T val) noexcept {
             domain = {val};
@@ -49,21 +40,8 @@ namespace csp {
             return domain;
         }
 
-        void addNeighbour(Neighbour<T, Constraint> neighbour) {
-            adjacent.emplace_back(std::move(neighbour));
-        }
-
-        void setNeighbours(std::vector<Neighbour<T, Constraint>> neighbours) {
-            this->adjacent = std::move(neighbours);
-        }
-
-        [[nodiscard]] auto getNeighbours() const noexcept -> const std::vector<Neighbour<T, Constraint>> & {
-            return adjacent;
-        }
-
     private:
         std::list<T> domain;
-        std::vector<Neighbour<T, Constraint>> adjacent;
     };
 }
 

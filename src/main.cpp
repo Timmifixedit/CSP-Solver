@@ -1,23 +1,33 @@
 #include <iostream>
 #include <functional>
+#include <memory>
 
 #include "Variable.h"
 #include "Arc.h"
 #include "solver.h"
 
-using intComperator = std::function<bool(int, int)>;
+using IntComperator = std::function<bool(int, int)>;
+using TestVar = csp::Variable<int>;
+using TestArc = csp::Arc<int, IntComperator>;
 
-class Test : public csp::Variable<int, intComperator> {
-public:
-    Test() : Variable({}) {}
-};
 
 
 int main() {
-    auto t1 = std::make_shared<Test>();
-    std::queue<csp::Arc<int, intComperator>> arcs;
-    arcs.emplace(t1, t1, [](int, int){return true;});
-    csp::ac3(arcs);
+    auto a = std::make_shared<TestVar>(std::list{1, 2, 3});
+    auto b = std::make_shared<TestVar>(std::list{1, 2, 3});
+    TestArc alb(a, b, std::less<>());
+    csp::removeInconsistent(alb);
+    for (auto val : a->valueDomain()) {
+        std::cout << val << " ";
+    }
+
+    std::cout << std::endl;
+    alb.reverse();
+    csp::removeInconsistent(alb);
+    for (auto val : b->valueDomain()) {
+        std::cout << val << " ";
+    }
+
+    std::cout << std::endl;
     return 0;
 }
-
