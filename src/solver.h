@@ -76,8 +76,8 @@ namespace csp::util {
 
                 auto it = problem.incomingNeighbours.find(current.from());
                 assert(it != problem.incomingNeighbours.end());
-                std::copy_if(it->seond.bein(), it->second.end(), std::back_inserter(arcs), [&current](const auto &var) {
-                    var != current.to();
+                std::copy_if(it->second.begin(), it->second.end(), std::back_inserter(arcs), [&current](const auto &arc) {
+                    return arc.from() != current.to();
                 });
             }
         }

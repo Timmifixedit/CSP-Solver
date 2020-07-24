@@ -62,3 +62,18 @@ TEST(solver_test, create_csp_from_constraints) {
     testArcsPerVar(varC);
     EXPECT_TRUE(problem.arcs.empty());
 }
+
+TEST(solver_test, ac3) {
+    using namespace csp::util;
+    auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varC = std::make_shared<TestVar>(std::list{2, 3, 1});
+    TestConstraint aLessB(varA, varB, std::less<>());
+    TestConstraint aLessC(varA, varC, std::less<>());
+    TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
+    Csp problem = createCsp(std::list{aLessB, aLessC, bNotC});
+    EXPECT_TRUE(ac3(problem));
+    EXPECT_EQ(varA->valueDomain(), (std::list{2, 1}));
+    EXPECT_EQ(varB->valueDomain(), (std::list{2, 3}));
+    EXPECT_EQ(varC->valueDomain(), (std::list{2, 3}));
+}
