@@ -26,8 +26,10 @@ namespace csp {
         std::list<T> valueDomain = std::move(nextVar->valueDomain());
         for (auto &val : valueDomain) {
             nextVar->assign(std::move(val));
+            auto cp = util::makeCspCheckpoint(problem);
             if (!util::ac3(problem)) {
-                return false;
+                util::restoreCspFromCheckpoint(problem, cp);
+                continue;
             }
 
             if (recursiveSolve(problem, strategy)) {

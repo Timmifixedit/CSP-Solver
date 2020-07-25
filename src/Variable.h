@@ -32,6 +32,10 @@ namespace csp {
             return domain.size() == 1;
         }
 
+        void setValueDomain(std::list<T> values) noexcept {
+            domain = std::move(values);
+        }
+
         [[nodiscard]] auto valueDomain() const noexcept -> const std::list<T>& {
             return domain;
         }

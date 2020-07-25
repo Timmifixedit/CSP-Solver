@@ -92,3 +92,24 @@ TEST(util_test, ac3_unsolvable) {
     Csp problem = createCsp({varA, varB, varC}, std::list{aLessB, bLessC, cLessA});
     EXPECT_FALSE(ac3(problem));
 }
+
+TEST(util_test, csp_checlpoint) {
+    std::vector<std::shared_ptr<TestVar>> vars = {std::make_shared<TestVar>(std::list{1, 2, 3}),
+                                                  std::make_shared<TestVar>(std::list{4, 5, 6}),
+                                                  std::make_shared<TestVar>(std::list{7, 8, 9})};
+    auto problem = csp::util::createCsp(vars, std::list<TestConstraint>{});
+    auto checkpoint = csp::util::makeCspCheckpoint(problem);
+    EXPECT_EQ(checkpoint.size(), problem.variables.size());
+    for (std::size_t i = 0; i < checkpoint.size(); ++i) {
+        EXPECT_EQ(checkpoint[i], problem.variables[i]->valueDomain());
+    }
+
+    vars[0]->assign(1);
+    vars[1]->assign(5);
+    vars[2]->assign(8);
+    csp::util::restoreCspFromCheckpoint(problem, checkpoint);
+    EXPECT_EQ(checkpoint.size(), problem.variables.size());
+    for (std::size_t i = 0; i < checkpoint.size(); ++i) {
+        EXPECT_EQ(checkpoint[i], problem.variables[i]->valueDomain());
+    }
+}

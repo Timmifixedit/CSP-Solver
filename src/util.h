@@ -83,6 +83,28 @@ namespace csp::util {
 
         return true;
     }
+
+    template<typename T>
+    using CspCheckpoint = std::vector<std::list<T>>;
+
+    template<typename T, typename Predicate>
+    auto makeCspCheckpoint(const Csp<T, Predicate> &problem) -> CspCheckpoint<T> {
+        CspCheckpoint<T> ret;
+        ret.reserve(problem.variables.size());
+        for (const auto &var : problem.variables) {
+            ret.emplace_back(var->valueDomain());
+        }
+
+        return ret;
+    }
+
+    template<typename T, typename Predicate>
+    void restoreCspFromCheckpoint(const Csp<T, Predicate> &problem, const CspCheckpoint<T> &checkpoint) {
+        assert(checkpoint.size() == problem.variables.size());
+        for (std::size_t i = 0; i < checkpoint.size(); ++i) {
+            problem.variables[i]->setValueDomain(checkpoint[i]);
+        }
+    }
 }
 
 #endif //CSP_SOLVER_UTIL_H

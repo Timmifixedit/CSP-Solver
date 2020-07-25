@@ -24,3 +24,9 @@ TEST(variable_test, assign) {
     EXPECT_EQ(a.valueDomain().size(), 1);
     EXPECT_EQ(a.valueDomain().front(), 2);
 }
+
+TEST(variable_test, set_value_domain) {
+    TestVar a({1, 2, 3});
+    a.setValueDomain({4, 5, 6});
+    EXPECT_EQ(a.valueDomain(), (std::list{4, 5, 6}));
+}
