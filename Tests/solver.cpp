@@ -30,3 +30,14 @@ TEST(solver_test, simple_csp) {
     EXPECT_TRUE(bnc.constraintSatisfied(bnc.from()->valueDomain().front(), bnc.to()->valueDomain().front()));
     EXPECT_TRUE(cnb.constraintSatisfied(cnb.from()->valueDomain().front(), cnb.to()->valueDomain().front()));
 }
+
+TEST(solver_test, impossible_csp) {
+    auto varA = std::make_shared<TestVar>(std::list{1, 2});
+    auto varB = std::make_shared<TestVar>(std::list{1, 2});
+    auto varC = std::make_shared<TestVar>(std::list{1, 2});
+    auto inequal = [](int lhs, int rhs) {return lhs != rhs;};
+    TestConstraint aNotB(varA, varB, inequal);
+    TestConstraint aNotC(varA, varC, inequal);
+    TestConstraint bNotC(varB, varC, inequal);
+    EXPECT_FALSE(csp::solve({varA, varB, varC}, std::list{aNotB, aNotC, bNotC}));
+}
