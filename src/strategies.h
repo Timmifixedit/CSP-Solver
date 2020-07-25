@@ -7,14 +7,14 @@
 
 #include <algorithm>
 
-#include "util.h"
+#include "Csp.h"
 #include "Variable.h"
 
 
 namespace csp::strategies {
     template<typename T, typename Predicate>
     struct Mrv {
-        VarPtr<T> operator() (const util::Csp<T, Predicate> &problem) const {
+        VarPtr<T> operator() (const Csp<T, Predicate> &problem) const {
             auto it = std::min_element(problem.variables.begin(), problem.variables.end(),
                     [](const auto &lhs, const auto &rhs) {
                 return rhs->isAssigned() || (!lhs->isAssigned() &&

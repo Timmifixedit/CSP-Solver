@@ -16,7 +16,7 @@
 namespace csp {
 
     template<typename T, typename Predicate, typename Strategy>
-    bool recursiveSolve(const util::Csp<T, Predicate> &problem, const Strategy &strategy) {
+    bool recursiveSolve(const Csp<T, Predicate> &problem, const Strategy &strategy) {
         VarPtr<T> nextVar = strategy(problem);
         if (nextVar->isAssigned()) {
             return true;
@@ -41,9 +41,8 @@ namespace csp {
     }
 
     template<typename T, typename Predicate, typename Strategy = strategies::Mrv<T, Predicate>>
-    bool solve(std::vector<VarPtr<T>> variables, const std::list<Constraint<T, Predicate>> &constraints) {
+    bool solve(const Csp<T, Predicate> &problem) {
         Strategy strategy;
-        util::Csp<T, Predicate> problem = util::createCsp(std::move(variables), constraints);
         if (!util::ac3(problem)) {
             return false;
         }
