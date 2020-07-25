@@ -25,7 +25,7 @@ namespace csp {
         explicit Variable(std::list<T> domain) : domain(std::move(domain)) {}
 
         void assign(T val) noexcept {
-            domain = {val};
+            domain = {std::move(val)};
         }
 
         [[nodiscard]] bool isAssigned() const noexcept {

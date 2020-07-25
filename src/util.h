@@ -41,16 +41,16 @@ namespace csp::util {
     template<typename T, typename Predicate>
     struct Csp {
         using ArcT = Arc<T, Predicate>;
-        Csp() = default;
-        Csp(std::list<ArcT> arcs, std::unordered_map<VarPtr<T>, std::vector<ArcT>> incomingNeighbours) :
-            arcs(std::move(arcs)), incomingNeighbours(std::move(incomingNeighbours)) {}
+        std::vector<VarPtr<T>> variables;
         std::list<ArcT> arcs;
         std::unordered_map<cVarPtr<T>, std::vector<ArcT>> incomingNeighbours;
     };
 
     template<typename T, typename Predicate>
-    auto createCsp(const std::list<Constraint<T, Predicate>> &constraints) -> Csp<T, Predicate> {
+    auto createCsp(std::vector<VarPtr<T>> variables, const std::list<Constraint<T, Predicate>> &constraints)
+        -> Csp<T, Predicate> {
         Csp<T, Predicate> ret;
+        ret.variables = std::move(variables);
         for (const auto &constraint : constraints) {
             auto [normal, reversed] = constraint.getArcs();
             ret.arcs.push_back(normal);
@@ -76,9 +76,8 @@ namespace csp::util {
 
                 auto it = problem.incomingNeighbours.find(current.from());
                 assert(it != problem.incomingNeighbours.end());
-                std::copy_if(it->second.begin(), it->second.end(), std::back_inserter(arcs), [&current](const auto &arc) {
-                    return arc.from() != current.to();
-                });
+                std::copy_if(it->second.begin(), it->second.end(), std::back_inserter(arcs),
+                        [&current](const auto &arc) {return arc.from() != current.to();});
             }
         }
 

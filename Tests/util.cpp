@@ -39,7 +39,10 @@ TEST(solver_test, create_csp_from_constraints) {
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint aLessC(varA, varC, std::less<>());
     TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
-    Csp problem = createCsp(std::list{aLessB, aLessC, bNotC});
+    Csp problem = createCsp({varA, varB, varC}, std::list{aLessB, aLessC, bNotC});
+    EXPECT_EQ(problem.variables[0], varA);
+    EXPECT_EQ(problem.variables[1], varB);
+    EXPECT_EQ(problem.variables[2], varC);
     EXPECT_EQ(problem.arcs.size(), 6);
 
     auto testArcsPerVar = [&problem] (const std::shared_ptr<TestVar> &var) {
@@ -71,7 +74,7 @@ TEST(solver_test, ac3) {
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint aLessC(varA, varC, std::less<>());
     TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
-    Csp problem = createCsp(std::list{aLessB, aLessC, bNotC});
+    Csp problem = createCsp({varA, varB, varC}, std::list{aLessB, aLessC, bNotC});
     EXPECT_TRUE(ac3(problem));
     EXPECT_EQ(varA->valueDomain(), (std::list{2, 1}));
     EXPECT_EQ(varB->valueDomain(), (std::list{2, 3}));
@@ -86,6 +89,6 @@ TEST(solver_test, ac3_unsolvable) {
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint bLessC(varB, varC, std::less<>());
     TestConstraint cLessA(varC, varA, std::less<>());
-    Csp problem = createCsp(std::list{aLessB, bLessC, cLessA});
+    Csp problem = createCsp({varA, varB, varC}, std::list{aLessB, bLessC, cLessA});
     EXPECT_FALSE(ac3(problem));
 }
