@@ -64,6 +64,13 @@ namespace csp {
     private:
         bool reversed;
     };
+
+    template<typename VarPtr, typename Predicate>
+    auto make_constraint(VarPtr var1, VarPtr var2, Predicate predicate)
+        -> Constraint<std::remove_reference_t<decltype(var1->valueDomain().front())>, Predicate> {
+        using VarT = std::remove_reference_t<decltype(var1->valueDomain().front())>;
+        return Constraint<VarT, Predicate>(std::move(var1), std::move(var2), std::move(predicate));
+    }
 }
 
 
