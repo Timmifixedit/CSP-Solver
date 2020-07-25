@@ -93,7 +93,7 @@ TEST(util_test, ac3_unsolvable) {
     EXPECT_FALSE(ac3(problem));
 }
 
-TEST(util_test, csp_checlpoint) {
+TEST(util_test, csp_checkpoint) {
     std::vector<std::shared_ptr<TestVar>> vars = {std::make_shared<TestVar>(std::list{1, 2, 3}),
                                                   std::make_shared<TestVar>(std::list{4, 5, 6}),
                                                   std::make_shared<TestVar>(std::list{7, 8, 9})};
