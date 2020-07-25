@@ -8,7 +8,7 @@
 #include "util.h"
 #include "TestTypes.h"
 
-TEST(solver_test, remove_inconsistent_values) {
+TEST(util_test, remove_inconsistent_values) {
     using namespace csp::util;
     auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
     auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
@@ -22,7 +22,7 @@ TEST(solver_test, remove_inconsistent_values) {
     EXPECT_EQ(varB->valueDomain(), (std::list{2, 3}));
 }
 
-TEST(solver_test, remove_inconsistent_indicate_removal) {
+TEST(util_test, remove_inconsistent_indicate_removal) {
     using namespace csp::util;
     auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
     auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
@@ -31,7 +31,7 @@ TEST(solver_test, remove_inconsistent_indicate_removal) {
     EXPECT_FALSE(removeInconsistent(a));
 }
 
-TEST(solver_test, create_csp_from_constraints) {
+TEST(util_test, create_csp_from_constraints) {
     using namespace csp::util;
     auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
     auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
@@ -66,7 +66,7 @@ TEST(solver_test, create_csp_from_constraints) {
     EXPECT_TRUE(problem.arcs.empty());
 }
 
-TEST(solver_test, ac3) {
+TEST(util_test, ac3) {
     using namespace csp::util;
     auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
     auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
@@ -81,7 +81,7 @@ TEST(solver_test, ac3) {
     EXPECT_EQ(varC->valueDomain(), (std::list{2, 3}));
 }
 
-TEST(solver_test, ac3_unsolvable) {
+TEST(util_test, ac3_unsolvable) {
     using namespace csp::util;
     auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
     auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
