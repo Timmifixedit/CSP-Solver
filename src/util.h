@@ -14,8 +14,8 @@
 
 namespace csp::util {
 
-    template<typename T, typename Predicate>
-    bool removeInconsistent(const Arc<T, Predicate> &arc) {
+    template<typename T>
+    bool removeInconsistent(const Arc<T> &arc) {
         bool removed = false;
         VarPtr<T> from = arc.from();
         cVarPtr<T> to = arc.to();
@@ -39,9 +39,9 @@ namespace csp::util {
         return removed;
     }
 
-    template<typename T, typename Predicate>
-    bool ac3(const Csp<T, Predicate> &problem) {
-        using ArcT = Arc<T, Predicate>;
+    template<typename T>
+    bool ac3(const Csp<T> &problem) {
+        using ArcT = Arc<T>;
         std::list<ArcT> arcs = problem.arcs;
         while (!arcs.empty()) {
             const ArcT current = arcs.front();
@@ -64,8 +64,8 @@ namespace csp::util {
     template<typename T>
     using CspCheckpoint = std::vector<std::list<T>>;
 
-    template<typename T, typename Predicate>
-    auto makeCspCheckpoint(const Csp<T, Predicate> &problem) -> CspCheckpoint<T> {
+    template<typename T>
+    auto makeCspCheckpoint(const Csp<T> &problem) -> CspCheckpoint<T> {
         CspCheckpoint<T> ret;
         ret.reserve(problem.variables.size());
         for (const auto &var : problem.variables) {
@@ -75,8 +75,8 @@ namespace csp::util {
         return ret;
     }
 
-    template<typename T, typename Predicate>
-    void restoreCspFromCheckpoint(const Csp<T, Predicate> &problem, const CspCheckpoint<T> &checkpoint) {
+    template<typename T>
+    void restoreCspFromCheckpoint(const Csp<T> &problem, const CspCheckpoint<T> &checkpoint) {
         assert(checkpoint.size() == problem.variables.size());
         for (std::size_t i = 0; i < checkpoint.size(); ++i) {
             problem.variables[i]->setValueDomain(checkpoint[i]);

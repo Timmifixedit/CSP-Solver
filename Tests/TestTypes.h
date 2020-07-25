@@ -10,9 +10,8 @@
 #include "Variable.h"
 #include "Arc.h"
 
-using IntComparator = std::function<bool(int, int)>;
 using TestVar = csp::Variable<int>;
-using TestArc = csp::Arc<int, IntComparator>;
-using TestConstraint = csp::Constraint<int, IntComparator>;
+using TestArc = csp::Arc<int>;
+using TestConstraint = csp::Constraint<int>;
 
 #endif //CSP_SOLVER_TESTTYPES_H

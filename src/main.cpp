@@ -1,52 +1,165 @@
 #include <iostream>
-#include <functional>
 #include <memory>
+#include <cassert>
+#include <utility>
+#include <fstream>
+#include <iomanip>
+#include <chrono>
 
 #include "Variable.h"
 #include "Arc.h"
-#include "util.h"
+#include "Csp.h"
+#include "solver.h"
 
-using IntComperator = std::function<bool(int, int)>;
-using TestVar = csp::Variable<int>;
-using TestArc = csp::Arc<int, IntComperator>;
-using TestConstraint = csp::Constraint<int, IntComperator>;
-
-class Test : public csp::Variable<int> {
+template <unsigned int N>
+class SudokuNode : public csp::Variable<unsigned int> {
 public:
-    Test() : csp::Variable<int>({}) {}
-    explicit Test(std::list<int> domain) : csp::Variable<int>(std::move(domain)) {}
-    int i = 4;
+    SudokuNode(unsigned int val, unsigned int x, unsigned int y) : csp::Variable<unsigned int>(
+            val == 0 ? std::list<unsigned int>{1, 2, 3, 4, 5, 6, 7 ,8 ,9} : std::list{val}), x(x), y(y) {
+        assert(val <= N);
+    }
+
+    const unsigned int x, y;
 };
 
+template<unsigned int N, unsigned int SQRT>
+class Sudoku {
+public:
+    explicit Sudoku(std::istream &input) {
+        int index = 0;
+        unsigned int val = 0;
+        while (input >> val) {
+            assert(val <= N);
+            auto [x, y] = linearToCoordinates(index);
+            fields[index] = std::make_shared<SudokuNode<N>>(val, x, y);
+            ++index;
+        }
+    }
+
+    static auto linearToCoordinates(unsigned int index) -> std::pair<unsigned int, unsigned int >{
+        assert(index < N * N);
+        return {index % N, index / N};
+    }
+
+    static auto coordinatesToLinear(unsigned int x, unsigned int y) -> unsigned int {
+        assert(x < N && y < N);
+        return N * y + x;
+    }
+
+    void print(std::ostream &out) const {
+        bool horLine = true;
+        for (std::size_t index = 0; index < fields.size(); ++index) {
+            const auto &field = fields[index];
+            auto [x, y] = linearToCoordinates(index);
+            out << std::setw(2);
+            if (horLine && y % SQRT == 0) {
+                for (unsigned int i = 0; i < N; ++i) {
+                    out << std::setw(3) <<  "-";
+                }
+
+                out << std::endl;
+                horLine = false;
+            } else if (y % SQRT != 0) {
+                horLine = true;
+            }
+
+            if(x % SQRT == 0) {
+                out << "| ";
+            }
+
+            if (field->isAssigned()) {
+                out << field->valueDomain().front();
+            } else {
+                out << "?";
+//                for (auto val : field->valueDomain()) {
+//                    out << val;
+//                }
+//                out << ")";
+            }
+
+            if(x == N - 1) {
+                out << " |" << std::endl;
+            } else {
+                out << " ";
+            }
+        }
+
+        for (unsigned int i = 0; i < N; ++i) {
+            out << std::setw(3) <<  "-";
+        }
+
+        out << std::endl;
+    }
+
+    bool solve() {
+        auto inequal = [](unsigned int lhs, unsigned int rhs) {return lhs != rhs;};
+        std::list<csp::Arc<unsigned int>> arcs;
+        for (std::size_t index = 0; index < fields.size(); ++index) {
+            auto neighbours = getNeighbours(index);
+            for (const auto &nb : neighbours) {
+                arcs.emplace_back(fields[index], nb, inequal);
+            }
+        }
+
+        auto sudokuProblem = csp::make_csp(fields, arcs);
+//        csp::util::ac3(sudokuProblem);
+//        print(std::cout);
+        return csp::solve(sudokuProblem);
+    }
+
+private:
+    [[nodiscard]] auto getNeighbours(unsigned int index) const -> std::array<std::shared_ptr<SudokuNode<N>>, 2 * (N - 1) + N - (2 * SQRT - 1)> {
+        auto [col, row] = linearToCoordinates(index);
+        std::array<std::shared_ptr<SudokuNode<N>>, 2 * (N - 1) + N - (2 * SQRT - 1)> ret;
+        auto it = ret.begin();
+        for (unsigned int i = 0; i < N; ++i) {
+            if (i != col) {
+                *it = fields[coordinatesToLinear(i, row)];
+                ++it;
+            }
+
+            if (i != row) {
+                *it = fields[coordinatesToLinear(col, i)];
+                ++it;
+            }
+        }
+
+        unsigned int blockNumber = SQRT * (row / SQRT) + col / SQRT;
+        unsigned int colStart = (blockNumber % SQRT) * SQRT;
+        unsigned int rowStart = (blockNumber / SQRT) * SQRT;
+        for(unsigned int y = rowStart; y < rowStart + SQRT; y++){
+            for(unsigned int x = colStart; x < colStart + SQRT; x++){
+                if(x != col && y != row){
+                    *it = fields[coordinatesToLinear(x, y)];
+                    ++it;
+                }
+            }
+        }
+
+        assert(it == ret.end());
+        return ret;
+    }
+    std::array<std::shared_ptr<SudokuNode<N>>, N * N> fields;
+};
+
+
 int main() {
-    auto test1 = std::make_shared<Test>(std::list{1, 2, 3});
-    auto test2 = std::make_shared<Test>(std::list{1, 2, 3});
-    TestConstraint testC(test1, test2, std::less<>());
-    auto [normal, reversed] = testC.getArcs();
-    normal.from()->assign(18);
-    reversed.from()->assign(17);
-    std::cout << test1->valueDomain().front() << " " << test2->valueDomain().front() << std::endl;
-    TestArc testArc(test1, test2, std::less<>());
-    csp::util::removeInconsistent(testArc);
-    for (auto val : test1->valueDomain()) {
-        std::cout << val << " ";
-    }
-    std::cout << std::endl << test1->i << std::endl;
-    auto a = std::make_shared<TestVar>(std::list{1, 2, 3});
-    auto b = std::make_shared<TestVar>(std::list{1, 2, 3});
-    TestArc alb(a, b, std::less<>());
-    csp::util::removeInconsistent(alb);
-    for (auto val : a->valueDomain()) {
-        std::cout << val << " ";
+    std::ifstream sudokuFile("../res/VeryHardSudoku.txt");
+    if (!sudokuFile) {
+        std::cerr << "Failed to open file" << std::endl;
+        std::exit(1);
     }
 
-    std::cout << std::endl;
-    alb.reverse();
-    csp::util::removeInconsistent(alb);
-    for (auto val : b->valueDomain()) {
-        std::cout << val << " ";
-    }
+    Sudoku<9, 3> sudoku(sudokuFile);
+    sudoku.print(std::cout);
 
-    std::cout << std::endl;
-    return 0;
+    auto start = std::chrono::high_resolution_clock::now();
+    if (sudoku.solve()) {
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+        std::cout << "Successfully solved sudoku in " << duration.count() << "ms" << std::endl;
+        sudoku.print(std::cout);
+    } else {
+        std::cout << "Sudoku cannot be solved" << std::endl;
+    }
 }
