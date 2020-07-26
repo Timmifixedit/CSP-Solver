@@ -52,7 +52,7 @@ namespace csp {
                     *std::begin(variables)
             )>>> {
 
-        using VarPtr = std::remove_cv_t<std::remove_reference_t<decltype(*std::begin(variables))>>;
+        using VarPtr = std::remove_const_t<std::remove_reference_t<decltype(*std::begin(variables))>>;
         Csp<VarPtr> ret;
         ret.variables.reserve(std::size(variables));
         for (const auto &v : variables) {
