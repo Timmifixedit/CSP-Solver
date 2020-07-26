@@ -12,29 +12,37 @@
 
 namespace csp {
 
+    namespace type_traits {
+        namespace implementations {
+            template<typename VarPtr>
+            std::true_type arcTest(Arc<VarPtr>);
 
-    template<typename T>
+            std::false_type arcTest(...);
+        }
+
+        template<typename T>
+        struct is_arc : decltype(implementations::arcTest(std::declval<T>())){};
+    }
+
+
+    template<typename VarPtr>
     struct Csp {
-        using ArcT = Arc<T>;
-        std::vector<VarPtr < T>> variables;
+        using ArcT = Arc<VarPtr>;
+        std::vector<VarPtr> variables;
         std::list<ArcT> arcs;
-        std::unordered_map<cVarPtr < T>, std::vector<ArcT>> incomingNeighbours;
+        std::unordered_map<VarPtr, std::vector<ArcT>> incomingNeighbours;
     };
 
-    template<typename VarContainer, typename ArcContainer>
+    template<typename VarContainer, typename ArcContainer, std::enable_if_t<type_traits::is_arc<std::remove_reference_t<decltype(std::declval<ArcContainer>().front())>>::value, int> = 0>
     auto make_csp(VarContainer &variables, ArcContainer &arcs) -> Csp<std::remove_reference_t<
             decltype(
-            std::begin(variables),
-                    std::end(variables),
                     std::size(variables),
-                    std::begin(arcs),
-                    std::end(arcs),
-                    arcs.front().reverse(),
-                    variables.front()->valueDomain().front()
+                    std::end(variables),
+                    *std::begin(variables)
             )>> {
 
-        using VarT = std::remove_reference_t<decltype(variables.front()->valueDomain().front())>;
-        Csp<VarT> ret;
+        using VarPtr = std::remove_reference_t<decltype(*std::begin(variables))>;
+        Csp<VarPtr> ret;
         ret.variables.reserve(std::size(variables));
         for (const auto &v : variables) {
             ret.variables.emplace_back(v);
@@ -53,13 +61,19 @@ namespace csp {
         return ret;
     }
 
-    template<typename T>
-    auto make_csp(std::vector<VarPtr < T>> variables, const std::list<Constraint < T>> &constraints) -> Csp<T> {
-            std::list<Arc < T>> arcs;
-            for (const auto &constraint : constraints) {
-                auto[normal, reverse] = constraint.getArcs();
-                arcs.emplace_back(std::move(normal));
-                arcs.emplace_back(std::move(reverse));
+    template<typename VarContainer, typename ContraintContainer, std::enable_if_t<!type_traits::is_arc<std::remove_reference_t<decltype(std::declval<ContraintContainer>().front())>>::value, int> = 0>
+    auto make_csp(VarContainer &variables, ContraintContainer &constraints) -> Csp<std::remove_reference_t<
+            decltype(
+            std::size(variables),
+                    std::end(variables),
+                    *std::begin(variables)
+            )>> {
+        using VarPtr = std::remove_reference_t<decltype(*std::begin(variables))>;
+        std::list<Arc<VarPtr>> arcs;
+        for (const auto &constraint : constraints) {
+            auto[normal, reverse] = constraint.getArcs();
+            arcs.emplace_back(std::move(normal));
+            arcs.emplace_back(std::move(reverse));
         }
 
         return make_csp(variables, arcs);

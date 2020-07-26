@@ -12,9 +12,9 @@
 
 
 namespace csp::strategies {
-    template<typename T>
+    template<typename VarPtr>
     struct Mrv {
-        VarPtr<T> operator() (const Csp<T> &problem) const {
+        VarPtr operator() (const Csp<VarPtr> &problem) const {
             auto it = std::min_element(problem.variables.begin(), problem.variables.end(),
                     [](const auto &lhs, const auto &rhs) {
                 return rhs->isAssigned() || (!lhs->isAssigned() &&

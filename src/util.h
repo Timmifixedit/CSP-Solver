@@ -14,11 +14,11 @@
 
 namespace csp::util {
 
-    template<typename T>
-    bool removeInconsistent(const Arc<T> &arc) {
+    template<typename VarPtr>
+    bool removeInconsistent(const Arc<VarPtr> &arc) {
         bool removed = false;
-        VarPtr<T> from = arc.from();
-        cVarPtr<T> to = arc.to();
+        VarPtr from = arc.from();
+        VarPtr to = arc.to();
         for (auto it = from->valueDomain().begin(); it != from->valueDomain().end();) {
             bool consistent = false;
             for (const auto &val : to->valueDomain()) {
@@ -39,9 +39,9 @@ namespace csp::util {
         return removed;
     }
 
-    template<typename T>
-    bool ac3(const Csp<T> &problem) {
-        using ArcT = Arc<T>;
+    template<typename VarPtr>
+    bool ac3(const Csp<VarPtr> &problem) {
+        using ArcT = Arc<VarPtr>;
         std::list<ArcT> arcs = problem.arcs;
         while (!arcs.empty()) {
             const ArcT current = arcs.front();
@@ -64,9 +64,11 @@ namespace csp::util {
     template<typename T>
     using CspCheckpoint = std::vector<std::list<T>>;
 
-    template<typename T>
-    auto makeCspCheckpoint(const Csp<T> &problem) -> CspCheckpoint<T> {
-        CspCheckpoint<T> ret;
+    template<typename VarPtr>
+    auto makeCspCheckpoint(const Csp<VarPtr> &problem) ->
+    CspCheckpoint<std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>> {
+        using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
+        CspCheckpoint<VarType> ret;
         ret.reserve(problem.variables.size());
         for (const auto &var : problem.variables) {
             ret.emplace_back(var->valueDomain());
@@ -75,8 +77,9 @@ namespace csp::util {
         return ret;
     }
 
-    template<typename T>
-    void restoreCspFromCheckpoint(const Csp<T> &problem, const CspCheckpoint<T> &checkpoint) {
+    template<typename VarPtr>
+    void restoreCspFromCheckpoint(const Csp<VarPtr> &problem, const CspCheckpoint<std::remove_reference_t<
+            decltype(std::declval<VarPtr>()->valueDomain().front())>> &checkpoint) {
         assert(checkpoint.size() == problem.variables.size());
         for (std::size_t i = 0; i < checkpoint.size(); ++i) {
             problem.variables[i]->setValueDomain(checkpoint[i]);
