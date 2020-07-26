@@ -54,17 +54,8 @@ namespace csp {
 
         using VarPtr = std::remove_const_t<std::remove_reference_t<decltype(*std::begin(variables))>>;
         Csp<VarPtr> ret;
-        ret.variables.reserve(std::size(variables));
-        for (const auto &v : variables) {
-            ret.variables.emplace_back(v);
-        }
-
-        for (const auto &a : arcs) {
-            ret.arcs.emplace_back(a);
-        }
-
-//        std::copy(std::begin(variables), std::end(variables), ret.variables.begin());
-//        std::copy(std::begin(arcs), std::end(arcs), ret.arcs.begin());
+        std::copy(std::begin(variables), std::end(variables), std::back_inserter(ret.variables));
+        std::copy(std::begin(arcs), std::end(arcs), std::back_inserter(ret.arcs));
         for (const auto &arc : ret.arcs) {
             ret.incomingNeighbours[arc.to()].emplace_back(arc);
         }
