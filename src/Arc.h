@@ -52,7 +52,7 @@ namespace csp {
     class Arc;
 
     /**
-     * Represents a binary constraint in a constraint satisfaction problem
+     * Represents a binary undirected constraint in a constraint satisfaction problem
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
      */
     template<typename VarPtr>
@@ -89,6 +89,8 @@ namespace csp {
      * Represents a binary constraint as directed arc in a constraint satisfaction problem. Is mainly used during
      * solving to obtain arc consistency
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+     * @note Constraints implicitly specify two directed arcs. For example: A constraint A < B is equivalent to
+     * two arcs A < B and B > A
      */
     template<typename VarPtr>
     class Arc : public Constraint<VarPtr> {
