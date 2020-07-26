@@ -40,7 +40,9 @@ TEST(util_test, ac3) {
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint aLessC(varA, varC, std::less<>());
     TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
-    Csp problem = make_csp({varA, varB, varC}, std::list{aLessB, aLessC, bNotC});
+    std::array vars{varA, varB, varC};
+    std::array constraints{aLessB, aLessC, bNotC};
+    Csp problem = make_csp(vars, constraints);
     EXPECT_TRUE(ac3(problem));
     EXPECT_EQ(varA->valueDomain(), (std::list{2, 1}));
     EXPECT_EQ(varB->valueDomain(), (std::list{2, 3}));
@@ -56,15 +58,18 @@ TEST(util_test, ac3_unsolvable) {
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint bLessC(varB, varC, std::less<>());
     TestConstraint cLessA(varC, varA, std::less<>());
-    Csp problem = make_csp({varA, varB, varC}, std::list{aLessB, bLessC, cLessA});
+    std::array vars{varA, varB, varC};
+    std::array constraints{aLessB, bLessC, cLessA};
+    Csp problem = make_csp(vars, constraints);
     EXPECT_FALSE(ac3(problem));
 }
 
 TEST(util_test, csp_checkpoint) {
-    std::vector<std::shared_ptr<TestVar>> vars = {std::make_shared<TestVar>(std::list{1, 2, 3}),
-                                                  std::make_shared<TestVar>(std::list{4, 5, 6}),
-                                                  std::make_shared<TestVar>(std::list{7, 8, 9})};
-    auto problem = csp::make_csp(vars, std::list<TestConstraint>{});
+    std::array vars = {std::make_shared<TestVar>(std::list{1, 2, 3}),
+                       std::make_shared<TestVar>(std::list{4, 5, 6}),
+                       std::make_shared<TestVar>(std::list{7, 8, 9})};
+    std::vector<TestConstraint> constraints;
+    auto problem = csp::make_csp(vars, constraints);
     auto checkpoint = csp::util::makeCspCheckpoint(problem);
     EXPECT_EQ(checkpoint.size(), problem.variables.size());
     for (std::size_t i = 0; i < checkpoint.size(); ++i) {

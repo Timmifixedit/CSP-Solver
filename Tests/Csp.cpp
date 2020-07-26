@@ -15,7 +15,9 @@ TEST(util_test, create_csp_from_constraints) {
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint aLessC(varA, varC, std::less<>());
     TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
-    Csp problem = make_csp({varA, varB, varC}, std::list{aLessB, aLessC, bNotC});
+    std::array vars{varA, varB, varC};
+    std::array constraints{aLessB, aLessC, bNotC};
+    Csp problem = make_csp(vars, constraints);
     EXPECT_EQ(problem.variables[0], varA);
     EXPECT_EQ(problem.variables[1], varB);
     EXPECT_EQ(problem.variables[2], varC);
