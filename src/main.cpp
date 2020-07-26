@@ -134,10 +134,15 @@ private:
     std::array<std::shared_ptr<SudokuNode>, 81> fields;
 };
 
-int main() {
-    std::ifstream sudokuFile("../res/VeryHardSudoku.txt");
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        std::cerr << "Please input the path to the sudoku file" << std::endl;
+        std::exit(1);
+    }
+
+    std::ifstream sudokuFile(argv[1]);
     if (!sudokuFile) {
-        std::cerr << "Failed to open file" << std::endl;
+        std::cerr << "Failed to open file '" << argv[1] << "'" << std::endl;
         std::exit(1);
     }
 
