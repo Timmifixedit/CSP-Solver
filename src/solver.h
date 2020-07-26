@@ -1,44 +1,56 @@
 //
-// Created by tim on 11.07.20.
+// Created by tim on 25.07.20.
 //
 
 #ifndef CSP_SOLVER_SOLVER_H
 #define CSP_SOLVER_SOLVER_H
-#include <cassert>
+
+#include <list>
+#include <algorithm>
 
 #include "Variable.h"
+#include "Arc.h"
+#include "util.h"
+#include "strategies.h"
+
 namespace csp {
-    template<typename T, typename Derived>
-    class MrvStrategy {
-        bool operator() (const Variable<T, Derived> &lhs, const Variable<T, Derived> &rhs) const noexcept {
-            return lhs.valueDomain().size() < rhs.valueDomain().size();
-        }
-    };
 
-    template<typename T, typename Derived>
-    bool removeInconsistent(Variable<T, Derived> &x, const Variable<T, Derived> &y) {
-        assert(!x.isAssigned() && !y.isAssigned());
-        bool removed = false;
-        for (auto it = x.valueDomain().begin(); it != x.valueDomain().end();) {
-            bool consistent = false;
-            x.assign(*it);
-            for (const auto &val : y.valueDomain()) {
-                if (y.assignmentValid(val)) {
-                    consistent = true;
-                    break;
-                }
-            }
-
-            if (!consistent) {
-                it = x.valueDomain().erase(it);
-                removed = true;
-            } else {
-                ++it;
-            }
+    template<typename VarPtr, typename Strategy>
+    bool recursiveSolve(const Csp<VarPtr> &problem, const Strategy &strategy) {
+        using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
+        VarPtr nextVar = strategy(problem);
+        if (nextVar->isAssigned()) {
+            return true;
         }
 
-        x.clearAssignment();
-        return removed;
+        //Moving storage as it will be overwritten by assign() anyway
+        std::list<VarType> valueDomain = std::move(nextVar->valueDomain());
+        for (auto &val : valueDomain) {
+            nextVar->assign(std::move(val));
+            auto cp = util::makeCspCheckpoint(problem);
+            if (!util::ac3(problem)) {
+                util::restoreCspFromCheckpoint(problem, cp);
+                continue;
+            }
+
+            if (recursiveSolve(problem, strategy)) {
+                return true;
+            }
+
+            util::restoreCspFromCheckpoint(problem, cp);
+        }
+
+        return false;
+    }
+
+    template<typename VarPtr, typename Strategy = strategies::Mrv<VarPtr>>
+    bool solve(const Csp<VarPtr> &problem) {
+        Strategy strategy;
+        if (!util::ac3(problem)) {
+            return false;
+        }
+
+        return recursiveSolve(problem, strategy);
     }
 }
 
