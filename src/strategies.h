@@ -12,6 +12,11 @@
 
 
 namespace csp::strategies {
+    /**
+     * Minimum remaining values strategy for variable selection during search. Chooses the varaible with the fewest
+     * remaining possible values
+     * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+     */
     template<typename VarPtr>
     struct Mrv {
         VarPtr operator() (const Csp<VarPtr> &problem) const {

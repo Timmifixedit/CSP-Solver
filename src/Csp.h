@@ -25,9 +25,18 @@ namespace csp {
             std::false_type constraintTest(...);
         }
 
+        /**
+         * Used to check if type is of template type csp::Arc
+         * @tparam T Type to be checked
+         */
         template<typename T>
         struct is_arc : decltype(implementations::arcTest(std::declval<T>())){};
 
+
+        /**
+         * Used to check if type is of template type csp::Constraint
+         * @tparam T Type to be checked
+         */
         template<typename T>
         struct is_constraint  {
             static constexpr bool value = decltype(implementations::constraintTest(std::declval<T>()))::value
@@ -36,6 +45,10 @@ namespace csp {
     }
 
 
+    /**
+     * Represents a constraint satisfaction problem (CSP)
+     * @tparam VarPtr VarPtr Pointer-type to a type derived from csp::Variable
+     */
     template<typename VarPtr>
     struct Csp {
         using ArcT = Arc<VarPtr>;
@@ -44,6 +57,17 @@ namespace csp {
         std::unordered_map<VarPtr, std::vector<ArcT>> incomingNeighbours;
     };
 
+    /**
+     * Creates a CSP from a container of variable-pointer and a container of csp::Arcs
+     * @tparam VarContainer Container-Type containing pointer-types to a type derived of csp::Variable
+     * @tparam ArcContainer Container-Type containing csp::Arcs
+     * @param variables Container of all variables in the CSP
+     * @param arcs Container of all directed csp::Arcs in the CSP
+     * @return csp::Csp representing the problem induced by the given variables and arcs
+     * @note When using csp::Arcs to specify the constraints, make sure that if you have a constraint e.g. A < B,
+     * you specify both csp::Arcs representing A < B and B > A! Otherwise the problem is malformed and may lead to
+     * invalid solutions!
+     */
     template<typename VarContainer, typename ArcContainer, std::enable_if_t<type_traits::is_arc<std::remove_reference_t<decltype(std::declval<ArcContainer>().front())>>::value, int> = 0>
     auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::remove_const_t<std::remove_reference_t<
             decltype(
@@ -62,7 +86,17 @@ namespace csp {
 
         return ret;
     }
-
+    /**
+     * Creates a CSP from a container of variable-pointers and a container of csp::Constraints
+     * @tparam VarContainer Container-Type containing pointer-types to a type derived of csp::Variable
+     * @tparam ArcContainer Container-Type containing csp::Constraints
+     * @param variables Container of all variables in the CSP
+     * @param arcs Container of all undirected csp::Constraints in the CSP
+     * @return csp::Csp representing the problem induced by the given variables and constraints
+     * @note When using csp::Constraints to specify the constraints, specify them only once. A csp::Constraint for
+     * e.g. A < B fully represents the constraint between the csp::Variable A and B. Specifying A < B and B > A
+     * may lead to performance loss during search!
+     */
     template<typename VarContainer, typename ContraintContainer, std::enable_if_t<type_traits::is_constraint<std::remove_reference_t<decltype(std::declval<ContraintContainer>().front())>>::value, int> = 0>
     auto make_csp(const VarContainer &variables, const ContraintContainer &constraints) -> Csp<std::remove_const_t<std::remove_reference_t<
             decltype(

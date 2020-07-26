@@ -15,9 +15,8 @@ TEST(solver_test, simple_csp) {
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint aLessC(varA, varC, std::less<>());
     TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
-    std::array vars{varA, varB, varC};
-    std::array constraints{aLessB, aLessC, bNotC};
-    bool success = csp::solve(csp::make_csp(vars, constraints));
+    bool success = csp::solve(csp::make_csp(std::array{varA, varB, varC},
+            std::array{aLessB, aLessC, bNotC}));
     EXPECT_TRUE(success);
     EXPECT_TRUE(varA->isAssigned());
     EXPECT_TRUE(varB->isAssigned());

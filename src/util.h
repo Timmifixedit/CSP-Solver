@@ -14,6 +14,13 @@
 
 namespace csp::util {
 
+    /**
+     * Removes all inconsistent values from the source node of the given csp::Arc. As a result, the source node's
+     * value domain only contains values for which a valid value in the domain of the destination node exists.
+     * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+     * @param arc Arc to be processed
+     * @return True if the value domain of the source node was modified, false otherwise
+     */
     template<typename VarPtr>
     bool removeInconsistent(const Arc<VarPtr> &arc) {
         bool removed = false;
@@ -39,6 +46,12 @@ namespace csp::util {
         return removed;
     }
 
+    /**
+     * Obtains arc consistency in a CSP using the AC3-algorithm
+     * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+     * @param problem The CSP to be processed
+     * @return True if arc consistency was obtained, false not possible
+     */
     template<typename VarPtr>
     bool ac3(const Csp<VarPtr> &problem) {
         using ArcT = Arc<VarPtr>;
@@ -64,6 +77,12 @@ namespace csp::util {
     template<typename T>
     using CspCheckpoint = std::vector<std::list<T>>;
 
+    /**
+     * Backs up all value domains of all varialbes in a CSP
+     * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+     * @param problem The CSP to be backed up
+     * @return vector of csp::Variable domains (std::list). Domains are ordered according to the variables in the CSP
+     */
     template<typename VarPtr>
     auto makeCspCheckpoint(const Csp<VarPtr> &problem) ->
     CspCheckpoint<std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>> {
@@ -77,6 +96,12 @@ namespace csp::util {
         return ret;
     }
 
+    /**
+     * Restores the value domains of all csp::Variables in a CSP from the given checkpoint
+     * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+     * @param problem The CPS to be restored
+     * @param checkpoint Checkpoint to load the value domains from
+     */
     template<typename VarPtr>
     void restoreCspFromCheckpoint(const Csp<VarPtr> &problem, const CspCheckpoint<std::remove_reference_t<
             decltype(std::declval<VarPtr>()->valueDomain().front())>> &checkpoint) {
