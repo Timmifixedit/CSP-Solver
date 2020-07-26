@@ -11,15 +11,6 @@
 namespace csp {
 
     template<typename T>
-    class Variable;
-
-    template<typename T>
-    using VarPtr = std::shared_ptr<Variable<T>>;
-
-    template<typename T>
-    using cVarPtr = std::shared_ptr<const Variable<T>>;
-
-    template<typename T>
     class Variable {
     public:
         explicit Variable(std::list<T> domain) : domain(std::move(domain)) {}

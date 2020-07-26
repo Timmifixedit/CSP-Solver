@@ -18,10 +18,21 @@ namespace csp {
             std::true_type arcTest(Arc<VarPtr>);
 
             std::false_type arcTest(...);
+
+            template<typename VarPtr>
+            std::true_type constraintTest(Constraint<VarPtr>);
+
+            std::false_type constraintTest(...);
         }
 
         template<typename T>
         struct is_arc : decltype(implementations::arcTest(std::declval<T>())){};
+
+        template<typename T>
+        struct is_constraint  {
+            static constexpr bool value = decltype(implementations::constraintTest(std::declval<T>()))::value
+                    && ! is_arc<T>::value;
+        };
     }
 
 
@@ -34,14 +45,14 @@ namespace csp {
     };
 
     template<typename VarContainer, typename ArcContainer, std::enable_if_t<type_traits::is_arc<std::remove_reference_t<decltype(std::declval<ArcContainer>().front())>>::value, int> = 0>
-    auto make_csp(VarContainer &variables, ArcContainer &arcs) -> Csp<std::remove_reference_t<
+    auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::remove_const_t<std::remove_reference_t<
             decltype(
                     std::size(variables),
                     std::end(variables),
                     *std::begin(variables)
-            )>> {
+            )>>> {
 
-        using VarPtr = std::remove_reference_t<decltype(*std::begin(variables))>;
+        using VarPtr = std::remove_cv_t<std::remove_reference_t<decltype(*std::begin(variables))>>;
         Csp<VarPtr> ret;
         ret.variables.reserve(std::size(variables));
         for (const auto &v : variables) {
@@ -61,14 +72,14 @@ namespace csp {
         return ret;
     }
 
-    template<typename VarContainer, typename ContraintContainer, std::enable_if_t<!type_traits::is_arc<std::remove_reference_t<decltype(std::declval<ContraintContainer>().front())>>::value, int> = 0>
-    auto make_csp(VarContainer &variables, ContraintContainer &constraints) -> Csp<std::remove_reference_t<
+    template<typename VarContainer, typename ContraintContainer, std::enable_if_t<type_traits::is_constraint<std::remove_reference_t<decltype(std::declval<ContraintContainer>().front())>>::value, int> = 0>
+    auto make_csp(const VarContainer &variables, const ContraintContainer &constraints) -> Csp<std::remove_const_t<std::remove_reference_t<
             decltype(
             std::size(variables),
                     std::end(variables),
                     *std::begin(variables)
-            )>> {
-        using VarPtr = std::remove_reference_t<decltype(*std::begin(variables))>;
+            )>>> {
+        using VarPtr = std::remove_const_t<std::remove_reference_t<decltype(*std::begin(variables))>>;
         std::list<Arc<VarPtr>> arcs;
         for (const auto &constraint : constraints) {
             auto[normal, reverse] = constraint.getArcs();

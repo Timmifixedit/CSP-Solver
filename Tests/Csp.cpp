@@ -15,15 +15,13 @@ TEST(util_test, create_csp_from_constraints) {
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint aLessC(varA, varC, std::less<>());
     TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
-    std::array vars{varA, varB, varC};
-    std::array constraints{aLessB, aLessC, bNotC};
-    Csp problem = make_csp(vars, constraints);
+    Csp problem = make_csp(std::array{varA, varB, varC}, std::array{aLessB, aLessC, bNotC});
     EXPECT_EQ(problem.variables[0], varA);
     EXPECT_EQ(problem.variables[1], varB);
     EXPECT_EQ(problem.variables[2], varC);
     EXPECT_EQ(problem.arcs.size(), 6);
 
-    auto testArcsPerVar = [&problem] (const std::shared_ptr<TestVar> &var) {
+    auto testArcsPerVar = [&problem] (const VarPtr &var) {
         const auto &incomingArcs = problem.incomingNeighbours[var];
         EXPECT_EQ(incomingArcs.size(), 2);
         EXPECT_NE(incomingArcs[0].from(), incomingArcs[1].from());

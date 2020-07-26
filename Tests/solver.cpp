@@ -41,7 +41,5 @@ TEST(solver_test, impossible_csp) {
     TestConstraint aNotB(varA, varB, inequal);
     TestConstraint aNotC(varA, varC, inequal);
     TestConstraint bNotC(varB, varC, inequal);
-    std::array vars{varA, varB, varC};
-    std::array constraints{aNotB, aNotC, bNotC};
-    EXPECT_FALSE(csp::solve(csp::make_csp(vars, constraints)));
+    EXPECT_FALSE(csp::solve(csp::make_csp(std::array{varA, varB, varC}, std::array{aNotB, aNotC, bNotC})));
 }
