@@ -29,9 +29,17 @@ namespace csp {
             std::false_type derivedTest(...);
         }
 
+        /**
+         * Used to check if type can be dereferenced using *-Operator
+         * @tparam T Type to be checked
+         */
         template<typename T>
         struct is_dereferencable : decltype(implementations::pointerTest<T>(std::declval<T>())) {};
 
+        /**
+         * Used to check if type is derived from csp::Variable
+         * @tparam T Type to be checked
+         */
         template<typename T>
         struct is_derived_from_var : decltype(implementations::derivedTest(std::declval<std::remove_reference_t<T>*>())) {};
     }
@@ -43,6 +51,10 @@ namespace csp {
     template<typename VarPtr>
     class Arc;
 
+    /**
+     * Represents a binary constraint in a constraint satisfaction problem
+     * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+     */
     template<typename VarPtr>
     class Constraint {
     public:
@@ -57,6 +69,10 @@ namespace csp {
 
         using ArcT = Arc<VarPtr>;
 
+        /**
+         * Create the two equivalent directed csp::Arcs
+         * @return Pair of equivalent csp::Arcs
+         */
         auto getArcs() const noexcept -> std::pair<ArcT, ArcT> {
             ArcT normal(var1, var2, predicate);
             ArcT reversed = normal;
@@ -69,6 +85,11 @@ namespace csp {
         BinaryPredicate<VarType> predicate;
     };
 
+    /**
+     * Represents a binary constraint as directed arc in a constraint satisfaction problem. Is mainly used during
+     * solving to obtain arc consistency
+     * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+     */
     template<typename VarPtr>
     class Arc : public Constraint<VarPtr> {
     public:
@@ -76,18 +97,37 @@ namespace csp {
         Arc(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate, bool reverse = false) :
                 Constraint<VarPtr>(std::move(v1), std::move(v2), std::move(predicate)), reversed(reverse) {}
 
+        /**
+         * Reverses the arc (switches from() and to() members)
+         */
         void reverse() noexcept {
             reversed = !reversed;
         }
 
+        /**
+         * Gets the source node of the arc
+         * @return Always returns the pointer to the source node of the arc, taking into account if the arc is reversed
+         */
         VarPtr from() const noexcept {
             return reversed ? this->var2 : this->var1;
         }
 
+        /**
+         * Gets the destination node of the arc
+         * @return Always returns the pointer to the destination node of the arc, taking into account if the arc is
+         * reversed
+         */
         VarPtr to() const noexcept {
             return reversed ? this->var1 : this->var2;
         }
 
+        /**
+         * Checks if the binary constraint between source and destination is satisfied. If values are chosen from the
+         * domains of from() and to() respectively, makes sure the constraint predicate is evaluated correctly
+         * @param valFrom value of the source node
+         * @param valTo value of the destination node
+         * @return true if constraint is satisfied, false otherwise
+         */
         bool constraintSatisfied(const VarType &valFrom, const VarType &valTo) const {
             return reversed ? this->predicate(valTo, valFrom) : this->predicate(valFrom, valTo);
         }
