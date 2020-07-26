@@ -11,39 +11,37 @@
 #include "Csp.h"
 #include "solver.h"
 
-template <unsigned int N>
 class SudokuNode : public csp::Variable<unsigned int> {
 public:
     SudokuNode(unsigned int val, unsigned int x, unsigned int y) : csp::Variable<unsigned int>(
-            val == 0 ? std::list<unsigned int>{1, 2, 3, 4, 5, 6, 7 ,8 ,9} : std::list{val}), x(x), y(y) {
-        assert(val <= N);
+            val == 0 ? std::list<unsigned int>{1, 2, 3, 4, 5, 6, 7, 8, 9} : std::list{val}), x(x), y(y) {
+        assert(val <= 9);
     }
 
     const unsigned int x, y;
 };
 
-template<unsigned int N, unsigned int SQRT>
 class Sudoku {
 public:
     explicit Sudoku(std::istream &input) {
         int index = 0;
         unsigned int val = 0;
         while (input >> val) {
-            assert(val <= N);
+            assert(val <= 9);
             auto [x, y] = linearToCoordinates(index);
-            fields[index] = std::make_shared<SudokuNode<N>>(val, x, y);
+            fields[index] = std::make_shared<SudokuNode>(val, x, y);
             ++index;
         }
     }
 
     static auto linearToCoordinates(unsigned int index) -> std::pair<unsigned int, unsigned int >{
-        assert(index < N * N);
-        return {index % N, index / N};
+        assert(index < 81);
+        return {index % 9, index / 9};
     }
 
     static auto coordinatesToLinear(unsigned int x, unsigned int y) -> unsigned int {
-        assert(x < N && y < N);
-        return N * y + x;
+        assert(x < 9 && y < 9);
+        return 9 * y + x;
     }
 
     void print(std::ostream &out) const {
@@ -52,18 +50,18 @@ public:
             const auto &field = fields[index];
             auto [x, y] = linearToCoordinates(index);
             out << std::setw(2);
-            if (horLine && y % SQRT == 0) {
-                for (unsigned int i = 0; i < N; ++i) {
+            if (horLine && y % 3 == 0) {
+                for (unsigned int i = 0; i < 9; ++i) {
                     out << std::setw(3) <<  "-";
                 }
 
                 out << std::endl;
                 horLine = false;
-            } else if (y % SQRT != 0) {
+            } else if (y % 3 != 0) {
                 horLine = true;
             }
 
-            if(x % SQRT == 0) {
+            if(x % 3 == 0) {
                 out << "| ";
             }
 
@@ -71,20 +69,16 @@ public:
                 out << field->valueDomain().front();
             } else {
                 out << "?";
-//                for (auto val : field->valueDomain()) {
-//                    out << val;
-//                }
-//                out << ")";
             }
 
-            if(x == N - 1) {
+            if(x == 9 - 1) {
                 out << " |" << std::endl;
             } else {
                 out << " ";
             }
         }
 
-        for (unsigned int i = 0; i < N; ++i) {
+        for (unsigned int i = 0; i < 9; ++i) {
             out << std::setw(3) <<  "-";
         }
 
@@ -93,7 +87,7 @@ public:
 
     bool solve() {
         auto inequal = [](unsigned int lhs, unsigned int rhs) {return lhs != rhs;};
-        std::list<csp::Arc<unsigned int>> arcs;
+        std::list<csp::Arc<std::shared_ptr<SudokuNode>>> arcs;
         for (std::size_t index = 0; index < fields.size(); ++index) {
             auto neighbours = getNeighbours(index);
             for (const auto &nb : neighbours) {
@@ -102,17 +96,15 @@ public:
         }
 
         auto sudokuProblem = csp::make_csp(fields, arcs);
-//        csp::util::ac3(sudokuProblem);
-//        print(std::cout);
         return csp::solve(sudokuProblem);
     }
 
 private:
-    [[nodiscard]] auto getNeighbours(unsigned int index) const -> std::array<std::shared_ptr<SudokuNode<N>>, 2 * (N - 1) + N - (2 * SQRT - 1)> {
+    [[nodiscard]] auto getNeighbours(unsigned int index) const -> std::array<std::shared_ptr<SudokuNode>, 20> {
         auto [col, row] = linearToCoordinates(index);
-        std::array<std::shared_ptr<SudokuNode<N>>, 2 * (N - 1) + N - (2 * SQRT - 1)> ret;
+        std::array<std::shared_ptr<SudokuNode>, 20> ret;
         auto it = ret.begin();
-        for (unsigned int i = 0; i < N; ++i) {
+        for (unsigned int i = 0; i < 9; ++i) {
             if (i != col) {
                 *it = fields[coordinatesToLinear(i, row)];
                 ++it;
@@ -124,11 +116,11 @@ private:
             }
         }
 
-        unsigned int blockNumber = SQRT * (row / SQRT) + col / SQRT;
-        unsigned int colStart = (blockNumber % SQRT) * SQRT;
-        unsigned int rowStart = (blockNumber / SQRT) * SQRT;
-        for(unsigned int y = rowStart; y < rowStart + SQRT; y++){
-            for(unsigned int x = colStart; x < colStart + SQRT; x++){
+        unsigned int blockNumber = 3 * (row / 3) + col / 3;
+        unsigned int colStart = (blockNumber % 3) * 3;
+        unsigned int rowStart = (blockNumber / 3) * 3;
+        for(unsigned int y = rowStart; y < rowStart + 3; y++){
+            for(unsigned int x = colStart; x < colStart + 3; x++){
                 if(x != col && y != row){
                     *it = fields[coordinatesToLinear(x, y)];
                     ++it;
@@ -139,9 +131,8 @@ private:
         assert(it == ret.end());
         return ret;
     }
-    std::array<std::shared_ptr<SudokuNode<N>>, N * N> fields;
+    std::array<std::shared_ptr<SudokuNode>, 81> fields;
 };
-
 
 int main() {
     std::ifstream sudokuFile("../res/VeryHardSudoku.txt");
@@ -150,7 +141,7 @@ int main() {
         std::exit(1);
     }
 
-    Sudoku<9, 3> sudoku(sudokuFile);
+    Sudoku sudoku(sudokuFile);
     sudoku.print(std::cout);
 
     auto start = std::chrono::high_resolution_clock::now();
