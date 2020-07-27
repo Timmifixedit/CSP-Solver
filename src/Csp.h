@@ -69,11 +69,11 @@ namespace csp {
      * invalid solutions!
      */
     template<typename VarContainer, typename ArcContainer, std::enable_if_t<
-            type_traits::is_arc<std::remove_reference_t<decltype(std::declval<ArcContainer>().front())>>::value,
+            type_traits::is_arc<std::remove_reference_t<decltype(*std::begin(std::declval<ArcContainer>()))>>::value,
             int> = 0>
     auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::remove_const_t<std::remove_reference_t<
             decltype(
-                    std::size(variables),
+                    std::end(arcs),
                     std::end(variables),
                     *std::begin(variables)
             )>>> {
@@ -100,10 +100,10 @@ namespace csp {
      * may lead to performance loss during search!
      */
     template<typename VarContainer, typename ContraintContainer, std::enable_if_t<type_traits::is_constraint<
-            std::remove_reference_t<decltype(std::declval<ContraintContainer>().front())>>::value, int> = 0>
+            std::remove_reference_t<decltype(*std::begin(std::declval<ContraintContainer>()))>>::value, int> = 0>
     auto make_csp(const VarContainer &variables, const ContraintContainer &constraints) -> Csp<std::remove_const_t<std::remove_reference_t<
             decltype(
-                    std::size(variables),
+                    std::end(constraints),
                     std::end(variables),
                     *std::begin(variables)
             )>>> {
