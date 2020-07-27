@@ -68,7 +68,9 @@ namespace csp {
      * you specify both csp::Arcs representing A < B and B > A! Otherwise the problem is malformed and may lead to
      * invalid solutions!
      */
-    template<typename VarContainer, typename ArcContainer, std::enable_if_t<type_traits::is_arc<std::remove_reference_t<decltype(std::declval<ArcContainer>().front())>>::value, int> = 0>
+    template<typename VarContainer, typename ArcContainer, std::enable_if_t<
+            type_traits::is_arc<std::remove_reference_t<decltype(std::declval<ArcContainer>().front())>>::value,
+            int> = 0>
     auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::remove_const_t<std::remove_reference_t<
             decltype(
                     std::size(variables),
@@ -97,10 +99,11 @@ namespace csp {
      * e.g. A < B fully represents the constraint between the csp::Variable A and B. Specifying A < B and B > A
      * may lead to performance loss during search!
      */
-    template<typename VarContainer, typename ContraintContainer, std::enable_if_t<type_traits::is_constraint<std::remove_reference_t<decltype(std::declval<ContraintContainer>().front())>>::value, int> = 0>
+    template<typename VarContainer, typename ContraintContainer, std::enable_if_t<type_traits::is_constraint<
+            std::remove_reference_t<decltype(std::declval<ContraintContainer>().front())>>::value, int> = 0>
     auto make_csp(const VarContainer &variables, const ContraintContainer &constraints) -> Csp<std::remove_const_t<std::remove_reference_t<
             decltype(
-            std::size(variables),
+                    std::size(variables),
                     std::end(variables),
                     *std::begin(variables)
             )>>> {

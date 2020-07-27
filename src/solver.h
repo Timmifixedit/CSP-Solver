@@ -54,13 +54,13 @@ namespace csp {
     /**
      * Solves a CSP
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
-     * @tparam Strategy Type of value selection strategy during search (default: minimum remaining values strategy)
+     * @tparam Strategy Type of value selection strategy during search (default: minimum remaining values strategy).
+     * Has to provide ()-Operator and return VarPtr from given csp::Csp
      * @param problem CSP to be solved
      * @return True if problem was solved, false otherwise
      */
     template<typename VarPtr, typename Strategy = strategies::Mrv<VarPtr>>
-    bool solve(const Csp<VarPtr> &problem) {
-        Strategy strategy;
+    bool solve(const Csp<VarPtr> &problem, const Strategy &strategy = Strategy()) {
         if (!util::ac3(problem)) {
             return false;
         }

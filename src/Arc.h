@@ -130,7 +130,8 @@ namespace csp {
          * @param valTo value of the destination node
          * @return true if constraint is satisfied, false otherwise
          */
-        bool constraintSatisfied(const VarType &valFrom, const VarType &valTo) const {
+        bool constraintSatisfied(const VarType &valFrom, const VarType &valTo) const noexcept(
+                noexcept(std::declval<BinaryPredicate<VarType>>()(valFrom, valTo))) {
             return reversed ? this->predicate(valTo, valFrom) : this->predicate(valFrom, valTo);
         }
 

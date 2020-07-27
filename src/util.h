@@ -107,7 +107,7 @@ namespace csp::util {
             decltype(std::declval<VarPtr>()->valueDomain().front())>> &checkpoint) {
         assert(checkpoint.size() == problem.variables.size());
         for (std::size_t i = 0; i < checkpoint.size(); ++i) {
-            problem.variables[i]->setValueDomain(checkpoint[i]);
+            problem.variables[i]->setValueDomain(std::move(checkpoint[i]));
         }
     }
 }
