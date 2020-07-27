@@ -63,3 +63,7 @@ auto strat = [](const auto & problem) {
 
 bool success = csp::solve(myCsp, strat);
 ```
+
+## Solving Sudoku Puzzles
+The `src/main.cpp` contains a program that can solve Sudoku puzzles. A Sudoku is defined by a grid of numbers where a 0 indicates, that the respective field is yet
+to be assigned. Some examples are provided in the `res` directory.
