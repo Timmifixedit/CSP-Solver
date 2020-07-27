@@ -7,6 +7,7 @@
 
 #include <list>
 #include <algorithm>
+#include <type_traits>
 
 #include "Variable.h"
 #include "Arc.h"
@@ -61,6 +62,8 @@ namespace csp {
      */
     template<typename VarPtr, typename Strategy = strategies::Mrv<VarPtr>>
     bool solve(const Csp<VarPtr> &problem, const Strategy &strategy = Strategy()) {
+        static_assert(std::is_invocable_r_v<VarPtr, Strategy, Csp<VarPtr>>,
+                "Invalid strategy object! Must map from csp::Csp -> VarPtr");
         if (!util::ac3(problem)) {
             return false;
         }
