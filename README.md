@@ -1,6 +1,6 @@
 # CSP-Solver
-Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm University. Solves arbitrary constraint satisfaction problems (CSP) using the AC3 algorithm
-and backtracking search.
+Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm University. Solves arbitrary constraint satisfaction problems (CSP) using the
+[AC-3 algorithm](https://en.wikipedia.org/wiki/AC-3_algorithm) and backtracking search.
 
 ## How To
 A CPS consists of a set of Variables, represented by `csp::Variable` and a set of constraints (dependencies between pairs of variables) represented by `csp::Constraint` or `csp::Arc`. You can use your own variable type by deriving from `csp::Variable`.
