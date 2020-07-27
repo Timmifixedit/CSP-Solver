@@ -96,7 +96,7 @@ public:
         }
 
         auto sudokuProblem = csp::make_csp(fields, arcs);
-        return csp::solve(sudokuProblem);
+        return csp::solve(sudokuProblem, csp::strategies::First<std::shared_ptr<SudokuNode>>());
     }
 
 private:
