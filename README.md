@@ -3,28 +3,28 @@ Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm Univer
 [AC-3 algorithm](https://en.wikipedia.org/wiki/AC-3_algorithm) and backtracking search.
 
 ## How To
-A CPS consists of a set of Variables, represented by `csp::Variable` and a set of constraints (dependencies between pairs of variables) represented by `csp::Constraint` or `csp::Arc`. You can use your own variable type by deriving from `csp::Variable`.
+A CPS consists of a set of variables, represented by `csp::Variable` and a set of constraints (dependencies between pairs of variables) represented by `csp::Constraint` or `csp::Arc`. You can use your own variable type by deriving from `csp::Variable`.
 
 ### Creating Variables
-To create a varaible, a domain of values has to be given, representing all possible
+To create a variable, a domain of values has to be given, representing all possible
 values the variable might take:
 ```cpp
 #include "Variable.h"
-using MyVar = csp::Varialbe<int>;
+using MyVar = csp::Variable<int>;
 MyVar a({1, 2, 17, 24});
 ```
 Also possible: Create your own type:
 ```cpp
 #include <string>
 #include "Variable.h"
-class MyVar : public csp::Varaible<int> {
+class MyVar : public csp::Variable<int> {
 public:
   explicit MyVar(std::string name) : csp::Variable<int>({1, 2, 3, 4}), name(std::move(name)) {}
   const std::string name;
 }
 ```
 ### Specifying Constraints
-`csp::Constraint` or `csp::Arc` specify dependencies between pairs of variables. They contain a pointer type to each varaible and a binary predicate specifying the
+`csp::Constraint` or `csp::Arc` specify dependencies between pairs of variables. They contain a pointer type to each variable and a binary predicate specifying the
 constraint. Example using the custom varaiable type above:
 ```cpp
 #include <memory>
@@ -41,7 +41,7 @@ cannot mix arcs and constraints when creating a CSP but you can convert a `csp::
 ### Creating the CSP
 Once you specified all variables and the respective contraints, create your CSP using:
 ```cpp
-csp::CSP myCsp = csp::make_csp(std::array{varA, varB}, std::array{aLessB});
+csp::Csp myCsp = csp::make_csp(std::array{varA, varB}, std::array{aLessB});
 ```
 You can use arbitrary containers that support iteration.
 
@@ -54,10 +54,10 @@ If solving the CSP is possible all domains of all variables will be reduced to e
 not modify the value domains of the variables.
 #### Specifying a Solving Strategy
 By default, `csp::solve` uses the minimum remaining values strategy, meaning that the algorithm chooses the variable with the fewest remaining values in its domain
-to be assigned next. You can also use a different (even custom) strategies e.g.:
+to be assigned next. You can also use a different (even custom) strategy e.g.:
 ```cpp
 auto strat = [](const auto & problem) {
-  // Your code here -> return the desired unassigned varaible from the CSP
+  // Your code here -> return the desired unassigned variable from the CSP
   return theNextVar;
 };
 
