@@ -3,8 +3,7 @@ Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm Univer
 and backtracking search.
 
 ## How To
-A CPS consists of a set of Variables, represented by `csp::Variable` and a set of constraints (dependencies between pairs of varaibles) represented by `csp::Constraint`
-or `csp::Arc`. You can use your own variable type by deriving from `csp::Variable`.
+A CPS consists of a set of Variables, represented by `csp::Variable` and a set of constraints (dependencies between pairs of variables) represented by `csp::Constraint` or `csp::Arc`. You can use your own variable type by deriving from `csp::Variable`.
 
 ### Creating Variables
 To create a varaible, a domain of values has to be given, representing all possible
@@ -35,7 +34,7 @@ auto varB = std::make_shared<MyVar>("B");
 csp::Constraint aLessB(varA, varB, std::less<>());
 ```
 You can also use `csp::Arc` to specify the relation between variables. The difference is, that an arc describes a directed constraint. Even if A < B is equivalent
-to B > A, two arcs describing both relations respectively are not. When defining your CPS using arcs, make sure that always both directions are specified explicitly.
+to B > A, two arcs describing both relations respectively are not. When defining your CSP using arcs, make sure that always both directions are specified explicitly.
 When using `csp::Constraint` only one direction suffices. In some situations, it is easier to specify the CSP using arcs than using constraints or vice versa. You
 cannot mix arcs and constraints when creating a CSP but you can convert a `csp::Constraint` to two equivalent `csp::Arc`.
 
@@ -55,8 +54,8 @@ If solving the CSP is possible all domains of all variables will be reduced to e
 not modify the value domains of the variables.
 #### Specifying a Solving Strategy
 By default, `csp::solve` uses the minimum remaining values strategy, meaning that the algorithm chooses the variable with the fewest remaining values in its domain
-to be assigned next. You can also use a different (even custom) strategy e.g.:
-```csp
+to be assigned next. You can also use a different (even custom) strategies e.g.:
+```cpp
 auto strat = [](const auto & problem) {
   // Your code here -> return the desired unassigned varaible from the CSP
   return theNextVar;
