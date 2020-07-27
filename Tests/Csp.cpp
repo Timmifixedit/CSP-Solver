@@ -7,15 +7,7 @@
 #include "Csp.h"
 #include "TestTypes.h"
 
-TEST(util_test, create_csp_from_constraints) {
-    using namespace csp;
-    auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
-    auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
-    auto varC = std::make_shared<TestVar>(std::list{2, 3, 1});
-    TestConstraint aLessB(varA, varB, std::less<>());
-    TestConstraint aLessC(varA, varC, std::less<>());
-    TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
-    Csp problem = make_csp(std::array{varA, varB, varC}, std::array{aLessB, aLessC, bNotC});
+void verifyCsp(csp::Csp<VarPtr> &problem, const VarPtr& varA, const VarPtr& varB, const VarPtr& varC) {
     EXPECT_EQ(problem.variables[0], varA);
     EXPECT_EQ(problem.variables[1], varB);
     EXPECT_EQ(problem.variables[2], varC);
@@ -40,4 +32,36 @@ TEST(util_test, create_csp_from_constraints) {
     testArcsPerVar(varB);
     testArcsPerVar(varC);
     EXPECT_TRUE(problem.arcs.empty());
+}
+
+TEST(csp_test, create_csp_from_constraints) {
+    using namespace csp;
+    auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varC = std::make_shared<TestVar>(std::list{2, 3, 1});
+    TestConstraint aLessB(varA, varB, std::less<>());
+    TestConstraint aLessC(varA, varC, std::less<>());
+    TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
+    Csp problem = make_csp(std::array{varA, varB, varC}, std::array{aLessB, aLessC, bNotC});
+    verifyCsp(problem, varA, varB, varC);
+}
+
+TEST(csp_test, create_csp_from_arcs) {
+    using namespace csp;
+    auto varA = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varC = std::make_shared<TestVar>(std::list{2, 3, 1});
+    TestArc aLessB(varA, varB, std::less<>());
+    TestArc bGreaterA = aLessB;
+    bGreaterA.reverse();
+    TestArc aLessC(varA, varC, std::less<>());
+    TestArc cGreaterA = aLessC;
+    cGreaterA.reverse();
+    TestArc bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
+    TestArc cNotB = bNotC;
+    cNotB.reverse();
+    Csp problem = make_csp(std::array{varA, varB, varC},
+            std::array{aLessB, bGreaterA, aLessC, cGreaterA, bNotC, cNotB});
+    verifyCsp(problem, varA, varB, varC);
+
 }
