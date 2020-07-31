@@ -1,6 +1,8 @@
-//
-// Created by tim on 11.07.20.
-//
+/**
+ * @author Tim Luchterhand
+ * @date 11.07.20
+ * @brief This file contains utility functions used by the search algorithm.
+ */
 
 #ifndef CSP_SOLVER_UTIL_H
 #define CSP_SOLVER_UTIL_H
@@ -78,7 +80,7 @@ namespace csp::util {
     using CspCheckpoint = std::vector<std::list<T>>;
 
     /**
-     * Backs up all value domains of all varialbes in a CSP
+     * Backs up all value domains of all variables in a CSP
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
      * @param problem The CSP to be backed up
      * @return vector of csp::Variable domains (std::list). Domains are ordered according to the variables in the CSP

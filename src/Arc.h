@@ -1,6 +1,11 @@
-//
-// Created by tim on 22.07.20.
-//
+/**
+ * @author Tim Luchterhand
+ * @date 22.07.20
+ * @brief This file contains the the csp::Arc and the csp::Constraint class. Both can be used to specify constraints
+ * (dependencies) between two csp::Variable pointers. An Arc is directed (specifying a constraint that a Variable X
+ * X imposes on a Variable Y, e.g. A < B but not B > A). A Constraint implicitly defines both directions
+ * (e.g. if A < B <=> B > A). The actual constraint is given as a binary predicate.
+ */
 
 #ifndef CSP_SOLVER_ARC_H
 #define CSP_SOLVER_ARC_H

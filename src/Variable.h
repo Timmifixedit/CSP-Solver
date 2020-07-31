@@ -1,6 +1,9 @@
-//
-// Created by tim on 11.07.20.
-//
+/**
+ * @author Tim Luchterhand
+ * @date 11.07.20
+ * @brief This file contains the definition of a variable which is used to describe a CSP. Custom variable types can
+ * be used by deriving from csp::Variable
+ */
 
 #ifndef CSP_SOLVER_VARIABLE_H
 #define CSP_SOLVER_VARIABLE_H

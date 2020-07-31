@@ -1,6 +1,10 @@
-//
-// Created by tim on 25.07.20.
-//
+/**
+ * @author Tim Luchterhand
+ * @date 25.07.20
+ * @brief This file contains the csp::Csp class which represents a complete definition of a constraint satisfaction
+ * problem. The class contains a list of Variable pointers, a list of all arcs and a map that specifies incoming arcs
+ * of each variable. The csp::Csp should be created using the provided function csp::make_csp.
+ */
 
 #ifndef CSP_SOLVER_CSP_H
 #define CSP_SOLVER_CSP_H

@@ -1,6 +1,10 @@
-//
-// Created by tim on 25.07.20.
-//
+/**
+ * @author Tim Luchterhand
+ * @date 25.07.20
+ * @brief This file contains different variable choosing strategies that can be used to solve a CSP. Apart from these
+ * strategies, custom strategies can be used. A strategy must return one of the pointers to a variable stored in the
+ * given CSP.
+ */
 
 #ifndef CSP_SOLVER_STRATEGIES_H
 #define CSP_SOLVER_STRATEGIES_H
