@@ -1,3 +1,26 @@
 .idea/*
 cmake-build-*
 coverageReport
+
+# latex stuff
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+*.pdf
+*.synctex.gz
+
