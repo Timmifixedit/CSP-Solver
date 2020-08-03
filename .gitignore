@@ -24,3 +24,7 @@ coverageReport
 *.pdf
 *.synctex.gz
 
+# VS stuff
+**/out/*
+**/.vs/*
+
