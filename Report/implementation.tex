@@ -47,7 +47,7 @@ eingehende Arcs zu Variablen zuordnet. Analog zu \inlcode{csp::Arc} und \inlcode
 \inlcode{std::vector} bietet sich für die Liste der Variablen an, da hier keine Elemente hinzugefügt oder gelöscht werden müssen. Der zusammenhängende Speicher ermöglicht außerdem
 effizienten Random-Access und effizientes Iterieren. Da der \ac*{ac}-3 Algorithmus auf einer Queue von Arcs arbeitet, bietet sich für die Liste der Arcs eine \inlcode{std::list}
 an. Denkbar wäre auch eine \inlcode{std::queue} gewesen. Allerdings unterstützt diese kein Iterieren und kein elegantes Einfügen von Elementen am Ende durch
-\inlcode{std::back_inserter} und \inlcode{std::copy}. Zuordnung zwischen Variablen und eingehenden Arcs wurde eine \inlcode{std::unordered_map} verwendet, die für jede Variable
+\inlcode{std::back_inserter} und \inlcode{std::copy}. Für die Zuordnung von eingehenden Arcs zu Variablen wurde eine \inlcode{std::unordered_map} verwendet, die für jede Variable
 einen \inlcode{std::vector} aus Arcs verwaltet. Das finden von Elementen in einer solchen Datenstruktur benötigt im Durchschnitt konstanten Aufwand \cite{uMap}, sodass eingehende
 Arcs zu einer gegebene Variable im \ac*{ac}-3 Algorithmus effizient bestimmt werden können.
 

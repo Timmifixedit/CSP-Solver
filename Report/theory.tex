@@ -24,13 +24,13 @@ entscheiden, welche Variable als nächstes ausgewählt werden soll, oder welcher
 
 \subsection{Lösen durch Constraint Propagation}
 \label{sec:ConstrProp}
-Ein Problem des zuvor vorgestellten Algorithmus ist, dass die ungültige Zuweisung einer Variable häufig erst sehr viel später bemerkt wird. Dadurch werden potentiell Äste im
-Suchbaum verfolgt, die von vornherein schon hätten ausgeschlossen werden könnten. Um dieses Problem zu lösen, bietet sich \textit{Constraint Propagation} an. Dabei werden
-aus bereits bestehenden Constraints neue hergeleitet, um die Wertedomänen von Variablen zusätzlich einzuschränken (in \cite{OrderingHeuristics} auch \textit{Consistency
-Enforcing} genannt). Dies soll an folgendem Beispiel erläutert werden. Angenommen es gibt zwei Variablen $A$ und $B$, die jeweils Werte zwischen einschließlich eins und drei
-annehmen können. Das Constraint sei $A < B$. Daraus lässt sich folgern, dass für $A$ unmöglich der Wert 3 gewählt werden kann, da es in der Domäne von $B$ keinen größeren
-Wert gibt. Dieser Wert kann von vornherein entfernt werden und muss nicht erst testweise ausprobiert werden. Analog kann bei $B$ der Wert 1 aus der Domäne entfernt werden. In
-diesem Beispiel stellt sich nach der erläuterten Anpassung der Wertedomänen der Variablen sogenannte \eac{ac} ein. Ein \ac*{csp} mit ausschließlich binären Constraints lässt 
+Ein Problem des zuvor vorgestellten Algorithmus ist, dass die ungültige Zuweisung einer Variable häufig erst viele Rekursionsschritte später bemerkt wird. Dadurch werden
+potentiell Äste im Suchbaum verfolgt, die von vornherein schon hätten ausgeschlossen werden könnten. Um dieses Problem zu lösen, bietet sich \textit{Constraint Propagation}
+an. Dabei werden aus bereits bestehenden Constraints neue hergeleitet, um die Wertedomänen von Variablen zusätzlich einzuschränken (in \cite{OrderingHeuristics} auch
+\textit{Consistency Enforcing} genannt). Dies soll an folgendem Beispiel erläutert werden. Angenommen es gibt zwei Variablen $A$ und $B$, die jeweils Werte zwischen einschließlich
+eins und drei annehmen können. Das Constraint sei $A < B$. Daraus lässt sich folgern, dass für $A$ unmöglich der Wert 3 gewählt werden kann, da es in der Domäne von $B$ keinen
+größeren Wert gibt. Dieser Wert kann von vornherein entfernt werden und muss nicht erst testweise ausprobiert werden. Analog kann bei $B$ der Wert 1 aus der Domäne entfernt werden.
+In diesem Beispiel stellt sich nach der erläuterten Anpassung der Wertedomänen der Variablen sogenannte \eac{ac} ein. Ein \ac*{csp} mit ausschließlich binären Constraints lässt 
 sich als Graph darstellen, bei dem die Knoten die Variablen repräsentieren und die Kanten die Constraints. Eine gerichtete Kante zwischen zwei Variablen $A$ und $B$ wird 
 \textit{Arc} genannt und im Folgenden mit $A \rightarrow B$ bezeichnet. Dies lässt sich interpretieren als: "$A$ fordert von $B$ die Einhaltung eines Constraints". Ein
 Constraint an sich lässt sich allgemein als binäres Prädikat angeben und definiert immer beide Richtungen, also $A \rightarrow B$ und $B \rightarrow A$. Bei dem Begriff
