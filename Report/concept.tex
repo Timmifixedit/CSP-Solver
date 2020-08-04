@@ -18,3 +18,14 @@ andererseits zu Fehlern führen, wodurch das \ac*{csp} dann nicht wohldefiniert 
 werden muss. Da der \ac*{ac}-3 Algorithmus während eines Durchlaufs mehrmals auf die eingehenden Arcs einer Variablen zugreifen muss, sollte vor Aufruf des eigentlichen
 Lösealgorithmus, zunächst eine Tabelle mit Variablen und zugehörigen eingehenden Arcs erstellt werden. Hierfür bietet sich eine assoziative Datenstruktur wie beispielsweise eine
 \inlcode{std::unordered_map} an.
+
+\subsection{Erweiterbarkeit des Algorithmus}
+Eine offensichtliche Anforderung an die zu implementierende Datenstruktur \inlcode{Variable} ist die Unterstützung von Wertdomänen mit beliebigen Werttypen. Dies kann einfach durch
+eine Template-Klasse realisiert werden. Für den Algorithmus muss eine Variable nur einige wenige Methoden zur Verfügung stellen, nämlich die Zuweisung eines Werts, sowie Mechanismen
+zur Manipulation der Wertedomäne. Möglicherweise will jedoch der Nutzer zusätzlich Funktionalität zu Variablen hinzufügen, sodass Erben aus der Basisklasse \inlcode{Variable}
+möglich sein soll. Da nicht es vorgesehen (und auch nicht notwendig) ist, dass der Nutzer die Basisimplementierung der für den Algorithmus notwendigen Methoden der Klasse
+\inlcode{Variable} überschreibt, lässt sich der Algorithmus rein statisch polymorph entwerfen. Dies hat den Vorteil, dass zusätzliche Rechenkosten vermieden werden.
+
+Wie bereits in \cref{sec:Solving} angeführt, kommen beim Lösen von \acp{csp} Heuristiken zum Auswählen der nächsten Variablen zum Einsatz. Diese sind meistens problemspezifisch,
+da eine allgemeine, optimale Heuristik aktuell nicht bekannt ist. Es liegt also nahe, den Algorithmus so zu implementieren, dass der Nutzer eine eigene Heuristik zum Lösen des
+Problems angeben kann.
