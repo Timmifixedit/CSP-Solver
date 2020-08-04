@@ -56,10 +56,10 @@ Wie schon in \cref{sec:Concept} erörtert, soll der Nutzer lediglich eine Menge 
 gibt es die Methode \inlcode{csp::make_csp}, die zwei Container entgegen nimmt: Im ersten sind wieder allgemeine Pointer-Typen enthalten, die auf alle Variablen des Problems zeigen.
 Im zweiten sind entweder \inlcode{csp::Constraint}s oder \inlcode{csp::Arc}s enthalten. Je nach Problem kann es manchmal einfacher sein, beide Richtungen der Constraints explizit
 anzugeben (wie beispielsweise in der Implementierung des Sudoku-Lösers), oder auch nicht. Deshalb werden beide Typen akzeptiert, jedoch keine Mischung aus beiden. Die Containertypen
-werden durch Template-Typparameter festgelegt, sodass beliebige Arten von Containern verwendet werden, die Iteration unterstützen. Werden die Constraints als \inlcode{csp::Arc}s
-angegeben, so lässt sich das \inlcode{csp::Csp} ohne großen zusätzlichen Aufwand konstruieren. Lediglich die Variablen mit ihren zugehörigen eingehenden Arcs müssen in die
-\inlcode{std::unordered_map} eingetragen werden. Wird stattdessen eine Menge aus \inlcode{csp::Constraint}s angegeben, so müssen diese zuvor noch in ihre äquivalenten Arcs
-umgewandelt werden. Dies geschieht durch die Memberfuntion \inlcode{getArcs()} von \inlcode{csp::Constraint}.
+werden durch Template-Typparameter festgelegt, sodass beliebige Arten von Containern verwendet werden können, die Iteration unterstützen. Werden die Constraints als
+\inlcode{csp::Arc}s angegeben, so lässt sich das \inlcode{csp::Csp} ohne großen zusätzlichen Aufwand konstruieren. Lediglich die Variablen mit ihren zugehörigen eingehenden Arcs
+müssen in die \inlcode{std::unordered_map} eingetragen werden. Wird stattdessen eine Menge aus \inlcode{csp::Constraint}s angegeben, so müssen diese zuvor noch in ihre äquivalenten
+Arcs umgewandelt werden. Dies geschieht durch die Memberfuntion \inlcode{getArcs()} von \inlcode{csp::Constraint}.
 
 Da beide Überladungen von \inlcode{csp::make_constraint} eine identische Signatur besitzen (bis auf die Namen der Template-Typparameter), muss \ac*{sfinae} eingesetzt werden, damit
 die Wahl der richtigen Methode zur Übersetzzeit eindeutig ist. Dazu besitzen beiden Methoden einen dritten Template-Parameter, der lediglich dazu dient, die unpassende Methode

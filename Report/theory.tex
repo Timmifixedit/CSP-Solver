@@ -5,7 +5,7 @@
 ein allgemeines \ac*{csp} eine exponentielle worst-case Laufzeit. In dieser Arbeit werden allerdings einige Einschränkungen gefordert, sodass sich die Implementierung eines Lösers
 vereinfacht: Zugelassen werden nur Variablem mit diskreten, endlichen Wertedomänen und harte, binäre Constraints. Letzteres sind also Beschränkungen, die von genau zwei Variablen
 abhängen und in einer gültigen Lösung des \ac*{csp} erfüllt sein \textit{müssen}. Ein solcher Spezialfall lässt sich dann beispielsweise durch folgenden Algorithmus lösen (gegeben
-als C++ Pseudoceode):
+als C++ Pseudoimplementierung):
 \lstinputlisting{backtrack.cpp}
 Der hier gezeigt Algorithmus ist eine rekursive Backtracking-Suche, die in jedem Rekursionsschritt versucht, einer noch nicht zugewiesenen Variable einen Wert zuzuweisen. Der
 Algorithmus macht sich hier allerdings noch nicht zunutze, dass alle Constraints binär sind. Ganz zu Beginn befindet sich die Abbruchbedingung: Wenn bereits alle Variablen einen
