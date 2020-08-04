@@ -5,39 +5,3 @@ Damenproblem, bei dem insgesamt acht Damen so auf einem Schachbrett platziert we
 ein passendes Feld zugewiesen werden muss. Bei jeder Dame umfasst die Wertedomäne $d$ alle möglichen Felder des Schachbretts und die Constraints wurden bereits erwähnt. Neben
 dem eben beschriebenen Beispiel finden sich \acp{csp} häufig im Bereich der künstlichen Intelligenz wieder. Beispielsweise werden zum Planen von wissenschaftlichen
 Beobachtungsmissionen auf dem Hubble Space Telescope Techniken zum Lösen von \acp{csp} verwendet, um die Betriebszeit und damit Kosten zu reduzieren \cite{HubbleScheduling}.
-
-\subsection{Lösen von \acp{csp}}
-\acp{csp} kann man in verschiedene Unterklassen unterteilen. Die allgemeinste Form lässt hierbei Variablen mit unendlichen (auch kontinuierlichen) Wertedomänen, soft-Constraints
-(also Präferenzen, anstatt Beschränkungen), sowie $n$-äre Contraints zu. Das Lösen eines solchen \ac*{csp} ist ein NP-vollständiges Problem. Als Folge hat ein Lösealgorithmus für
-ein allgemeines \ac*{csp} eine exponentielle worst-case Laufzeit. In dieser Arbeit werden allerdings einige Einschränkungen gefordert, sodass sich die Implementierung eines Lösers
-vereinfacht: Zugelassen werden nur Variablem mit diskreten, endlichen Wertedomänen und harte, binäre Constraints. Letzteres sind also Beschränkungen, die von genau zwei Variablen
-abhängen und in einer gültigen Lösung des \ac*{csp} erfüllt sein \textit{müssen}. Ein solcher Spezialfall lässt sich dann beispielsweise durch folgenden Algorithmus lösen (gegeben
-als C++ Pseudoceode):
-\lstinputlisting{backtrack.cpp}
-Der hier gezeigt Algorithmus ist eine rekursive Backtracking-Suche, die in jedem Rekursionsschritt versucht, einer noch nicht zugewiesenen Variable einen Wert zuzuweisen. Der
-Algorithmus macht sich hier allerdings noch nicht zunutze, dass alle Constraints binär sind. Ganz zu Beginn befindet sich die Abbruchbedingung: Wenn bereits alle Variablen einen
-gültigen Wert besitzen und kein Constraint verletzt ist, dann liefert die Methode \inlcode{cspSolver} \inlcode{true}. Die gültige Zuweisung ist im hier im Argument \inlcode{problem}
-(mit nicht näher definiertem Datentyp \inlcode{CSP}) gespeichert, das als Referenz übergeben wurde. Ist das Problem noch nicht gelöst, wird die nächste nicht zugewiesene Variable
-ausgewählt und alle möglichen Werte der zugehörigen Wertedomäne sukzessive ausprobiert. In Zeile 10 wird überprüft, ob die aktuelle Zuweisung erlaubt ist. Im einfachsten Fall
-einfach durch Überprüfen sämtlicher Constraints. Falls ja, wird im nächsten Rekursionsschritt die nächste Variable zugewiesen. Sollte es bei einer Variable keine gültige Zuweisung
-geben, ist der Algorithmus in eine Sackgasse gelaufen. Im Suchbaum läuft der Algorithmus dann so lange aufwärts, bis wieder eine gültige Zuweisung für eine Variable gefunden wird.
-Gibt es keine solche Variable, dann ist das Problem nicht lösbar (z.B. aufgrund  widersprüchlicher Constraints). 
-
-Wie hier recht unschwer zu erkenne ist, besitzt diese naive Backtracking-Suche jedoch eine exponentielle Komplexität in der Anzahl der Variablen,
-was für große \acp*{csp} schnell zu sehr langen Laufzeiten führen kann. Tatsächlich ist aktuell kein effizienter Algorithmus (also mit polynomieller Laufzeit) bekannt, der ein
-\ac*{csp}, selbst mit den oben genannten Einschränkungen, effizient lösen kann, da es sich nach wie vor um ein NP-vollständiges Problem handelt \cite{BestCSPSearch}. Deshalb
-werden in der Praxis häufig zusätzlich Heuristiken verwendet, um den Suchraum zu verkleinern und dadurch die Laufzeit zu verringern. Diese Heuristiken können beispielsweise
-entscheiden, welche Variable als nächstes ausgewählt werden soll, oder welcher Wert als nächstes ausprobiert wird.
-
-\subsection{Lösen durch Constraint Propagation}
-Ein Problem des zuvor vorgestellten Algorithmus ist, dass die ungültige Zuweisung einer Variable häufig erst sehr viel später bemerkt wird. Dadurch werden potentiell Äste im
-Suchbaum verfolgt, die von vornherein schon hätten ausgeschlossen werden könnten. Um dieses Problem zu lösen, bietet sich \textit{Constraint Propagation} an. Dabei werden
-aus bereits bestehenden Constraints neue hergeleitet, um die Wertedomänen von Variablen zusätzlich einzuschränken (in \cite{OrderingHeuristics} auch \textit{Consistency
-Enforcing} genannt). Dies soll an folgendem Beispiel erläutert werden. Angenommen es gibt zwei Variablen $A$ und $B$, die jeweils Werte zwischen einschließlich eins und drei
-annehmen können. Das Constraint sei $A < B$. Daraus lässt sich folgern, dass für $A$ unmöglich der Wert 3 gewählt werden kann, da es in der Domäne von $B$ keinen größeren
-Wert gibt. Dieser Wert kann von vornherein entfernt werden und muss nicht erst testweise ausprobiert werden. Analog kann bei $B$ der Wert 1 aus der Domäne entfernt werden. In
-diesem Beispiel stellt sich nach der erläuterten Anpassung der Wertedomänen der Variablen sogenannte \eac{ac} ein. Formell ist eine Variable $A$ mit Wertedomäne $d_A$ \textit{arc
-consistent} zu einer Variablen $B$ mit Wertedomäne $d_B$, wenn $\forall v \in d_A \ \exists w \in d_B$, sodass die Zuweisung $A = v, \ B = w$ keine Constraints zwischen $A$ und
-$B$ verletzt. Gilt dies für alle Paare von Variablen eines \ac*{csp}, dann nennt man das Problem ebenfalls \textit{arc consistent} \cite{ACOverview}. Auch wenn das Herstellen von
-\ac*{ac} das Problem im Allgemeinen nicht löst, so kann dadurch der effektive Suchraum verkleinert werden wodurch sich die Suche nach einer Lösung beschleunigen kann. Ein bekannter
-Algorithmus, der \ac*{ac} in einem \ac*{csp} herstellt ist der \ac*{ac}-3 Algorithmus (siehe beispielsweise \cite{ac3}).

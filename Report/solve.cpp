@@ -6,12 +6,12 @@ bool cspSolver(CSP &problem) {
     auto &currentVariable = problem.getNextUnassignedVariable();
     for (auto value : currentVariable.domain) {
         currentVariable.assign(value);
-        bool success = false;
-        if (currentVariable.isConsistent()) {
-            success = cspSolver(problem);
+        if (!obtainArcConsistency(problem)) {
+            currentVariable.removeAssignment();
+            continue;
         }
 
-        if (success) {
+        if (cspSolver(problem)) {
             return true;
         }
 
