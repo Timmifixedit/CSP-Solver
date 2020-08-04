@@ -30,7 +30,7 @@ schreiben von eigenen Heuristiken zur Variablenauswahl, wie später noch genauer
 
 Mithilfe von \acused{sfinae}\ac*{sfinae}-Techniken lässt sich zur Übersetzzeit überprüfen, ob der gegebene Typparameter die oben genannten Anforderungen erfüllt (also
 dereferenzierbar und zeigt auf einen Typen, der aus \inlcode{csp::Variable} erbt):
-\lstinputlisting[linerange={23-50}]{../src/Arc.h}
+\lstinputlisting[linerange={23-36, 41-42, 48-49}]{../src/Arc.h}
 Durch \inlcode{static_assert} lassen sich dann aussagekräftige Fehlermeldungen zur Übersetzzeit generieren:
 \lstinputlisting[linerange={63-69}]{../src/Arc.h}
 
@@ -70,3 +70,25 @@ der dritte Parameter nicht explizit angegeben werden muss. Sollte der im Typ \in
 \inlcode{std::enable_if_t} keinen Typ und der Ausdruck des Standardwerts ist nicht gültig. Dadurch wird diese Überladung von \inlcode{csp::make_csp} durch \ac*{sfinae}
 ausgeschlossen. Bei der Überladung der Methode, die \inlcode{csp::Constraint}s annimmt, wird ein analoger Test durchgeführt, sodass maximal eine der beiden Überladungen ausgewählt
 werden kann. Die dafür verwendeten Type-Traits sind ähnlich aufgebaut wie jene, die in \cref{sec:ArcConstr} vorgestellt wurden.
+
+\subsection{Lösealgorithmus}
+Mithilfe der zuvor vorgestellten Datenstrukturen lässt sich der eigentliche Lösealgorithmus recht einfach implementieren. Der während der Backtracking-Suche verwendete \ac*{ac}-3
+Algorithmus ist quasi eine eins zu eins Implementierung des Pseudocodes aus \cite{ac3}. Der Unterschied ist, dass in der hier vorgestellten Implementierung nur binäre Constraints
+erlaubt sind. Unäre Constrainst lassen sich allerdings trivial auf die Wertedomäne einer Variable übertragen, sodass diese Aufgabe an den Nutzer delegiert wurde.
+Die Backtracking-Suche selbst ist in der Methode \inlcode{csp::recursiveSolve} implementiert und ist ebenfalls sehr ähnlich zu der in \cref{sec:ConstrProp} vorgestellten
+Pseudoimplementierung. Ein paar kleine Unterschiede gibt es jedoch:
+\lstinputlisting[linerange={30-36}]{../src/solver.h}
+Zusätzlich zum \ac*{csp} muss ein Strategie-Funktor übergeben werden, der aus einem \inlcode{csp::Csp} die nächste, noch nicht zugewiesene Variable auswählt. Es werden beliebige
+Funktoren akzeptiert, die eine korrekte Signatur besitzen. Somit erhält der Nutzer die Möglichkeit, beliebige, problemspezifische Heuristiken zu Auswahl der nächsten Variablen
+anzugeben. Es wird gefordert, dass die Heuristik immer eine Variable liefert. Im Falle, dass es keine nicht zugewiesene Variable mehr gibt, muss eine beliebige gewählt werden.
+Dadurch vereinfacht sich der Goal-Test zu der einfachen \inlcode{if}-Abfrage in Zeile fünf. Der restliche Algorithmus ist analog zur Pseudoimplementierung aus \cref{sec:ConstrProp}
+aufgebaut.
+
+Zur einfacheren Verwendung wird mit \inlcode{csp::solve} ein Wrapper für die rekursive Backtracking-Suche bereitgestellt:
+\lstinputlisting[linerange={66-75}]{../src/solver.h}
+Hier wird außerdem mithilfe des \inlcode{static_assert} und \inlcode{std::is_invocable_r_v} zur Übersetzzeit überprüft, ob die angegebene Heuristik eine gültige Signatur besitzt.
+Standardmäßig wird die bereits implementierte Heuristik \inlcode{strategies::Mrv} verwendet. Diese wählt die Variable mit den wenigsten möglichen Werten aus (\inlcode{Mrv} steht
+für \textit{Minimum Remainig Values}). Eine weiter Möglichkeit ist die \inlcode{strategies::First} Heuristik, die einfach die nächstbeste nicht zugewiesene Variable auswählt. Darüber
+hinaus lassen sich aber auch beliebige eigene Heuristiken verwenden, solange die Signatur zulässig ist. Außerdem ruft der Wrapper anfangs einmal den \ac*{ac}-3 Algorithmus auf,
+da die rekursive Suche davon ausgeht, dass das Problem bereits arc consistent ist. Sollte dieser erste Schritt schon fehlschlagen, ist das Problem nicht lösbar und die Backtracking-
+Suche ist obsolet.
