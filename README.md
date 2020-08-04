@@ -50,8 +50,7 @@ An instance of `csp::Csp` can be solved using:
 ```cpp
 bool success = csp::solve(myCsp);
 ```
-If solving the CSP is possible all domains of all variables will be reduced to exactly one value. If the CSP cannot be solved, the function returns `false` and does
-not modify the value domains of the variables.
+If solving the CSP is possible all domains of all variables will be reduced to exactly one value. If the CSP cannot be solved, the function returns `false` but might still modify the variables' value domains.
 #### Specifying a Solving Strategy
 By default, `csp::solve` uses the minimum remaining values strategy, meaning that the algorithm chooses the variable with the fewest remaining values in its domain
 to be assigned next. You can also use a different (even custom) strategy e.g.:
