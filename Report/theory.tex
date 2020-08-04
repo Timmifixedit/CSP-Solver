@@ -1,0 +1,53 @@
+\section{Lösen von \acp{csp}}
+\label{sec:Solving}
+\acp{csp} kann man in verschiedene Unterklassen unterteilen. Die allgemeinste Form lässt hierbei Variablen mit unendlichen (auch kontinuierlichen) Wertedomänen, soft-Constraints
+(also Präferenzen, anstatt Beschränkungen), sowie $n$-äre Contraints zu. Das Lösen eines solchen \ac*{csp} ist ein NP-vollständiges Problem. Als Folge hat ein Lösealgorithmus für
+ein allgemeines \ac*{csp} eine exponentielle worst-case Laufzeit. In dieser Arbeit werden allerdings einige Einschränkungen gefordert, sodass sich die Implementierung eines Lösers
+vereinfacht: Zugelassen werden nur Variablem mit diskreten, endlichen Wertedomänen und harte, binäre Constraints. Letzteres sind also Beschränkungen, die von genau zwei Variablen
+abhängen und in einer gültigen Lösung des \ac*{csp} erfüllt sein \textit{müssen}. Ein solcher Spezialfall lässt sich dann beispielsweise durch folgenden Algorithmus lösen (gegeben
+als C++ Pseudoceode):
+\lstinputlisting{backtrack.cpp}
+Der hier gezeigt Algorithmus ist eine rekursive Backtracking-Suche, die in jedem Rekursionsschritt versucht, einer noch nicht zugewiesenen Variable einen Wert zuzuweisen. Der
+Algorithmus macht sich hier allerdings noch nicht zunutze, dass alle Constraints binär sind. Ganz zu Beginn befindet sich die Abbruchbedingung: Wenn bereits alle Variablen einen
+gültigen Wert besitzen und kein Constraint verletzt ist, dann liefert die Methode \inlcode{cspSolver} \inlcode{true}. Die gültige Zuweisung ist im hier im Argument \inlcode{problem}
+(mit nicht näher definiertem Datentyp \inlcode{CSP}) gespeichert, das als Referenz übergeben wurde. Ist das Problem noch nicht gelöst, wird die nächste nicht zugewiesene Variable
+ausgewählt und alle möglichen Werte der zugehörigen Wertedomäne sukzessive ausprobiert. In Zeile 10 wird überprüft, ob die aktuelle Zuweisung erlaubt ist. Im einfachsten Fall
+einfach durch Überprüfen sämtlicher Constraints. Falls ja, wird im nächsten Rekursionsschritt die nächste Variable zugewiesen. Sollte es bei einer Variable keine gültige Zuweisung
+geben, ist der Algorithmus in eine Sackgasse gelaufen. Im Suchbaum läuft der Algorithmus dann so lange aufwärts, bis wieder eine gültige Zuweisung für eine Variable gefunden wird.
+Gibt es keine solche Variable, dann ist das Problem nicht lösbar (z.B. aufgrund  widersprüchlicher Constraints). 
+
+Wie hier recht unschwer zu erkenne ist, besitzt diese naive Backtracking-Suche jedoch eine exponentielle Komplexität in der Anzahl der Variablen,
+was für große \acp*{csp} schnell zu sehr langen Laufzeiten führen kann. Tatsächlich ist aktuell kein effizienter Algorithmus (also mit polynomieller Laufzeit) bekannt, der ein
+\ac*{csp}, selbst mit den oben genannten Einschränkungen, effizient lösen kann, da es sich nach wie vor um ein NP-vollständiges Problem handelt \cite{BestCSPSearch}. Deshalb
+werden in der Praxis häufig zusätzlich Heuristiken verwendet, um den Suchraum zu verkleinern und dadurch die Laufzeit zu verringern. Diese Heuristiken können beispielsweise
+entscheiden, welche Variable als nächstes ausgewählt werden soll, oder welcher Wert als nächstes ausprobiert wird (siehe beispielsweise \cite{OrderingHeuristics}).
+
+\subsection{Lösen durch Constraint Propagation}
+\label{sec:ConstrProp}
+Ein Problem des zuvor vorgestellten Algorithmus ist, dass die ungültige Zuweisung einer Variable häufig erst sehr viel später bemerkt wird. Dadurch werden potentiell Äste im
+Suchbaum verfolgt, die von vornherein schon hätten ausgeschlossen werden könnten. Um dieses Problem zu lösen, bietet sich \textit{Constraint Propagation} an. Dabei werden
+aus bereits bestehenden Constraints neue hergeleitet, um die Wertedomänen von Variablen zusätzlich einzuschränken (in \cite{OrderingHeuristics} auch \textit{Consistency
+Enforcing} genannt). Dies soll an folgendem Beispiel erläutert werden. Angenommen es gibt zwei Variablen $A$ und $B$, die jeweils Werte zwischen einschließlich eins und drei
+annehmen können. Das Constraint sei $A < B$. Daraus lässt sich folgern, dass für $A$ unmöglich der Wert 3 gewählt werden kann, da es in der Domäne von $B$ keinen größeren
+Wert gibt. Dieser Wert kann von vornherein entfernt werden und muss nicht erst testweise ausprobiert werden. Analog kann bei $B$ der Wert 1 aus der Domäne entfernt werden. In
+diesem Beispiel stellt sich nach der erläuterten Anpassung der Wertedomänen der Variablen sogenannte \eac{ac} ein. Ein \ac*{csp} mit ausschließlich binären Constraints lässt 
+sich als Graph darstellen, bei dem die Knoten die Variablen repräsentieren und die Kanten die Constraints. Eine gerichtete Kante zwischen zwei Variablen $A$ und $B$ wird 
+\textit{Arc} genannt und im Folgenden mit $A \rightarrow B$ bezeichnet. Dies lässt sich interpretieren als: "$A$ fordert von $B$ die Einhaltung eines Constraints". Ein
+Constraint an sich lässt sich allgemein als binäres Prädikat angeben und definiert immer beide Richtungen, also $A \rightarrow B$ und $B \rightarrow A$. Bei dem Begriff
+der \acl*{ac} spielt die Richtung jedoch eine wichtige Rolle.
+
+\paragraph{\acl*{ac}} Formell ist eine Variable $A$ mit Wertedomäne $d_A$ \textit{arc consistent} zu einer Variablen $B$ mit Wertedomäne $d_B$, wenn $\forall v \in d_A \ 
+\exists w \in d_B$, sodass die Zuweisung $A = v, \ B = w$ keine Constraints zwischen $A$ und $B$ verletzt. Im Folgenden wird dies bezeichnet durch $A \consTo B$. Hier ist
+zu beachten, dass im Allgemeinen aus $A \consTo B$ nicht folgt $B \consTo A$. Gilt die Relation für alle Paare von Variablen eines \ac*{csp} (also insbesondere Hin- und 
+Rückrichtungen), dann nennt man das Problem ebenfalls \textit{arc consistent} \cite{ACOverview}. Ein bekannter Algorithmus, der \ac*{ac} in einem \ac*{csp} herstellt ist 
+der \ac*{ac}-3 Algorithmus (siehe beispielsweise \cite{ac3}). 
+
+Auch wenn das Herstellen von \ac*{ac} das Problem im
+Allgemeinen nicht löst, so kann dadurch der effektive Suchraum verkleinert werden wodurch sich die Suche nach einer Lösung beschleunigen kann. So lässt sich beispielsweise der
+zuvor angegebene naive Backtracking-Algorithmus folgendermaßen anpassen:
+\lstinputlisting{solve.cpp}
+Nach der Zuweisung der aktuellen Variable in Zeile acht wird hier durch die Methode \textit{obtainArcConsistency} das Problem auf ein äquivalentes Problem transformiert, wobei
+ggf. Werte aus den Domänen mancher Variablen gelöscht werden. Sollte sich eine Domäne einer Variablen auf die leere Menge reduzieren, ist das Problem von diesem Rekursionsschritt
+aus nicht mehr lösbar, sodass direkt der nächste Wert ausprobiert werden kann. In diesem Fall gibt die Methode \inlcode{false} zurück. Ist das Herstellen der \ac*{ac} erfolgreich,
+kann wie zuvor der nächste Rekursionsschritt ausgeführt werden, wobei im Idealfall die Domänen der Variablen reduziert sind. In manchen Fällen lässt sich ein \ac*{csp} sogar
+direkt durch das Herstellen von \ac*{ac} lösen.
