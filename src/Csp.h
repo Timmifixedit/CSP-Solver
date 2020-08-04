@@ -75,14 +75,14 @@ namespace csp {
     template<typename VarContainer, typename ArcContainer, std::enable_if_t<
             type_traits::is_arc<std::remove_reference_t<decltype(*std::begin(std::declval<ArcContainer>()))>>::value,
             int> = 0>
-    auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::remove_const_t<std::remove_reference_t<
+    auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::decay_t<
             decltype(
                     std::end(arcs),
                     std::end(variables),
                     *std::begin(variables)
-            )>>> {
+            )>> {
 
-        using VarPtr = std::remove_const_t<std::remove_reference_t<decltype(*std::begin(variables))>>;
+        using VarPtr = std::decay_t<decltype(*std::begin(variables))>;
         Csp<VarPtr> ret;
         std::copy(std::begin(variables), std::end(variables), std::back_inserter(ret.variables));
         std::copy(std::begin(arcs), std::end(arcs), std::back_inserter(ret.arcs));
@@ -105,13 +105,13 @@ namespace csp {
      */
     template<typename VarContainer, typename ContraintContainer, std::enable_if_t<type_traits::is_constraint<
             std::remove_reference_t<decltype(*std::begin(std::declval<ContraintContainer>()))>>::value, int> = 0>
-    auto make_csp(const VarContainer &variables, const ContraintContainer &constraints) -> Csp<std::remove_const_t<std::remove_reference_t<
+    auto make_csp(const VarContainer &variables, const ContraintContainer &constraints) -> Csp<std::decay_t<
             decltype(
                     std::end(constraints),
                     std::end(variables),
                     *std::begin(variables)
-            )>>> {
-        using VarPtr = std::remove_const_t<std::remove_reference_t<decltype(*std::begin(variables))>>;
+            )>> {
+        using VarPtr = std::decay_t<decltype(*std::begin(variables))>;
         std::list<Arc<VarPtr>> arcs;
         for (const auto &constraint : constraints) {
             auto[normal, reverse] = constraint.getArcs();
