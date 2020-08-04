@@ -34,7 +34,7 @@ diesem Beispiel stellt sich nach der erläuterten Anpassung der Wertedomänen de
 sich als Graph darstellen, bei dem die Knoten die Variablen repräsentieren und die Kanten die Constraints. Eine gerichtete Kante zwischen zwei Variablen $A$ und $B$ wird 
 \textit{Arc} genannt und im Folgenden mit $A \rightarrow B$ bezeichnet. Dies lässt sich interpretieren als: "$A$ fordert von $B$ die Einhaltung eines Constraints". Ein
 Constraint an sich lässt sich allgemein als binäres Prädikat angeben und definiert immer beide Richtungen, also $A \rightarrow B$ und $B \rightarrow A$. Bei dem Begriff
-der \acl*{ac} spielt die Richtung jedoch eine wichtige Rolle.
+der \acl*{ac} spielt die Richtung jedoch eine wichtige Rolle, weshalb zwischen Arcs und Constraints unterschieden werden muss.
 
 \paragraph{\acl*{ac}} Formell ist eine Variable $A$ mit Wertedomäne $d_A$ \textit{arc consistent} zu einer Variablen $B$ mit Wertedomäne $d_B$, wenn $\forall v \in d_A \ 
 \exists w \in d_B$, sodass die Zuweisung $A = v, \ B = w$ keine Constraints zwischen $A$ und $B$ verletzt. Im Folgenden wird dies bezeichnet durch $A \consTo B$. Hier ist
