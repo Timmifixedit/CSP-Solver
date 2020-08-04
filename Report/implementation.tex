@@ -1,0 +1,15 @@
+\section{Umsetzung}
+Ausgehend von den in \cref{sec:Concept} beschriebenen Anforderungen wird im folgenden Abschnitt die Implementierung des generischen \ac*{csp}-Lösers vorgestellt.
+
+\subsection{Zentrale Datenstrukturen}
+Um ein \ac*{csp} zu definieren, muss des Nutzer lediglich zwei Dinge tun: Alle vorhandenen Variablen angeben (mit zugehöriger Wertedomäne), sowie eine Menge von Constraints, die
+die Abhängigkeiten zwischen den Variablen darstellen. Dafür werden die Template-Klassen \inlcode{csp::Variable}, sowie \inlcode{csp::Constraint} oder \inlcode{csp::Arc} zur
+Verfügung gestellt.
+
+Die Klasse \inlcode{csp::Variable} ist, wie schon in \cref{sec:CSPDef} beschrieben sehr einfach gehalten. Sie besitzt einen Member vom Typ \inlcode{std::list}, der die zugehörige
+Wertedomäne darstellt. Der Datentyp der Werte in der Domäne lässt sich durch den Template-Parameter der Klasse angeben. Es wurde sich bewusst für eine \inlcode{std::list}
+entschieden, da später durch den \ac*{ac}-3 Algorithmus Werte an beliebigen Stellen in der Domäne gelöscht werden dürfen. Eine \inlcode{std::list} garantiert für eine solche
+Operation konstanten Aufwand \cite{stdList}. Da bidirektionales Iterieren nicht benötigt wird, hätte auch eine \inlcode{std::forward\_list} verwendet werden. Allerdings stellt
+diese Datenstruktur keine Methode \inlcode{size()} zur Verfügung. Es gibt keinen eigenen Member, der den Wert einer zugewiesenen Variable repräsentiert. Eine Variable zählt als
+zugewiesen, wenn die Wertedomäne genau einen Wert enthält. Ein Nutzer könnte aber bei Bedarf aus \inlcode{csp::Variable} ableiten und beispielsweise eine Methode \inlcode{getValue()}
+hinzufügen.
