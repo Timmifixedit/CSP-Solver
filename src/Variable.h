@@ -31,7 +31,7 @@ namespace csp {
          * @param val The desired value
          * @note The value does not have to be in the variable's value domain. No checks are performed.
          */
-        void assign(T val) noexcept {
+        void assign(T val) {
             domain = {std::move(val)};
         }
 
@@ -48,7 +48,7 @@ namespace csp {
          * @param values desired range of values.
          * @note Avoid duplicates! No checks are performed. Duplicates can lead to performance losses.
          */
-        void setValueDomain(std::list<T> values) noexcept {
+        void setValueDomain(std::list<T> values) {
             domain = std::move(values);
         }
 
