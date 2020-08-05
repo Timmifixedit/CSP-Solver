@@ -69,7 +69,7 @@ namespace csp {
             decltype(
                     std::end(arcs),
                     std::end(variables),
-                    *std::begin(variables)
+                    **std::begin(variables)
             )>> {
 
         using VarType = std::decay_t<decltype(**std::begin(variables))>;
@@ -99,7 +99,7 @@ namespace csp {
             decltype(
                     std::end(constraints),
                     std::end(variables),
-                    *std::begin(variables)
+                    **std::begin(variables)
             )>> {
         using VarType = std::decay_t<decltype(**std::begin(variables))>;
         std::list<Arc<VarType>> arcs;
@@ -121,12 +121,13 @@ namespace csp {
         using ArcT = Arc<VarType>;
         using VarContentT = typename ArcT::VarContentT;
         using VarPtr = typename ArcT::VarPtr;
+        using cVarPtr = typename ArcT::cVarPtr;
         std::vector<VarPtr> variables;
         std::list<ArcT> arcs;
-        std::unordered_map<VarPtr, std::vector<ArcT>> incomingNeighbours;
+        std::unordered_map<cVarPtr, std::vector<ArcT>> incomingNeighbours;
 
         auto clone() const -> Csp {
-            std::unordered_map<VarPtr, VarPtr> oldToNew;
+            std::unordered_map<cVarPtr, VarPtr> oldToNew;
             std::vector<VarPtr> newVars;
             newVars.reserve(variables.size());
             for (const auto &var : variables) {

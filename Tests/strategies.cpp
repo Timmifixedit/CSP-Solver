@@ -15,7 +15,7 @@ TEST(strategies_test, mrv) {
     auto c = std::make_shared<TestVar>(std::list{1, 2, 3});
     auto d = std::make_shared<TestVar>(std::list{1, 2, 3 , 4});
     auto problem = csp::make_csp(std::array{a, b, c, d}, std::vector<TestArc>{});
-    auto next = csp::strategies::Mrv<VarPtr>()(problem);
+    auto next = csp::strategies::Mrv<TestVar>()(problem);
     EXPECT_EQ(next, b);
 }
 
@@ -25,6 +25,6 @@ TEST(strategy_test, first) {
     auto c = std::make_shared<TestVar>(std::list{1, 2, 3});
     auto d = std::make_shared<TestVar>(std::list{1, 2, 3 , 4});
     auto problem = csp::make_csp(std::array{a, c, d, b}, std::vector<TestArc>{});
-    auto next = csp::strategies::First<VarPtr>()(problem);
+    auto next = csp::strategies::First<TestVar>()(problem);
     EXPECT_EQ(next, c);
 }

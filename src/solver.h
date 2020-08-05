@@ -27,16 +27,17 @@ namespace csp {
      * @param strategy value selection strategy object used during during search
      * @return True if problem was solved, false otherwise
      */
-    template<typename VarPtr, typename Strategy>
-    bool recursiveSolve(const Csp<VarPtr> &problem, const Strategy &strategy) {
-        using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
+    template<typename VarType, typename Strategy>
+    bool recursiveSolve(const Csp<VarType> &problem, const Strategy &strategy) {
+        using VarContentT = typename Csp<VarType>::VarContentT;
+        using VarPtr = typename Csp<VarType>::VarPtr;
         VarPtr nextVar = strategy(problem);
         if (nextVar->isAssigned()) {
             return true;
         }
 
         //Moving storage as it will be overwritten by assign() anyway
-        std::list<VarType> valueDomain = std::move(nextVar->valueDomain());
+        std::list<VarContentT> valueDomain = std::move(nextVar->valueDomain());
         for (auto &val : valueDomain) {
             nextVar->assign(std::move(val));
             auto cp = util::makeCspCheckpoint(problem);
@@ -63,16 +64,15 @@ namespace csp {
      * @param problem CSP to be solved
      * @return True if problem was solved, false otherwise
      */
-    template<typename VarPtr, typename Strategy = strategies::Mrv<VarPtr>>
-    bool solve(const Csp<VarPtr> &problem, const Strategy &strategy = Strategy()) {
-        static_assert(std::is_invocable_r_v<VarPtr, Strategy, Csp<VarPtr>>,
+    template<typename VarType, typename Strategy = strategies::Mrv<VarType>>
+    bool solve(const Csp<VarType> &problem, const Strategy &strategy = Strategy()) {
+        static_assert(std::is_invocable_r_v<typename Csp<VarType>::VarPtr, Strategy, Csp<VarType>>,
                 "Invalid strategy object! Must map from csp::Csp -> VarPtr");
-        auto localCopy = problem.clone();
-        if (!util::ac3(localCopy)) {
+        if (!util::ac3(problem)) {
             return false;
         }
 
-        return recursiveSolve(localCopy, strategy);
+        return recursiveSolve(problem, strategy);
     }
 }
 

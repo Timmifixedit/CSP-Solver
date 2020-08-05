@@ -21,9 +21,10 @@ namespace csp::strategies {
      * remaining possible values
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
      */
-    template<typename VarPtr>
+    template<typename VarType>
     struct Mrv {
-        VarPtr operator() (const Csp<VarPtr> &problem) const {
+        using VarPtr = typename Csp<VarType>::VarPtr;
+        VarPtr operator() (const Csp<VarType> &problem) const {
             auto it = std::min_element(problem.variables.begin(), problem.variables.end(),
                     [](const auto &lhs, const auto &rhs) {
                 return rhs->isAssigned() || (!lhs->isAssigned() &&
@@ -39,9 +40,10 @@ namespace csp::strategies {
      * Variable selection strategy that simply chooses the next unassigned variable
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
      */
-    template<typename VarPtr>
+    template<typename VarType>
     struct First {
-         VarPtr operator() (const Csp<VarPtr> &problem) const {
+        using VarPtr = typename Csp<VarType>::VarPtr;
+         VarPtr operator() (const Csp<VarType> &problem) const {
              assert(!problem.variables.empty());
              auto it = std::find_if(problem.variables.begin(), problem.variables.end(),
                      [](const auto &var) {return !var->isAssigned();});

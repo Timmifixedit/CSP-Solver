@@ -7,7 +7,7 @@
 #include "Csp.h"
 #include "TestTypes.h"
 
-void verifyCsp(csp::Csp<VarPtr> &problem, const VarPtr& varA, const VarPtr& varB, const VarPtr& varC) {
+void verifyCsp(csp::Csp<TestVar> &problem, const VarPtr& varA, const VarPtr& varB, const VarPtr& varC) {
     EXPECT_EQ(problem.variables[0], varA);
     EXPECT_EQ(problem.variables[1], varB);
     EXPECT_EQ(problem.variables[2], varC);
@@ -63,5 +63,38 @@ TEST(csp_test, create_csp_from_arcs) {
     Csp problem = make_csp(std::array{varA, varB, varC},
             std::array{aLessB, bGreaterA, aLessC, cGreaterA, bNotC, cNotB});
     verifyCsp(problem, varA, varB, varC);
+
+}
+
+TEST(csp_test, clone) {
+    using namespace csp;
+    auto varA = std::make_shared<TestVar>(std::list{1, 2, 3});
+    auto varB = std::make_shared<TestVar>(std::list{2, 3, 1});
+    auto varC = std::make_shared<TestVar>(std::list{3, 1, 2});
+    TestConstraint aLessB(varA, varB, std::less<>());
+    TestConstraint aLessC(varA, varC, std::less<>());
+    TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
+    Csp problem = make_csp(std::array{varA, varB, varC}, std::array{aLessB, aLessC, bNotC});
+    Csp deepCopy = problem.clone();
+    EXPECT_EQ(deepCopy.variables.size(), problem.variables.size());
+    EXPECT_EQ(deepCopy.arcs.size(), problem.arcs.size());
+    EXPECT_EQ(deepCopy.incomingNeighbours.size(), problem.incomingNeighbours.size());
+    for (std::size_t i = 0; i < problem.variables.size(); ++i) {
+        EXPECT_NE(deepCopy.variables[i], problem.variables[i]);
+        EXPECT_EQ(*deepCopy.variables[i], *problem.variables[i]);
+    }
+
+    auto itP = problem.arcs.begin();
+    auto itC = deepCopy.arcs.begin();
+    while (itP != problem.arcs.end()) {
+        EXPECT_EQ(*itP->from(), *itC->from());
+        EXPECT_NE(itP->from(), itC->from());
+        EXPECT_EQ(*itP->to(), *itC->to());
+        EXPECT_NE(itP->to(), itC->to());
+        EXPECT_EQ(itP->isReversed(), itC->isReversed());
+        ++itP;
+        ++itC;
+    }
+
 
 }
