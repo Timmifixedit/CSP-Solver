@@ -44,8 +44,21 @@ namespace csp {
         }
 
         /**
+         * Sets the value domain accepting arbitrary containers that support iteration
+         * @tparam Container Type of the container
+         * @param container desired values
+         * @note Avoid duplicates! No checks are performed. Duplicates can lead to performance losses.
+         */
+        template<typename Container, std::enable_if_t<
+                std::is_convertible_v<decltype(*std::begin(std::declval<Container>())), T>, int> = 0>
+        void setValueDomain (const Container &container) {
+            domain.clear();
+            std::copy(std::begin(container), std::end(container), std::back_inserter(domain));
+        }
+
+        /**
          * Sets the value domain
-         * @param values desired range of values.
+         * @param values desired  values.
          * @note Avoid duplicates! No checks are performed. Duplicates can lead to performance losses.
          */
         void setValueDomain(std::list<T> values) {
