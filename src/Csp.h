@@ -56,9 +56,25 @@ namespace csp {
     template<typename VarPtr>
     struct Csp {
         using ArcT = Arc<VarPtr>;
-        std::vector<VarPtr> variables;
-        std::list<ArcT> arcs;
-        std::unordered_map<VarPtr, std::vector<ArcT>> incomingNeighbours;
+        using VarListT = std::vector<VarPtr>;
+        using ArcListT = std::list<ArcT>;
+        using NeighbourListT = std::unordered_map<VarPtr, std::vector<ArcT>>;
+        const VarListT variables;
+        const std::list<ArcT> arcs;
+        const NeighbourListT incomingNeighbours;
+
+        template<typename VarContainer, typename ArcContainer, std::enable_if_t<
+                type_traits::is_arc<std::remove_reference_t<decltype(
+                        *std::begin(std::declval<ArcContainer>())
+                        )>>::value, int>>
+        friend auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::decay_t<decltype(
+                        std::end(arcs),
+                        std::end(variables),
+                        *std::begin(variables)
+                )>>;
+    private:
+        Csp(VarListT variables, ArcListT arcs, NeighbourListT neighbours) :
+                variables(std::move(variables)), arcs(std::move(arcs)), incomingNeighbours(std::move(neighbours)) {}
     };
 
     /**
@@ -75,22 +91,27 @@ namespace csp {
     template<typename VarContainer, typename ArcContainer, std::enable_if_t<
             type_traits::is_arc<std::remove_reference_t<decltype(*std::begin(std::declval<ArcContainer>()))>>::value,
             int> = 0>
-    auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::decay_t<
-            decltype(
+    auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::decay_t<decltype(
                     std::end(arcs),
                     std::end(variables),
                     *std::begin(variables)
             )>> {
 
         using VarPtr = std::decay_t<decltype(*std::begin(variables))>;
-        Csp<VarPtr> ret;
-        std::copy(std::begin(variables), std::end(variables), std::back_inserter(ret.variables));
-        std::copy(std::begin(arcs), std::end(arcs), std::back_inserter(ret.arcs));
-        for (const auto &arc : ret.arcs) {
-            ret.incomingNeighbours[arc.to()].emplace_back(arc);
+        using VarListT = typename Csp<VarPtr>::VarListT;
+        using ArcListT = typename Csp<VarPtr>::ArcListT;
+        using NeighbourListT = typename Csp<VarPtr>::NeighbourListT;
+        VarListT vars;
+        ArcListT cspArcs;
+        NeighbourListT neighbours;
+        std::copy(std::begin(variables), std::end(variables), std::back_inserter(vars));
+        std::copy(std::begin(arcs), std::end(arcs), std::back_inserter(cspArcs));
+
+        for (const auto &arc : cspArcs) {
+            neighbours[arc.to()].emplace_back(arc);
         }
 
-        return ret;
+        return Csp<VarPtr>(std::move(vars), std::move(cspArcs), std::move(neighbours));
     }
     /**
      * Creates a CSP from a container of variable-pointers and a container of csp::Constraints
@@ -105,14 +126,14 @@ namespace csp {
      */
     template<typename VarContainer, typename ContraintContainer, std::enable_if_t<type_traits::is_constraint<
             std::remove_reference_t<decltype(*std::begin(std::declval<ContraintContainer>()))>>::value, int> = 0>
-    auto make_csp(const VarContainer &variables, const ContraintContainer &constraints) -> Csp<std::decay_t<
-            decltype(
+    auto make_csp(const VarContainer &variables, const ContraintContainer &constraints) -> Csp<std::decay_t<decltype(
                     std::end(constraints),
                     std::end(variables),
                     *std::begin(variables)
             )>> {
         using VarPtr = std::decay_t<decltype(*std::begin(variables))>;
-        std::list<Arc<VarPtr>> arcs;
+        using ArcT = typename Csp<VarPtr>::ArcT;
+        std::vector<ArcT> arcs;
         for (const auto &constraint : constraints) {
             auto[normal, reverse] = constraint.getArcs();
             arcs.emplace_back(std::move(normal));
