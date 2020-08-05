@@ -85,7 +85,7 @@ public:
         out << std::endl;
     }
 
-    bool solve() {
+    auto solve() -> std::optional<csp::Csp<SudokuNode>> {
         auto inequal = [](unsigned int lhs, unsigned int rhs) {return lhs != rhs;};
         std::list<csp::Arc<SudokuNode>> arcs;
         for (std::size_t index = 0; index < fields.size(); ++index) {

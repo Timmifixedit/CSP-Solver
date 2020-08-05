@@ -24,7 +24,7 @@ namespace csp::util {
      * @return True if the value domain of the source node was modified, false otherwise
      */
     template<typename VarType>
-    bool removeInconsistent(const Arc<VarType> &arc) {
+    bool removeInconsistent(Arc<VarType> &arc) {
         bool removed = false;
         using VarPtr = typename Arc<VarType>::VarPtr;
         using cVarPtr = typename Arc<VarType>::cVarPtr;
@@ -57,25 +57,26 @@ namespace csp::util {
      * @return True if arc consistency was obtained, false not possible
      */
     template<typename VarType>
-    bool ac3(const Csp<VarType> &problem) {
+    auto ac3(const Csp<VarType> &problem) -> std::optional<Csp<VarType>>{
+        auto localCopy = problem.clone();
         using ArcT = Arc<VarType>;
-        std::list<ArcT> arcs = problem.arcs;
+        std::list<ArcT> arcs = localCopy.arcs;
         while (!arcs.empty()) {
-            const ArcT current = arcs.front();
+            ArcT current = arcs.front();
             arcs.pop_front();
             if(removeInconsistent(current)) {
                 if (current.from()->valueDomain().empty()) {
-                    return false;
+                    return {};
                 }
 
-                auto it = problem.incomingNeighbours.find(current.from());
-                assert(it != problem.incomingNeighbours.end());
+                auto it = localCopy.incomingNeighbours.find(current.from());
+                assert(it != localCopy.incomingNeighbours.end());
                 std::copy_if(it->second.begin(), it->second.end(), std::back_inserter(arcs),
                         [&current](const auto &arc) {return arc.from() != current.to();});
             }
         }
 
-        return true;
+        return localCopy;
     }
 
     template<typename T>

@@ -28,32 +28,35 @@ namespace csp {
      * @return True if problem was solved, false otherwise
      */
     template<typename VarType, typename Strategy>
-    bool recursiveSolve(const Csp<VarType> &problem, const Strategy &strategy) {
+    auto recursiveSolve(const Csp<VarType> &problem, const Strategy &strategy) -> std::optional<Csp<VarType>>{
         using VarContentT = typename Csp<VarType>::VarContentT;
         using VarPtr = typename Csp<VarType>::VarPtr;
-        VarPtr nextVar = strategy(problem);
+        auto localCopy = problem.clone();
+        VarPtr nextVar = strategy(localCopy);
         if (nextVar->isAssigned()) {
-            return true;
+            return localCopy;
         }
 
         //Moving storage as it will be overwritten by assign() anyway
         std::list<VarContentT> valueDomain = std::move(nextVar->valueDomain());
         for (auto &val : valueDomain) {
             nextVar->assign(std::move(val));
-            auto cp = util::makeCspCheckpoint(problem);
-            if (!util::ac3(problem)) {
-                util::restoreCspFromCheckpoint(problem, cp);
+            //auto cp = util::makeCspCheckpoint(problem);
+            auto reducedProblem = util::ac3(localCopy);
+            if (!reducedProblem.has_value()) {
+//                util::restoreCspFromCheckpoint(problem, cp);
                 continue;
             }
 
-            if (recursiveSolve(problem, strategy)) {
-                return true;
+            auto subSolution = recursiveSolve(*reducedProblem, strategy);
+            if (subSolution.has_value()) {
+                return subSolution;
             }
 
-            util::restoreCspFromCheckpoint(problem, cp);
+            //util::restoreCspFromCheckpoint(problem, cp);
         }
 
-        return false;
+        return {};
     }
 
     /**
@@ -65,14 +68,15 @@ namespace csp {
      * @return True if problem was solved, false otherwise
      */
     template<typename VarType, typename Strategy = strategies::Mrv<VarType>>
-    bool solve(const Csp<VarType> &problem, const Strategy &strategy = Strategy()) {
+    auto solve(const Csp<VarType> &problem, const Strategy &strategy = Strategy()) -> std::optional<Csp<VarType>> {
         static_assert(std::is_invocable_r_v<typename Csp<VarType>::VarPtr, Strategy, Csp<VarType>>,
                 "Invalid strategy object! Must map from csp::Csp -> VarPtr");
-        if (!util::ac3(problem)) {
-            return false;
+        auto reducedProblem = util::ac3(problem);
+        if (!reducedProblem.has_value()) {
+            return {};
         }
 
-        return recursiveSolve(problem, strategy);
+        return recursiveSolve(*reducedProblem, strategy);
     }
 }
 
