@@ -28,13 +28,12 @@ namespace csp {
      * @return True if problem was solved, false otherwise
      */
     template<typename VarType, typename Strategy>
-    auto recursiveSolve(const Csp<VarType> &problem, const Strategy &strategy) -> std::optional<Csp<VarType>>{
+    auto recursiveSolve(Csp<VarType> &problem, const Strategy &strategy) -> std::optional<Csp<VarType>>{
         using VarContentT = typename Csp<VarType>::VarContentT;
         using VarPtr = typename Csp<VarType>::VarPtr;
-        auto localCopy = problem.clone();
-        VarPtr nextVar = strategy(localCopy);
+        VarPtr nextVar = strategy(problem);
         if (nextVar->isAssigned()) {
-            return localCopy;
+            return problem;
         }
 
         //Moving storage as it will be overwritten by assign() anyway
@@ -42,7 +41,7 @@ namespace csp {
         for (auto &val : valueDomain) {
             nextVar->assign(std::move(val));
             //auto cp = util::makeCspCheckpoint(problem);
-            auto reducedProblem = util::ac3(localCopy);
+            auto reducedProblem = util::ac3(problem);
             if (!reducedProblem.has_value()) {
 //                util::restoreCspFromCheckpoint(problem, cp);
                 continue;

@@ -96,7 +96,13 @@ public:
         }
 
         auto sudokuProblem = csp::make_csp(fields, arcs);
-        return csp::solve(sudokuProblem, csp::strategies::First<SudokuNode>());
+        auto start = std::chrono::high_resolution_clock::now();
+        auto res = csp::solve(sudokuProblem, csp::strategies::First<SudokuNode>());
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        std::cout << "Solving " << duration.count() << "µs" << std::endl;
+        std::copy(res->variables.begin(), res->variables.end(), fields.begin());
+        return res;
     }
 
 private:
