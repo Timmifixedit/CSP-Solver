@@ -56,7 +56,7 @@ namespace csp::util {
      */
     template<typename VarPtr>
     bool ac3(Csp<VarPtr> &problem) {
-        using ArcT = Arc<VarPtr>;
+        using ArcT = typename Csp<VarPtr>::ArcT;
         std::list<ArcT> arcs = problem.arcs;
         while (!arcs.empty()) {
             const ArcT current = arcs.front();
@@ -88,7 +88,7 @@ namespace csp::util {
     template<typename VarPtr>
     auto makeCspCheckpoint(const Csp<VarPtr> &problem) ->
     CspCheckpoint<std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>> {
-        using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
+        using VarType = typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::ValueT;
         CspCheckpoint<VarType> ret;
         ret.reserve(problem.variables.size());
         for (const auto &var : problem.variables) {

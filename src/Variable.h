@@ -68,8 +68,10 @@ namespace csp {
             return domain;
         }
 
+        using DomainT = std::list<T>;
+        using ValueT = T;
     private:
-        std::list<T> domain;
+        DomainT domain;
     };
 }
 

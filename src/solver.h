@@ -29,14 +29,14 @@ namespace csp {
      */
     template<typename VarPtr, typename Strategy>
     bool recursiveSolve(Csp<VarPtr> &problem, const Strategy &strategy) {
-        using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
+        using Domain = typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::DomainT;
         VarPtr nextVar = strategy(problem);
         if (nextVar->isAssigned()) {
             return true;
         }
 
         //Moving storage as it will be overwritten by assign() anyway
-        std::list<VarType> valueDomain = std::move(nextVar->valueDomain());
+        Domain valueDomain = std::move(nextVar->valueDomain());
         for (auto &val : valueDomain) {
             nextVar->assign(std::move(val));
             // Back up value domains of all variables. This is considerably faster than creating a deep copy of the
