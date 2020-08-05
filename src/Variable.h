@@ -68,6 +68,10 @@ namespace csp {
             return domain;
         }
 
+        [[nodiscard]] bool operator==(const Variable &other) const {
+            return valueDomain() == other.valueDomain();
+        }
+
     private:
         std::list<T> domain;
     };

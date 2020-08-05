@@ -67,11 +67,12 @@ namespace csp {
     bool solve(const Csp<VarPtr> &problem, const Strategy &strategy = Strategy()) {
         static_assert(std::is_invocable_r_v<VarPtr, Strategy, Csp<VarPtr>>,
                 "Invalid strategy object! Must map from csp::Csp -> VarPtr");
-        if (!util::ac3(problem)) {
+        auto localCopy = problem.clone();
+        if (!util::ac3(localCopy)) {
             return false;
         }
 
-        return recursiveSolve(problem, strategy);
+        return recursiveSolve(localCopy, strategy);
     }
 }
 

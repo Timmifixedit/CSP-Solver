@@ -87,7 +87,7 @@ public:
 
     bool solve() {
         auto inequal = [](unsigned int lhs, unsigned int rhs) {return lhs != rhs;};
-        std::list<csp::Arc<std::shared_ptr<SudokuNode>>> arcs;
+        std::list<csp::Arc<SudokuNode>> arcs;
         for (std::size_t index = 0; index < fields.size(); ++index) {
             auto neighbours = getNeighbours(index);
             for (const auto &nb : neighbours) {
@@ -135,6 +135,9 @@ private:
 };
 
 int main(int argc, char **argv) {
+    auto a = std::make_shared<SudokuNode>(1, 2, 3);
+    auto b = std::make_shared<SudokuNode>(1, 2, 3);
+    auto arc = csp::make_arc<SudokuNode>(a, b, std::less<>());
     if (argc != 2) {
         std::cerr << "Please input the path to the sudoku file" << std::endl;
         std::exit(1);

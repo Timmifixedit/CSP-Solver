@@ -48,18 +48,8 @@ namespace csp {
         };
     }
 
-
-    /**
-     * Represents a constraint satisfaction problem (CSP)
-     * @tparam VarPtr VarPtr Pointer-type to a type derived from csp::Variable
-     */
-    template<typename VarPtr>
-    struct Csp {
-        using ArcT = Arc<VarPtr>;
-        std::vector<VarPtr> variables;
-        std::list<ArcT> arcs;
-        std::unordered_map<VarPtr, std::vector<ArcT>> incomingNeighbours;
-    };
+    template<typename VarType>
+    struct Csp;
 
     /**
      * Creates a CSP from a container of variable-pointer and a container of csp::Arcs
@@ -82,8 +72,8 @@ namespace csp {
                     *std::begin(variables)
             )>> {
 
-        using VarPtr = std::decay_t<decltype(*std::begin(variables))>;
-        Csp<VarPtr> ret;
+        using VarType = std::decay_t<decltype(**std::begin(variables))>;
+        Csp<VarType> ret;
         std::copy(std::begin(variables), std::end(variables), std::back_inserter(ret.variables));
         std::copy(std::begin(arcs), std::end(arcs), std::back_inserter(ret.arcs));
         for (const auto &arc : ret.arcs) {
@@ -111,8 +101,8 @@ namespace csp {
                     std::end(variables),
                     *std::begin(variables)
             )>> {
-        using VarPtr = std::decay_t<decltype(*std::begin(variables))>;
-        std::list<Arc<VarPtr>> arcs;
+        using VarType = std::decay_t<decltype(**std::begin(variables))>;
+        std::list<Arc<VarType>> arcs;
         for (const auto &constraint : constraints) {
             auto[normal, reverse] = constraint.getArcs();
             arcs.emplace_back(std::move(normal));
@@ -121,6 +111,41 @@ namespace csp {
 
         return make_csp(variables, arcs);
     }
+
+    /**
+     * Represents a constraint satisfaction problem (CSP)
+     * @tparam VarPtr VarPtr Pointer-type to a type derived from csp::Variable
+     */
+    template<typename VarType>
+    struct Csp {
+        using ArcT = Arc<VarType>;
+        using VarContentT = typename ArcT::VarContentT;
+        using VarPtr = typename ArcT::VarPtr;
+        std::vector<VarPtr> variables;
+        std::list<ArcT> arcs;
+        std::unordered_map<VarPtr, std::vector<ArcT>> incomingNeighbours;
+
+        auto clone() const -> Csp {
+            std::unordered_map<VarPtr, VarPtr> oldToNew;
+            std::vector<VarPtr> newVars;
+            newVars.reserve(variables.size());
+            for (const auto &var : variables) {
+                auto newVar = std::make_shared<VarType>(*var);
+                oldToNew[var] = newVar;
+                newVars.emplace_back(std::move(newVar));
+            }
+
+            std::vector<ArcT> newArcs;
+            newArcs.reserve(arcs.size());
+            for (const auto &arc : arcs) {
+                auto firstVar = arc.isReversed() ? arc.to() : arc.from();
+                auto secondVar = arc.isReversed() ? arc.from() : arc.to();
+                newArcs.emplace_back(oldToNew[firstVar], oldToNew[secondVar], arc.getPredicate(), arc.isReversed());
+            }
+
+            return make_csp(newVars, newArcs);
+        }
+    };
 }
 
 #endif //CSP_SOLVER_CSP_H

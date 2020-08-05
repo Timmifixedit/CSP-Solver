@@ -53,26 +53,28 @@ namespace csp {
     template<typename T>
     using BinaryPredicate = std::function<bool(const T&, const T&)>;
 
-    template<typename VarPtr>
+    template<typename VarType>
     class Arc;
 
     /**
      * Represents a binary undirected constraint in a constraint satisfaction problem
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
      */
-    template<typename VarPtr>
+    template<typename VarType>
     class Constraint {
     public:
-        static_assert(type_traits::is_dereferencable<VarPtr>::value,
-                      "Constraints must be constructed from pointer type to csp::Variable");
-        static_assert(type_traits::is_derived_from_var<decltype(*std::declval<VarPtr>())>::value,
+//        static_assert(type_traits::is_dereferencable<VarPtr>::value,
+//                      "Constraints must be constructed from pointer type to csp::Variable");
+        static_assert(type_traits::is_derived_from_var<VarType>::value,
                       "Type referenced by VarPtr must derive from csp::Variable");
-        using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
+        using VarContentT = typename std::remove_reference_t<decltype(std::declval<VarType>().valueDomain())>::value_type;
+        using VarPtr = std::shared_ptr<VarType>;
+        using cVarPtr = std::shared_ptr<const VarType>;
 
-        Constraint(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate) : var1(std::move(v1)), var2(std::move(v2)),
-        predicate(std::move(predicate)) {}
+        Constraint(VarPtr v1, VarPtr v2, BinaryPredicate<VarContentT> predicate) :
+            var1(std::move(v1)), var2(std::move(v2)), predicate(std::move(predicate)) {}
 
-        using ArcT = Arc<VarPtr>;
+        using ArcT = Arc<VarType>;
 
         /**
          * Create the two equivalent directed csp::Arcs
@@ -87,7 +89,7 @@ namespace csp {
 
     protected:
         VarPtr var1, var2;
-        BinaryPredicate<VarType> predicate;
+        BinaryPredicate<VarContentT> predicate;
     };
 
     /**
@@ -97,12 +99,14 @@ namespace csp {
      * @note Constraints implicitly specify two directed arcs. For example: A constraint A < B is equivalent to
      * two arcs A < B and B > A
      */
-    template<typename VarPtr>
-    class Arc : public Constraint<VarPtr> {
+    template<typename VarType>
+    class Arc : public Constraint<VarType> {
     public:
-        using VarType = typename Constraint<VarPtr>::VarType;
-        Arc(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate, bool reverse = false) :
-                Constraint<VarPtr>(std::move(v1), std::move(v2), std::move(predicate)), reversed(reverse) {}
+        using VarContentT = typename Constraint<VarType>::VarContentT;
+        using VarPtr = typename Constraint<VarType>::VarPtr;
+        using cVarPtr = typename Constraint<VarType>::cVarPtr;
+        Arc(VarPtr v1, VarPtr v2, BinaryPredicate<VarContentT> predicate, bool reverse = false) :
+            Constraint<VarType>(std::move(v1), std::move(v2), std::move(predicate)), reversed(reverse) {}
 
         /**
          * Reverses the arc (switches from() and to() members)
@@ -124,7 +128,7 @@ namespace csp {
          * @return Always returns the pointer to the destination node of the arc, taking into account if the arc is
          * reversed
          */
-        VarPtr to() const noexcept {
+        cVarPtr to() const noexcept {
             return reversed ? this->var1 : this->var2;
         }
 
@@ -135,14 +139,27 @@ namespace csp {
          * @param valTo value of the destination node
          * @return true if constraint is satisfied, false otherwise
          */
-        bool constraintSatisfied(const VarType &valFrom, const VarType &valTo) const noexcept(
-                noexcept(std::declval<BinaryPredicate<VarType>>()(valFrom, valTo))) {
+        bool constraintSatisfied(const VarContentT &valFrom, const VarContentT &valTo) const noexcept(
+                noexcept(std::declval<BinaryPredicate<VarContentT>>()(valFrom, valTo))) {
             return reversed ? this->predicate(valTo, valFrom) : this->predicate(valFrom, valTo);
+        }
+
+        auto getPredicate() const noexcept -> const BinaryPredicate<VarContentT>& {
+            return this->predicate;
+        }
+
+        [[nodiscard]] bool isReversed() const noexcept {
+            return reversed;
         }
 
     private:
         bool reversed;
     };
+
+    template<typename VarType>
+    Arc<VarType> make_arc(typename Arc<VarType>::VarPtr v1, typename Arc<VarType>::VarPtr v2, BinaryPredicate<typename Arc<VarType>::VarContentT> pred) {
+        return Arc<VarType>(v1, v2, pred);
+    }
 }
 
 
