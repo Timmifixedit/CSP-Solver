@@ -2,7 +2,7 @@
  * @author Tim Luchterhand
  * @date 25.07.20
  * @brief This file contains the solving algorithm for CSPs. It consists of a recursive backtracking search which
- * repeatedly uses the AC-3 algorithm to reduce the search space. Use the csp::solve wrapper mehtod.
+ * repeatedly uses the AC-3 algorithm to reduce the search space. Use the csp::solve wrapper method.
  */
 
 #ifndef CSP_SOLVER_SOLVER_H
@@ -28,7 +28,7 @@ namespace csp {
      * @return True if problem was solved, false otherwise
      */
     template<typename VarPtr, typename Strategy>
-    bool recursiveSolve(const Csp<VarPtr> &problem, const Strategy &strategy) {
+    bool recursiveSolve(Csp<VarPtr> &problem, const Strategy &strategy) {
         using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
         VarPtr nextVar = strategy(problem);
         if (nextVar->isAssigned()) {
@@ -39,6 +39,8 @@ namespace csp {
         std::list<VarType> valueDomain = std::move(nextVar->valueDomain());
         for (auto &val : valueDomain) {
             nextVar->assign(std::move(val));
+            // Back up value domains of all variables. This is considerably faster than creating a deep copy of the
+            // whole Csp
             auto cp = util::makeCspCheckpoint(problem);
             if (!util::ac3(problem)) {
                 util::restoreCspFromCheckpoint(problem, cp);
@@ -56,7 +58,9 @@ namespace csp {
     }
 
     /**
-     * Solves a CSP
+     * Solves a CSP. If a solution exists, the value domains of each variable in the given Csp will be reduced to
+     * exactly one value. If multiple solutions exist, it is unspecified which is found. If no solution exists, false
+     * is returned but the value domains of the variables might still be altered
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
      * @tparam Strategy Type of value selection strategy during search (default: minimum remaining values strategy).
      * Has to provide ()-Operator and return VarPtr from given csp::Csp
@@ -64,7 +68,7 @@ namespace csp {
      * @return True if problem was solved, false otherwise
      */
     template<typename VarPtr, typename Strategy = strategies::Mrv<VarPtr>>
-    bool solve(const Csp<VarPtr> &problem, const Strategy &strategy = Strategy()) {
+    bool solve(Csp<VarPtr> &problem, const Strategy &strategy = Strategy()) {
         static_assert(std::is_invocable_r_v<VarPtr, Strategy, Csp<VarPtr>>,
                 "Invalid strategy object! Must map from csp::Csp -> VarPtr");
         if (!util::ac3(problem)) {
