@@ -25,7 +25,7 @@ public:
 ```
 ### Specifying Constraints
 `csp::Constraint` or `csp::Arc` specify dependencies between pairs of variables. They contain a pointer type to each variable and a binary predicate specifying the
-constraint. Example using the custom varaiable type above:
+constraint. You can use arbitrary pointer types that support the dereference operator as well as -> oerator.Example using the custom varaiable type above and shared_ptr (which is recommended over raw pointers):
 ```cpp
 #include <memory>
 #include "Arc.h"
