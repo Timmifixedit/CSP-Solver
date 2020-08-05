@@ -1,61 +1,66 @@
 \section{Umsetzung}
-Ausgehend von den in \cref{sec:Concept} beschriebenen Anforderungen wird im folgenden Abschnitt die Implementierung des generischen \ac*{csp}-Lösers vorgestellt.
+Ausgehend von den in \cref{sec:Concept} beschriebenen Anforderungen wird im folgenden Teil die Implementierung des generischen \ac*{csp}-Lösers vorgestellt.
 
 \subsection{Zentrale Datenstrukturen}
-Um ein \ac*{csp} zu definieren, muss des Nutzer lediglich zwei Dinge tun: Alle vorhandenen Variablen angeben (mit zugehöriger Wertedomäne), sowie eine Menge von Constraints, die
-die Abhängigkeiten zwischen den Variablen darstellen. Dafür werden die Template-Klassen \inlcode{csp::Variable}, sowie \inlcode{csp::Constraint} oder \inlcode{csp::Arc} zur
-Verfügung gestellt.
+Um ein \ac*{csp} zu definieren, muss des Nutzer lediglich zwei Dinge tun: Angegeben werden müssen alle vorhandenen Variablen mit zugehöriger Wertedomäne sowie eine Menge von
+Constraints, die die Abhängigkeiten zwischen den Variablen darstellen. Dafür werden die Template-Klassen \inlcode{csp::Variable} sowie \inlcode{csp::Constraint} oder
+\inlcode{csp::Arc} zur Verfügung gestellt.
 
 \subsubsection{csp::Variable}
 Die Klasse \inlcode{csp::Variable} ist, wie schon in \cref{sec:CSPDef} beschrieben, sehr einfach gehalten. Sie besitzt einen Member vom Typ \inlcode{std::list}, der die zugehörige
-Wertedomäne darstellt. Der Datentyp der Werte in der Domäne lässt sich durch den Template-Typparameter der Klasse angeben. Es wurde sich bewusst für eine \inlcode{std::list}
-entschieden, da später durch den \ac*{ac}-3 Algorithmus Werte an beliebigen Stellen in der Domäne gelöscht werden dürfen. Eine \inlcode{std::list} garantiert für eine solche
-Operation konstanten Aufwand \cite{stdList}. Da bidirektionales Iterieren nicht benötigt wird, hätte auch eine \inlcode{std::forward\_list} verwendet werden. Allerdings stellt
-diese Datenstruktur keine Methode \inlcode{size()} zur Verfügung. Es gibt keinen eigenen Member, der den Wert einer zugewiesenen Variable repräsentiert. Eine Variable zählt als
-zugewiesen, wenn die Wertedomäne genau einen Wert enthält. Ein Nutzer könnte aber bei Bedarf aus \inlcode{csp::Variable} ableiten und beispielsweise eine Methode \inlcode{getValue()}
-hinzufügen.
+Wertedomäne darstellt. Der Datentyp der Werte in der Domäne lässt sich durch den Template-Typparameter der Klasse angeben. Die Entscheidung ist hier bewusst auf eine
+\inlcode{std::list} gefallen, da später durch den \ac*{ac}-3 Algorithmus Werte an beliebigen Stellen in der Domäne gelöscht werden dürfen. Eine \inlcode{std::list} garantiert für
+eine solche Operation konstanten Aufwand \cite{stdList}. Da bidirektionales Iterieren nicht benötigt wird, hätte auch eine \inlcode{std::forward\_list} verwendet werden können.
+Allerdings stellt diese Datenstruktur keine Methode \inlcode{size()} zur Verfügung. Ein weiterer Kandidat war ein \inlcode{std::unordered_set}. Der Vorteil dabei wäre, dass die
+Wertedomäne dann garantiert einzigartige Elemente enthält. Allerdings funktioniert ein \inlcode{std::unordered_set} nur, wenn eine passende Hash-Funktion angegeben wird. Zwar gibt
+es mit \inlcode{std::hash} für einige häufig verwendete Datentypen Standardimplementierungen, wird allerdings ein eigener Datentyp verwendet, so müsste auch explizit eine
+Hash-Funktion angegeben werden. Dies wäre auch möglich über einen weiteren Template-Typparameter mit Default-Typ, zwingt den Nutzer aber trotzdem zur Implementierung der
+Hash-Funktion.
+
+Die Klasse \inlcode{csp::Variable} besitzt keinen eigenen Member, der den zugewiesenen Wert repräsentiert. Eine Variable gilt als zugewiesen, wenn die Wertedomäne genau einen
+Wert enthält. Ein Nutzer könnte aber bei Bedarf aus \inlcode{csp::Variable} ableiten und beispielsweise eine Methode \inlcode{getValue()} hinzufügen.
 
 \subsubsection{csp::Constraint und csp::Arc}
 \label{sec:ArcConstr}
 Constraints werden entweder durch \inlcode{csp::Constraint} oder durch \inlcode{csp::Arc} angegeben. Dabei erbt \inlcode{csp::Arc} aus \inlcode{csp::Constraint}. Der Unterschied
-zwischen beiden Klassen ist der bereits in \cref{sec:ConstrProp} erläuterte Unterschied zwischen Constraints, die eine bidirektionale Abhängigkeit zwischen zwei Variablen angeben,
-und Arcs, die gerichtet sind. Beide lassen sich jedoch fast identisch verwenden. Zunächst soll die Klasse \inlcode{csp::Constraint} genauer betrachtet werden: Sie enthält zwei
-Pointer-Typen, die jeweils auf eine \inlcode{csp::Variable} zeigen und das Constraint zwischen den Variablen wird durch ein binäres Prädikat in Form einer \inlcode{std::function}
-repräsentiert. Der genaue Typ des Pointers wird nicht vorgeschrieben und lässt sich über einen Template-Typparameter angeben. Grundsätzlich sind alle Typen zulässig, die den
-Dereferenzoperator \inlcode{*} unterstützen. Möglich sind also beispielsweise einfache "Raw-Pointer" oder auch Smart-Pointer, solange sie den Copy-Constructor unterstützen. Alle
-weiteren Hilfsklassen und -Methoden, sowie der Lösealgorithmus selbst verwenden diesen angegeben Pointer-Typ, um das Kopieren von Variablen zu vermeiden. Der Pointer selbst muss
-auf einen Typ zeigen, der aus \inlcode{csp::Variable} ableitet. Verwendet der Nutzer eine eigene Variablen-Klasse, die aus \inlcode{csp::Variable} erbt und weitere Member besitzt, 
-so ist es weiterhin möglich auf diese Member über den Pointer zuzugreifen, auch wenn \inlcode{csp::Variable} selbst nicht polymorph ist. Dies ermöglicht mehr Flexibilität beim
-schreiben von eigenen Heuristiken zur Variablenauswahl, wie später noch genauer erläutert werden soll.
+zwischen beiden Klassen wurde bereits in \cref{sec:ConstrProp} erläutert: Constraints geben eine bidirektionale Abhängigkeit zwischen zwei Variablen an, wohin Arcs gerichtet sind.
+Beide lassen sich jedoch fast identisch verwenden. Zunächst soll die Klasse \inlcode{csp::Constraint} genauer betrachtet werden. Sie enthält zwei Pointer-Typen, die jeweils auf
+eine \inlcode{csp::Variable} zeigen und das Constraint zwischen den Variablen wird durch ein binäres Prädikat in Form einer \inlcode{std::function} repräsentiert. Der genaue Typ
+des Pointers wird nicht vorgeschrieben und lässt sich über einen Template-Typparameter angeben. Grundsätzlich sind alle Typen zulässig, die den Dereferenzoperator \inlcode{*}
+unterstützen. Möglich sind also beispielsweise einfache "Raw-Pointer" oder auch Smart-Pointer, solange sie den Copy-Constructor unterstützen. Alle weiteren Hilfsklassen und
+-methoden sowie der Lösealgorithmus selbst verwenden alle denselben Pointer-Typ. Der Pointer selbst muss auf einen Typ zeigen, der aus \inlcode{csp::Variable} ableitet. Verwendet
+der Nutzer eine eigene Variablen-Klasse, die aus \inlcode{csp::Variable} erbt und weitere Member besitzt, so ist es weiterhin über den Pointer möglich auf diese Member zuzugreifen,
+auch wenn \inlcode{csp::Variable} selbst nicht polymorph ist. Dies ermöglicht mehr Flexibilität beim Schreiben von eigenen Heuristiken zur Variablenauswahl, wie später noch genauer
+erläutert wird.
 
-Mithilfe von \acused{sfinae}\ac*{sfinae}-Techniken lässt sich zur Übersetzzeit überprüfen, ob der gegebene Typparameter die oben genannten Anforderungen erfüllt (also
-dereferenzierbar und zeigt auf einen Typen, der aus \inlcode{csp::Variable} erbt):
+Mithilfe von \acused{sfinae}\ac*{sfinae}-Techniken lässt sich zur Übersetzzeit überprüfen, ob der gegebene Typparameter die oben genannten Anforderungen erfüllt, also
+dereferenzierbar ist und auf einen Typ zeigt, der aus \inlcode{csp::Variable} erbt:
 \lstinputlisting[linerange={23-36, 41-42, 48-49}]{../src/Arc.h}
 Durch \inlcode{static_assert} lassen sich dann aussagekräftige Fehlermeldungen zur Übersetzzeit generieren:
 \lstinputlisting[linerange={63-69}]{../src/Arc.h}
 
 Ein \inlcode{csp::Arc} lässt sich identisch zu einem \inlcode{csp::Constraint} konstruieren. Allerdings besitz ein \inlcode{csp::Arc} folgende zusätzliche Member: \inlcode{from()}
 liefert einen (allgemeinen) Pointer auf die Variable, von der der Arc ausgeht. Für den Arc $A \rightarrow B$ wäre dies beispielsweise $A$. Analog würde \inlcode{to()} einen
-Pointer auf $B$ liefern. Mithilfe von \inlcode{reverse()} lässt sich der Arc umdrehen. Man würde also den Arc $B \rightarrow A$ erhalten. Beide Arcs würden jedoch nach wie vor
-durch dasselbe Constraint repräsentiert werden. Die Member \inlcode{from()} und \inlcode{to()} stellen dabei unter Beachtung der Richtung des Arcs sicher, dass immer der korrekte
-Pointer geliefert wird. Ebenfalls wird die Auswertung des binären Prädikats durch den Member \inlcode{constraintSatisfied()} vereinheitlicht, der mit zwei Werten aus den Domänen
+Pointer auf $B$ liefern. Mithilfe von \inlcode{reverse()} lässt sich der Arc umdrehen. Man würde also den Arc $B \rightarrow A$ erhalten. Beide Arcs wären jedoch nach wie vor
+durch dasselbe Constraint repräsentiert. Die Member \inlcode{from()} und \inlcode{to()} stellen dabei unter Beachtung der Richtung des Arcs sicher, dass immer der korrekte
+Pointer geliefert wird. Außerdem wird die Auswertung des binären Prädikats durch den Member \inlcode{constraintSatisfied()} vereinheitlicht, der mit zwei Werten aus den Domänen
 von \inlcode{from()} und \inlcode{to()} aufgerufen werden sollte und dann sicher stellt, dass die Argumente des Prädikats in der richtigen Reihenfolge angegeben werden.
 
 \subsubsection{csp::Csp}
-Die Klasse \inlcode{csp::Csp} repräsentiert ein vollständiges \ac*{csp}. Sie besteht aus einer Liste aus Pointern auf Variablen, einer Liste aus Arcs und einer Tabelle, die
-eingehende Arcs zu Variablen zuordnet. Analog zu \inlcode{csp::Arc} und \inlcode{csp::Constraint} ist hier der genaue Pointer-Typ und der genaue Variablen-Typ nicht festgelegt.
+Die Klasse \inlcode{csp::Csp} repräsentiert ein vollständiges \ac*{csp}. Sie besteht aus einer Liste von Pointern auf Variablen, einer Liste von Arcs und einer Tabelle, die
+eingehende Arcs zu Variablen zuordnet. Analog zu \inlcode{csp::Arc} und \inlcode{csp::Constraint} sind hier der genaue Pointer-Typ und der genaue Variablen-Typ nicht festgelegt.
 \inlcode{std::vector} bietet sich für die Liste der Variablen an, da hier keine Elemente hinzugefügt oder gelöscht werden müssen. Der zusammenhängende Speicher ermöglicht außerdem
 effizienten Random-Access und effizientes Iterieren. Da der \ac*{ac}-3 Algorithmus auf einer Queue von Arcs arbeitet, bietet sich für die Liste der Arcs eine \inlcode{std::list}
 an. Denkbar wäre auch eine \inlcode{std::queue} gewesen. Allerdings unterstützt diese kein Iterieren und kein elegantes Einfügen von Elementen am Ende durch
 \inlcode{std::back_inserter} und \inlcode{std::copy}. Für die Zuordnung von eingehenden Arcs zu Variablen wurde eine \inlcode{std::unordered_map} verwendet, die für jede Variable
-einen \inlcode{std::vector} aus Arcs verwaltet. Das finden von Elementen in einer solchen Datenstruktur benötigt im Durchschnitt konstanten Aufwand \cite{uMap}, sodass eingehende
-Arcs zu einer gegebene Variable im \ac*{ac}-3 Algorithmus effizient bestimmt werden können.
+einen \inlcode{std::vector} aus Arcs verwaltet. Das Finden von Elementen in einer solchen Datenstruktur benötigt im Durchschnitt konstanten Aufwand \cite{uMap}, sodass im \ac*{ac}-3
+Algorithmus eingehende Arcs zu einer gegebene Variable effizient bestimmt werden können.
 
 \subsection{Definieren eines \ac*{csp}}
 Wie schon in \cref{sec:Concept} erörtert, soll der Nutzer lediglich eine Menge von Variablen und Constraints angeben müssen, um ein \ac*{csp} vollständig zu definieren. Hierfür
 gibt es die Methode \inlcode{csp::make_csp}, die zwei Container entgegen nimmt: Im ersten sind wieder allgemeine Pointer-Typen enthalten, die auf alle Variablen des Problems zeigen.
 Im zweiten sind entweder \inlcode{csp::Constraint}s oder \inlcode{csp::Arc}s enthalten. Je nach Problem kann es manchmal einfacher sein, beide Richtungen der Constraints explizit
-anzugeben (wie beispielsweise in der Implementierung des Sudoku-Lösers), oder auch nicht. Deshalb werden beide Typen akzeptiert, jedoch keine Mischung aus beiden. Die Containertypen
+anzugeben (wie beispielsweise in der Implementierung des Sudoku-Lösers) oder auch nicht. Deshalb werden beide Typen akzeptiert, jedoch keine Mischung aus beiden. Die Containertypen
 werden durch Template-Typparameter festgelegt, sodass beliebige Arten von Containern verwendet werden können, die Iteration unterstützen. Werden die Constraints als
 \inlcode{csp::Arc}s angegeben, so lässt sich das \inlcode{csp::Csp} ohne großen zusätzlichen Aufwand konstruieren. Lediglich die Variablen mit ihren zugehörigen eingehenden Arcs
 müssen in die \inlcode{std::unordered_map} eingetragen werden. Wird stattdessen eine Menge aus \inlcode{csp::Constraint}s angegeben, so müssen diese zuvor noch in ihre äquivalenten
@@ -64,7 +69,7 @@ Arcs umgewandelt werden. Dies geschieht durch die Memberfuntion \inlcode{getArcs
 Da beide Überladungen von \inlcode{csp::make_constraint} eine identische Signatur besitzen (bis auf die Namen der Template-Typparameter), muss \ac*{sfinae} eingesetzt werden, damit
 die Wahl der richtigen Methode zur Übersetzzeit eindeutig ist. Dazu besitzen beiden Methoden einen dritten Template-Parameter, der lediglich dazu dient, die unpassende Methode
 auszuschließen:
-\lstinputlisting[linerange={75-78}]{../src/Csp.h}
+\lstinputlisting[linerange={91-94}]{../src/Csp.h}
 Das Konstrukt nutzt \inlcode{std::enable_if_t}, um einen Template-Parameter vom Typ \inlcode{int} mit Standardwert 0 zu deklarieren, sodass bei korrekter Benutzung der Methode
 der dritte Parameter nicht explizit angegeben werden muss. Sollte der im Typ \inlcode{ArcContainer} enthaltene Typ nicht vom Typ \inlcode{csp::Arc} sein, so definiert
 \inlcode{std::enable_if_t} keinen Typ und der Ausdruck des Standardwerts ist nicht gültig. Dadurch wird diese Überladung von \inlcode{csp::make_csp} durch \ac*{sfinae}
@@ -74,21 +79,21 @@ werden kann. Die dafür verwendeten Type-Traits sind ähnlich aufgebaut wie jene
 \subsection{Lösealgorithmus}
 Mithilfe der zuvor vorgestellten Datenstrukturen lässt sich der eigentliche Lösealgorithmus recht einfach implementieren. Der während der Backtracking-Suche verwendete \ac*{ac}-3
 Algorithmus ist quasi eine eins zu eins Implementierung des Pseudocodes aus \cite{ac3}. Der Unterschied ist, dass in der hier vorgestellten Implementierung nur binäre Constraints
-erlaubt sind. Unäre Constrainst lassen sich allerdings trivial auf die Wertedomäne einer Variable übertragen, sodass diese Aufgabe an den Nutzer delegiert wurde.
+erlaubt sind. Unäre Constraints lassen sich allerdings trivial auf die Wertedomäne einer Variable übertragen, sodass diese Aufgabe an den Nutzer delegiert wurde.
 Die Backtracking-Suche selbst ist in der Methode \inlcode{csp::recursiveSolve} implementiert und ist ebenfalls sehr ähnlich zu der in \cref{sec:ConstrProp} vorgestellten
-Pseudoimplementierung. Ein paar kleine Unterschiede gibt es jedoch:
+Pseudoimplementierung. Ein paar kleine Unterschiede gibt es dennoch:
 \lstinputlisting[linerange={30-36}]{../src/solver.h}
-Zusätzlich zum \ac*{csp} muss ein Strategie-Funktor übergeben werden, der aus einem \inlcode{csp::Csp} die nächste, noch nicht zugewiesene Variable auswählt. Es werden beliebige
-Funktoren akzeptiert, die eine korrekte Signatur besitzen. Somit erhält der Nutzer die Möglichkeit, beliebige, problemspezifische Heuristiken zu Auswahl der nächsten Variablen
+Zusätzlich zum \ac*{csp} muss ein Strategie-Funktor übergeben werden, der die nächste, noch nicht zugewiesene Variable aus dem \inlcode{csp::Csp} auswählt. Es werden beliebige
+Funktoren akzeptiert, die eine korrekte Signatur besitzen. Somit erhält der Nutzer die Möglichkeit, beliebige, problemspezifische Heuristiken zur Auswahl der nächsten Variablen
 anzugeben. Es wird gefordert, dass die Heuristik immer eine Variable liefert. Im Falle, dass es keine nicht zugewiesene Variable mehr gibt, muss eine beliebige gewählt werden.
 Dadurch vereinfacht sich der Goal-Test zu der einfachen \inlcode{if}-Abfrage in Zeile fünf. Der restliche Algorithmus ist analog zur Pseudoimplementierung aus \cref{sec:ConstrProp}
 aufgebaut.
 
 Zur einfacheren Verwendung wird mit \inlcode{csp::solve} ein Wrapper für die rekursive Backtracking-Suche bereitgestellt:
-\lstinputlisting[linerange={66-75}]{../src/solver.h}
+\lstinputlisting[linerange={70-79}]{../src/solver.h}
 Hier wird außerdem mithilfe des \inlcode{static_assert} und \inlcode{std::is_invocable_r_v} zur Übersetzzeit überprüft, ob die angegebene Heuristik eine gültige Signatur besitzt.
 Standardmäßig wird die bereits implementierte Heuristik \inlcode{strategies::Mrv} verwendet. Diese wählt die Variable mit den wenigsten möglichen Werten aus (\inlcode{Mrv} steht
-für \textit{Minimum Remainig Values}). Eine weiter Möglichkeit ist die \inlcode{strategies::First} Heuristik, die einfach die nächstbeste nicht zugewiesene Variable auswählt. Darüber
-hinaus lassen sich aber auch beliebige eigene Heuristiken verwenden, solange die Signatur zulässig ist. Außerdem ruft der Wrapper anfangs einmal den \ac*{ac}-3 Algorithmus auf,
-da die rekursive Suche davon ausgeht, dass das Problem bereits arc consistent ist. Sollte dieser erste Schritt schon fehlschlagen, ist das Problem nicht lösbar und die Backtracking-
-Suche ist obsolet.
+für \textit{Minimum Remainig Values}). Eine weitere Möglichkeit ist die \inlcode{strategies::First} Heuristik, die einfach die nächstbeste nicht zugewiesene Variable auswählt.
+Darüber hinaus lassen sich aber auch beliebige eigene Heuristiken verwenden, solange die Signatur zulässig ist. Außerdem ruft der Wrapper anfangs einmal den \ac*{ac}-3 Algorithmus
+auf, da die rekursive Suche davon ausgeht, dass das Problem bereits arc consistent ist. Sollte dieser erste Schritt schon fehlschlagen, ist das Problem nicht lösbar und die
+Backtracking-Suche ist obsolet.

@@ -1,7 +1,7 @@
 \section{Konzept und Anforderungen}
 \label{sec:Concept}
-Im Rahmen dieser Arbeit soll ein generischer Algorithmus entwickelt werden, der beliebige \acp{csp} (mit den in \cref{sec:Solving} beschriebenen Einschränkungen) lösen kann. Wie in
-\cref{sec:ConstrProp} erörtert, bietet sich dazu ein Backtracking-Suche an, die sich zusätzlich Constraint Propagation zunutze macht. Hierfür wird der populäre \ac*{ac}-3
+Im Rahmen dieser Arbeit soll ein generischer Algorithmus entwickelt werden, der beliebige \acp{csp} mit den in \cref{sec:Solving} beschriebenen Einschränkungen lösen kann. Wie in
+\cref{sec:ConstrProp} erörtert, bietet sich dazu eine Backtracking-Suche an, die sich zusätzlich Constraint Propagation zunutze macht. Hierfür wird der populäre \ac*{ac}-3
 Algorithmus verwendet, da er vergleichsweise simpel zu implementieren ist und trotzdem mit fortgeschritteneren Algorithmen wie dem \ac*{ac}-4 mithalten kann. Teilweise hat
 \ac*{ac}-3 sogar Vorteile gegenüber \ac*{ac}-4 \cite{ACAgain}.
 
@@ -10,25 +10,25 @@ Algorithmus verwendet, da er vergleichsweise simpel zu implementieren ist und tr
 Um den Lösealgorithmus für beliebige \acp{csp} zu implementieren, werden Datenstrukturen mit einer einheitlichen Schnittstelle benötigt. Gleichzeitig muss der Nutzer in der Lage
 sein, ein beliebiges Problem elegant und möglichst kompakt zu definieren. Außer den Einschränkungen, die in \cref{sec:Solving} genannt wurden, sollen keine weiteren Beschränkungen
 gefordert werden, damit der Löser auf eine große Menge von Problemstellungen angewandt werden kann. Es bietet sich deshalb an, sich an der allgemeinen, mathematischen Definition
-für \acp{csp} zu orientieren, indem Datenstrukturen für Variablen, Wertedomänen und Constraints zur Verfügung gestellt werden. Da die Wertedomänen eng mit den zugehörigen Variablen
-zusammenhängen, bietet es sich ebenfalls an, beide Strukturen zu kombinieren, beispielsweise indem Variablen einen Member \textit{domain} besitzen. Auch bei der Umsetzung der
-Constraints sind mehrere Optionen denkbar: Jede Variable könnte eine Liste mit Verweisen auf andere Variablen besitzen, zu denen eine Abhängigkeit besteht, zusammen einem
+für \acp{csp} zu orientieren und Datenstrukturen für Variablen, Wertedomänen und Constraints zur Verfügung zu stellen. Da die Wertedomänen eng mit den zugehörigen Variablen
+zusammenhängen, bietet es sich ebenfalls an, beide Strukturen zu kombinieren, beispielsweise indem Variablen einen Member \textit{domain} bekommen. Bei der Umsetzung der
+Constraints sind mehrere Optionen denkbar: Jede Variable könnte eine Liste mit Verweisen auf andere Variablen besitzen, zu denen eine Abhängigkeit besteht, zusammen mit einem
 Funktionsobjekt, das die konkrete Relation angibt. Dieses Konzept wäre besonders bei der Implementierung des \ac*{ac}-3 Algorithmus vorteilhaft, da hier zu einer Variablen $V$ alle
 eingehenden Arcs $N_i \rightarrow V$ benötigt werden. Hierbei bezeichnet $N_i, \ i \in \{1, \dots, k\}$ einen der $k$ Nachbarn von $V$ im Constraint-Graph. Der Nachteil bei dieser
 Lösung ist allerdings, dass der Nutzer bei der Definition des \ac*{csp} immer beide Richtungen eines Constraints explizit angeben muss. Das kann einerseits aufwendig werden und
 andererseits zu Fehlern führen, wodurch das \ac*{csp} dann nicht wohldefiniert wäre. Deshalb wird in dieser Arbeit ein Ansatz bevorzugt, bei dem lediglich eine Richtung angegeben
 werden muss. Da der \ac*{ac}-3 Algorithmus während eines Durchlaufs mehrmals auf die eingehenden Arcs einer Variablen zugreifen muss, sollte vor Aufruf des eigentlichen
-Lösealgorithmus, zunächst eine Tabelle mit Variablen und zugehörigen eingehenden Arcs erstellt werden. Hierfür bietet sich eine assoziative Datenstruktur wie beispielsweise eine
+Lösealgorithmus zunächst eine Tabelle mit Variablen und zugehörigen eingehenden Arcs erstellt werden. Hierfür bietet sich eine assoziative Datenstruktur wie beispielsweise eine
 \inlcode{std::unordered_map} an.
 
 \subsection{Erweiterbarkeit des Algorithmus}
 \label{sec:Extensions}
 Eine offensichtliche Anforderung an die zu implementierende Datenstruktur \inlcode{Variable} ist die Unterstützung von Wertdomänen mit beliebigen Werttypen. Dies kann einfach durch
-eine Template-Klasse realisiert werden. Für den Algorithmus muss eine Variable nur einige wenige Methoden zur Verfügung stellen, nämlich die Zuweisung eines Werts, sowie Mechanismen
-zur Manipulation der Wertedomäne. Möglicherweise will jedoch der Nutzer zusätzlich Funktionalität zu Variablen hinzufügen, sodass Erben aus der Basisklasse \inlcode{Variable}
+eine Template-Klasse realisiert werden. Für den Algorithmus muss eine Variable nur einige wenige Methoden zur Verfügung stellen, nämlich die Zuweisung eines Werts sowie Mechanismen
+zur Manipulation der Wertedomäne. Möglicherweise will der Nutzer jedoch die Variable mit zusätzlicher Funktionalität versehen, sodass Erben aus der Basisklasse \inlcode{Variable}
 möglich sein soll. Da es nicht vorgesehen (und auch nicht notwendig) ist, dass der Nutzer die Basisimplementierung der für den Algorithmus notwendigen Methoden der Klasse
 \inlcode{Variable} überschreibt, lässt sich der Algorithmus rein statisch polymorph entwerfen. Dies hat den Vorteil, dass zusätzliche Rechenkosten vermieden werden.
 
-Wie bereits in \cref{sec:Solving} angeführt, kommen beim Lösen von \acp{csp} Heuristiken zum Auswählen der nächsten Variablen zum Einsatz. Diese sind meistens problemspezifisch,
-da eine allgemeine, optimale Heuristik aktuell nicht bekannt ist. Es liegt also nahe, den Algorithmus so zu implementieren, dass der Nutzer eine eigene Heuristik zum Lösen des
+Wie bereits in \cref{sec:Solving} angeführt, kommen beim Lösen von \acp{csp} Heuristiken bei der Auswahl der nächsten Variablen zum Einsatz. Diese sind meistens problemspezifisch,
+da eine optimale allgemeine Heuristik aktuell nicht bekannt ist. Es liegt also nahe, den Algorithmus so zu implementieren, dass der Nutzer eine eigene Heuristik zum Lösen des
 Problems angeben kann.
