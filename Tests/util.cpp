@@ -39,7 +39,7 @@ TEST(util_test, ac3) {
     auto varC = std::make_shared<TestVar>(std::list{2, 3, 1});
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint aLessC(varA, varC, std::less<>());
-    TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
+    TestConstraint bNotC(varB, varC, std::not_equal_to<>());
     Csp problem = make_csp(std::array{varA, varB, varC}, std::array{aLessB, aLessC, bNotC});
     EXPECT_TRUE(ac3(problem));
     EXPECT_EQ(varA->valueDomain(), (std::list{2, 1}));

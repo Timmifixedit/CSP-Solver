@@ -44,7 +44,7 @@ TEST(csp_test, create_csp_from_constraints) {
     auto varC = std::make_shared<TestVar>(std::list{2, 3, 1});
     TestConstraint aLessB(varA, varB, std::less<>());
     TestConstraint aLessC(varA, varC, std::less<>());
-    TestConstraint bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
+    TestConstraint bNotC(varB, varC, std::not_equal_to<>());
     Csp problem = make_csp(std::array{varA, varB, varC}, std::array{aLessB, aLessC, bNotC});
     verifyCsp(problem, varA, varB, varC);
 }
@@ -60,7 +60,7 @@ TEST(csp_test, create_csp_from_arcs) {
     TestArc aLessC(varA, varC, std::less<>());
     TestArc cGreaterA = aLessC;
     cGreaterA.reverse();
-    TestArc bNotC(varB, varC, [](int lhs, int rhs) {return lhs != rhs;});
+    TestArc bNotC(varB, varC, std::not_equal_to<>());
     TestArc cNotB = bNotC;
     cNotB.reverse();
     Csp problem = make_csp(std::array{varA, varB, varC},
