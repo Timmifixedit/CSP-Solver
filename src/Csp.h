@@ -60,7 +60,7 @@ namespace csp {
         using ArcListT = std::list<ArcT>;
         using NeighbourListT = std::unordered_map<VarPtr, std::vector<ArcT>>;
         const VarListT variables;
-        const std::list<ArcT> arcs;
+        const ArcListT arcs;
         const NeighbourListT incomingNeighbours;
 
         template<typename VarContainer, typename ArcContainer, std::enable_if_t<

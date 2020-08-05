@@ -67,7 +67,7 @@ namespace csp {
                       "Constraints must be constructed from pointer type to csp::Variable");
         static_assert(type_traits::is_derived_from_var<decltype(*std::declval<VarPtr>())>::value,
                       "Type referenced by VarPtr must derive from csp::Variable");
-        using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
+        using VarType = typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::ValueT;
 
         Constraint(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate) : var1(std::move(v1)), var2(std::move(v2)),
         predicate(std::move(predicate)) {}
