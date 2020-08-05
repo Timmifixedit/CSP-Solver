@@ -31,7 +31,7 @@ namespace csp {
          * @param val The desired value
          * @note The value does not have to be in the variable's value domain. No checks are performed.
          */
-        void assign(T val) noexcept {
+        void assign(T val) {
             domain = {std::move(val)};
         }
 
@@ -44,11 +44,24 @@ namespace csp {
         }
 
         /**
-         * Sets the value domain
-         * @param values desired range of values.
+         * Sets the value domain accepting arbitrary containers that support iteration
+         * @tparam Container Type of the container
+         * @param container desired values
          * @note Avoid duplicates! No checks are performed. Duplicates can lead to performance losses.
          */
-        void setValueDomain(std::list<T> values) noexcept {
+        template<typename Container, std::enable_if_t<
+                std::is_convertible_v<decltype(*std::begin(std::declval<Container>())), T>, int> = 0>
+        void setValueDomain (const Container &container) {
+            domain.clear();
+            std::copy(std::begin(container), std::end(container), std::back_inserter(domain));
+        }
+
+        /**
+         * Sets the value domain
+         * @param values desired  values.
+         * @note Avoid duplicates! No checks are performed. Duplicates can lead to performance losses.
+         */
+        void setValueDomain(std::list<T> values) {
             domain = std::move(values);
         }
 
@@ -68,8 +81,10 @@ namespace csp {
             return domain;
         }
 
+        using DomainT = std::list<T>;
+        using ValueT = T;
     private:
-        std::list<T> domain;
+        DomainT domain;
     };
 }
 

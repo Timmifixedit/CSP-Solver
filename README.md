@@ -13,7 +13,7 @@ values the variable might take:
 using MyVar = csp::Variable<int>;
 MyVar a({1, 2, 17, 24});
 ```
-Also possible: Create your own type:
+Also possible: Create your own type. This allows you to add functionality to your varaible type. For example you can add a varaible name:
 ```cpp
 #include <string>
 #include "Variable.h"
@@ -25,7 +25,7 @@ public:
 ```
 ### Specifying Constraints
 `csp::Constraint` or `csp::Arc` specify dependencies between pairs of variables. They contain a pointer type to each variable and a binary predicate specifying the
-constraint. Example using the custom varaiable type above:
+constraint. You can use arbitrary pointer types that support the dereference operator as well as -> operator. Example using the custom varaiable type above and shared_ptr (which is recommended over raw pointers):
 ```cpp
 #include <memory>
 #include "Arc.h"
@@ -50,7 +50,7 @@ An instance of `csp::Csp` can be solved using:
 ```cpp
 bool success = csp::solve(myCsp);
 ```
-If solving the CSP is possible all domains of all variables will be reduced to exactly one value. If the CSP cannot be solved, the function returns `false` but might still modify the variables' value domains.
+If solving the CSP is possible all domains of all variables will be reduced to exactly one value. The algorithm will find a solution if one exists (given engough time). If multiple exist, it is unspecified which exact solution is found. If the CSP cannot be solved, the function returns `false` but might still modify the variables' value domains.
 #### Specifying a Solving Strategy
 By default, `csp::solve` uses the minimum remaining values strategy, meaning that the algorithm chooses the variable with the fewest remaining values in its domain
 to be assigned next. You can also use a different (even custom) strategy e.g.:

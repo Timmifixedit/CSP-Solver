@@ -86,12 +86,11 @@ public:
     }
 
     bool solve() {
-        auto inequal = [](unsigned int lhs, unsigned int rhs) {return lhs != rhs;};
         std::list<csp::Arc<std::shared_ptr<SudokuNode>>> arcs;
         for (std::size_t index = 0; index < fields.size(); ++index) {
             auto neighbours = getNeighbours(index);
             for (const auto &nb : neighbours) {
-                arcs.emplace_back(fields[index], nb, inequal);
+                arcs.emplace_back(fields[index], nb, std::not_equal_to<>());
             }
         }
 

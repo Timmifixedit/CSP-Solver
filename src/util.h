@@ -52,11 +52,11 @@ namespace csp::util {
      * Obtains arc consistency in a CSP using the AC3-algorithm
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
      * @param problem The CSP to be processed
-     * @return True if arc consistency was obtained, false not possible
+     * @return True if arc consistency was obtained, false if not possible
      */
     template<typename VarPtr>
-    bool ac3(const Csp<VarPtr> &problem) {
-        using ArcT = Arc<VarPtr>;
+    bool ac3(Csp<VarPtr> &problem) {
+        using ArcT = typename Csp<VarPtr>::ArcT;
         std::list<ArcT> arcs = problem.arcs;
         while (!arcs.empty()) {
             const ArcT current = arcs.front();
@@ -88,7 +88,7 @@ namespace csp::util {
     template<typename VarPtr>
     auto makeCspCheckpoint(const Csp<VarPtr> &problem) ->
     CspCheckpoint<std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>> {
-        using VarType = std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>;
+        using VarType = typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::ValueT;
         CspCheckpoint<VarType> ret;
         ret.reserve(problem.variables.size());
         for (const auto &var : problem.variables) {
@@ -105,7 +105,7 @@ namespace csp::util {
      * @param checkpoint Checkpoint to load the value domains from
      */
     template<typename VarPtr>
-    void restoreCspFromCheckpoint(const Csp<VarPtr> &problem, const CspCheckpoint<std::remove_reference_t<
+    void restoreCspFromCheckpoint(Csp<VarPtr> &problem, const CspCheckpoint<std::remove_reference_t<
             decltype(std::declval<VarPtr>()->valueDomain().front())>> &checkpoint) {
         assert(checkpoint.size() == problem.variables.size());
         for (std::size_t i = 0; i < checkpoint.size(); ++i) {
