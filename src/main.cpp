@@ -96,8 +96,8 @@ public:
         arcs.reserve(81 * 20);
         for (std::size_t index = 0; index < fields.size(); ++index) {
             auto neighbours = getNeighbours(index);
-            for (const auto &nb : neighbours) {
-                arcs.emplace_back(fields[index], nb, std::not_equal_to<>());
+            for (auto &nb : neighbours) {
+                arcs.emplace_back(fields[index], std::move(nb), std::not_equal_to<>());
             }
         }
 
