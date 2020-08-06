@@ -29,7 +29,7 @@ namespace csp {
      */
     template<typename VarPtr, typename Strategy>
     bool recursiveSolve(Csp<VarPtr> &problem, const Strategy &strategy) {
-        using Domain = typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::DomainT;
+        using Domain = typename Csp<VarPtr>::VarT::DomainT;
         VarPtr nextVar = strategy(problem);
         if (nextVar->isAssigned()) {
             return true;
