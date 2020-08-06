@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iomanip>
 #include <chrono>
+#include <optional>
 
 #include "Variable.h"
 #include "Arc.h"
@@ -13,12 +14,18 @@
 
 class SudokuNode : public csp::Variable<unsigned int> {
 public:
-    SudokuNode(unsigned int val, unsigned int x, unsigned int y) : csp::Variable<unsigned int>(
-            val == 0 ? std::list<unsigned int>{1, 2, 3, 4, 5, 6, 7, 8, 9} : std::list{val}), x(x), y(y) {
+    explicit SudokuNode(unsigned int val) : csp::Variable<unsigned int>(
+            val == 0 ? std::list<unsigned int>{1, 2, 3, 4, 5, 6, 7, 8, 9} : std::list{val}) {
         assert(val <= 9);
     }
 
-    const unsigned int x, y;
+    [[nodiscard]] auto getValue() const -> std::optional<unsigned int> {
+        if (this->isAssigned()) {
+            return this->valueDomain().front();
+        }
+
+        return {};
+    }
 };
 
 class Sudoku {
@@ -28,8 +35,7 @@ public:
         unsigned int val = 0;
         while (input >> val) {
             assert(val <= 9);
-            auto [x, y] = linearToCoordinates(index);
-            fields[index] = std::make_shared<SudokuNode>(val, x, y);
+            fields[index] = std::make_shared<SudokuNode>(val);
             ++index;
         }
     }
@@ -66,7 +72,7 @@ public:
             }
 
             if (field->isAssigned()) {
-                out << field->valueDomain().front();
+                out << *field->getValue();
             } else {
                 out << "?";
             }
@@ -130,6 +136,7 @@ private:
         assert(it == ret.end());
         return ret;
     }
+
     std::array<std::shared_ptr<SudokuNode>, 81> fields;
 };
 
