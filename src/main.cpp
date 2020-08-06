@@ -92,7 +92,8 @@ public:
     }
 
     bool solve() {
-        std::list<csp::Arc<std::shared_ptr<SudokuNode>>> arcs;
+        std::vector<csp::Arc<std::shared_ptr<SudokuNode>>> arcs;
+        arcs.reserve(81 * 20);
         for (std::size_t index = 0; index < fields.size(); ++index) {
             auto neighbours = getNeighbours(index);
             for (const auto &nb : neighbours) {
