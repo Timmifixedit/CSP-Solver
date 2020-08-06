@@ -56,6 +56,7 @@ namespace csp {
     template<typename VarPtr>
     struct Csp {
         using ArcT = Arc<VarPtr>;
+        using VarT = std::remove_reference_t<decltype(*std::declval<VarPtr>())>;
         using VarListT = std::vector<VarPtr>;
         using ArcListT = std::list<ArcT>;
         using NeighbourListT = std::unordered_map<VarPtr, std::vector<ArcT>>;
