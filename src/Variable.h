@@ -20,11 +20,13 @@ namespace csp {
     template<typename T>
     class Variable {
     public:
+        using DomainT = std::list<T>;
+        using ValueT = T;
         /**
          * CTor
          * @param domain list of possible values
          */
-        explicit Variable(std::list<T> domain) : domain(std::move(domain)) {}
+        explicit Variable(DomainT domain) : domain(std::move(domain)) {}
 
         /**
          * Sets the variable to the specified value (by reducing the value domain to said value)
@@ -61,7 +63,7 @@ namespace csp {
          * @param values desired  values.
          * @note Avoid duplicates! No checks are performed. Duplicates can lead to performance losses.
          */
-        void setValueDomain(std::list<T> values) {
+        void setValueDomain(DomainT values) {
             domain = std::move(values);
         }
 
@@ -69,7 +71,7 @@ namespace csp {
          * Gets the value domain
          * @return
          */
-        [[nodiscard]] auto valueDomain() const noexcept -> const std::list<T>& {
+        [[nodiscard]] auto valueDomain() const noexcept -> const DomainT& {
             return domain;
         }
 
@@ -77,12 +79,9 @@ namespace csp {
          * Gets the value domain
          * @return
          */
-        [[nodiscard]] auto valueDomain() noexcept -> std::list<T>& {
+        [[nodiscard]] auto valueDomain() noexcept -> DomainT & {
             return domain;
         }
-
-        using DomainT = std::list<T>;
-        using ValueT = T;
     private:
         DomainT domain;
     };
