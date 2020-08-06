@@ -1,0 +1,24 @@
+\section{Testsuite und Beispielanwendung}
+Nachdem ein Überblick über den Aufbau des allgemeinen Lösealgorithmus gegeben wurde, soll nun kurz die Implementierung eines Sudokulösers, sowie die Testsuite vorgestellt werden.
+
+\subsection{Lösen von Sudokus}
+Die bekannten Sudoku-Rätsel lassen sich recht einfach als \ac*{csp} beschreiben. Dabei stellen die einzelnen Felder die Variablen dar, die mit Zahlen von eins bis neuen ausgefüllt
+werden müssen. Die Constraints äußern sich darin, dass Felder in der selben Zeile, Spalte oder im selben $3 \times 3$ Block unterschiedliche Werte haben müssen. Für den Löser wurde
+ein eigener Variablen-Typ erstellt, der im Konstruktor automatisch die Wertedomäne korrekt setzt. Außerdem lässt sich der Wert der Variable bequem mit \inlcode{getValue()} abfragen:
+\lstinputlisting[linerange={15-29}]{../src/main.cpp}
+Um die \inlcode{SudokuNode}s zu verwalten, wurde außerdem die Hilfsklasse \inlcode{Sudoku} implementiert. Deren Konstruktor ließt die gegebenen Werte aus einem \inlcode{std::istream}
+ein und instanziiert automatisch alle Variablen mit den korrekten Werten. Der Wert 0 gibt hierbei an, dass ein Sudoku-Feld noch leer ist. Außerdem lässt sich das Sudoku mit
+\inlcode{print()} anzeigen und mit \inlcode{solve()} lösen:
+\lstinputlisting[linerange={94-106}]{../src/main.cpp}
+Zunächst müssen alle Abhängigkeiten zwischen den Feldern angegeben werden. Diese werden im \inlcode{std::vector arcs} gespeichert. Das Verwenden eines \inlcode{std::array} ist
+nicht möglich, da ein \inlcode{csp::Arc} nicht default-konstruierbar ist. Danach wird das zu lösende Problem durch \inlcode{csp::make_csp} definiert und anschließende durch
+\inlcode{csp::solve} gelöst. Hier wird explizit die Heuristik \inlcode{csp::strategies::First} verwendet, die bei Experimenten mit verschiedenen Sudokus bessere Performance gezeigt
+hat, als die \inlcode{csp::strategies::Mrv} Strategie. Nach dem Aufruf von \inlcode{solve()} kann, falls lösbar, die Lösung des Sudokus erneut mit \inlcode{print()} angezeigt werden.
+
+\subsection{Unit-Tests mit Google Test}
+Während der Entwicklung wurden insgesamt 19 Unit-Tests mit dem Google-Test-Framework geschrieben, um die korrekte Funktionalität der einzelnen Komponenten zu gewährleisten.
+Der Aufbau eines solchen Unit-Test soll an einem Beispiel kurz dargestellt werden:
+\lstinputlisting[linerange={25-32}]{../Tests/util.cpp}
+Der gezeigte Test überprüft, ob die Methode \inlcode{util::removeInconsistent}, die im \ac*{ac}-3 Algorithmus zum Einsatz kommt, den korrekten Wert zurück liefert. Dies lässt
+sich mit den von Google Test zur Verfügung gestellten Makros wie \inlcode{EXPECT_TRUE} überprüfen. Es gibt darüber hinaus weitere Makros, die auch komplexeres Verhalten überprüfen
+können.
