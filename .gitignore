@@ -27,4 +27,5 @@ coverageReport
 # VS stuff
 **/out/*
 **/.vs/*
+**/.vscode/*
 
