@@ -77,7 +77,7 @@ namespace csp::util {
     }
 
     template<typename T>
-    using CspCheckpoint = std::vector<std::list<T>>;
+    using CspCheckpoint = std::vector<typename Variable<T>::DomainT>;
 
     /**
      * Backs up all value domains of all variables in a CSP
@@ -87,7 +87,7 @@ namespace csp::util {
      */
     template<typename VarPtr>
     auto makeCspCheckpoint(const Csp<VarPtr> &problem) ->
-    CspCheckpoint<std::remove_reference_t<decltype(std::declval<VarPtr>()->valueDomain().front())>> {
+    CspCheckpoint<typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::ValueT> {
         using VarType = typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::ValueT;
         CspCheckpoint<VarType> ret;
         ret.reserve(problem.variables.size());
