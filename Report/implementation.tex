@@ -91,9 +91,10 @@ Pseudoimplementierung. Sie arbeitet ebenfalls direkt auf einer Referenz des Prob
 \lstinputlisting[linerange={30-36}]{../src/solver.h}
 Zusätzlich zum \ac*{csp} muss ein Strategie-Funktor übergeben werden, der die nächste, noch nicht zugewiesene Variable aus dem \inlcode{csp::Csp} auswählt. Es werden beliebige
 Funktoren akzeptiert, die eine korrekte Signatur besitzen. Somit erhält der Nutzer die Möglichkeit, beliebige, problemspezifische Heuristiken zur Auswahl der nächsten Variablen
-anzugeben. Es wird gefordert, dass die Heuristik immer eine Variable liefert. Im Falle, dass es keine nicht zugewiesene Variable mehr gibt, muss eine beliebige gewählt werden.
-Dadurch vereinfacht sich der Goal-Test zu der einfachen \inlcode{if}-Abfrage in Zeile fünf. Danach werden für die aktuelle Variable sukzessive Werte aus ihrer Wertedomänen
-ausprobiert:
+anzugeben. Werden eigene Variablentypen verwendet, die aus \inlcode{csp::Variable} ableiten, kann eine benutzerdefinierte Heuristik durch den statischen Polymorphismus auch auf
+dessen zusätzliche Felder und Methoden zugreifen, sodass mehr Informationen bei der Auswahl der nächsten Variable zur Verfügung stehen. Es wird gefordert, dass die Heuristik
+immer eine Variable liefert. Im Falle, dass es keine nicht zugewiesene Variable mehr gibt, muss eine beliebige gewählt werden. Dadurch vereinfacht sich der Goal-Test zu der
+einfachen \inlcode{if}-Abfrage in Zeile fünf. Danach werden für die aktuelle Variable sukzessive Werte aus ihrer Wertedomänen ausprobiert:
 \lstinputlisting[linerange={39-41, 44-57}, firstnumber=8]{../src/solver.h}
 Da die Zuweisung eines Wertes durch \inlcode{assign} die Wertedomäne einer Variable verändert, muss diese zunächst gesichert werden, damit Iterieren weiterhin möglich ist.
 Außerdem werden vor dem Aufruf des \ac*{ac}-3 Algorithmus alle Wertedomänen aller Variablen gesichert, da diese durch das Herstellen von \ac*{ac} oder den folgenden
