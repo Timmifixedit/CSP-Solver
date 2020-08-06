@@ -15,7 +15,9 @@ Allerdings stellt diese Datenstruktur keine Methode \inlcode{size()} zur Verfüg
 Wertedomäne dann garantiert einzigartige Elemente enthält. Allerdings funktioniert ein \inlcode{std::unordered_set} nur, wenn eine passende Hash-Funktion angegeben wird. Zwar gibt
 es mit \inlcode{std::hash} für einige häufig verwendete Datentypen Standardimplementierungen, wird allerdings ein eigener Datentyp verwendet, so müsste auch explizit eine
 Hash-Funktion angegeben werden. Dies wäre auch möglich über einen weiteren Template-Typparameter mit Default-Typ, zwingt den Nutzer aber trotzdem zur Implementierung der
-Hash-Funktion.
+Hash-Funktion. Damit der Nutzer bei der Angabe der Wertedomäne auch andere Containertypen verwenden kann, existiert für den Setter \inlcode{setValueDomain} eine Überladung, die
+beliebige Containertypen annimmt und deren Inhalt in die \inlcode{std::list} kopiert. Die Container müssen lediglich Iterieren unterstützen, damit das Kopieren mit
+\inlcode{std::copy} durchgeführt werden kann.
 
 Die Klasse \inlcode{csp::Variable} besitzt keinen eigenen Member, der den zugewiesenen Wert repräsentiert. Eine Variable gilt als zugewiesen, wenn die Wertedomäne genau einen
 Wert enthält. Ein Nutzer könnte aber bei Bedarf aus \inlcode{csp::Variable} ableiten und beispielsweise eine Methode \inlcode{getValue()} hinzufügen.
@@ -54,7 +56,10 @@ effizienten Random-Access und effizientes Iterieren. Da der \ac*{ac}-3 Algorithm
 an. Denkbar wäre auch eine \inlcode{std::queue} gewesen. Allerdings unterstützt diese kein Iterieren und kein elegantes Einfügen von Elementen am Ende durch
 \inlcode{std::back_inserter} und \inlcode{std::copy}. Für die Zuordnung von eingehenden Arcs zu Variablen wurde eine \inlcode{std::unordered_map} verwendet, die für jede Variable
 einen \inlcode{std::vector} aus Arcs verwaltet. Das Finden von Elementen in einer solchen Datenstruktur benötigt im Durchschnitt konstanten Aufwand \cite{uMap}, sodass im \ac*{ac}-3
-Algorithmus eingehende Arcs zu einer gegebene Variable effizient bestimmt werden können.
+Algorithmus eingehende Arcs zu einer gegebene Variable effizient bestimmt werden können. Alle Member von \inlcode{csp::Csp} sind \inlcode{const}, sodass sich die bei der Konstruktion
+festgelegte Topologie des Problems nicht mehr ändern lässt. Es ist also nicht möglich, neue Variablen oder Constraints hinzuzufügen oder zu entfernen. Allerdings lassen sich die
+Variablen über die Pointer verändern, sodass der Löser später beispielsweise die Wertedomänen anpassen kann. Da die korrekte Zuordnung von eingehenden Arcs zu Variablen essentiell
+für die Korrektheit des Lösers ist, darf ein \inlcode{csp::Csp} nur über die \inlcode{friend}-Methode \inlcode{csp::make_csp} konstruiert werden.
 
 \subsection{Definieren eines \ac*{csp}}
 Wie schon in \cref{sec:Concept} erörtert, soll der Nutzer lediglich eine Menge von Variablen und Constraints angeben müssen, um ein \ac*{csp} vollständig zu definieren. Hierfür
@@ -69,7 +74,7 @@ Arcs umgewandelt werden. Dies geschieht durch die Memberfuntion \inlcode{getArcs
 Da beide Überladungen von \inlcode{csp::make_constraint} eine identische Signatur besitzen (bis auf die Namen der Template-Typparameter), muss \ac*{sfinae} eingesetzt werden, damit
 die Wahl der richtigen Methode zur Übersetzzeit eindeutig ist. Dazu besitzen beiden Methoden einen dritten Template-Parameter, der lediglich dazu dient, die unpassende Methode
 auszuschließen:
-\lstinputlisting[linerange={91-94}]{../src/Csp.h}
+\lstinputlisting[linerange={92-95}]{../src/Csp.h}
 Das Konstrukt nutzt \inlcode{std::enable_if_t}, um einen Template-Parameter vom Typ \inlcode{int} mit Standardwert 0 zu deklarieren, sodass bei korrekter Benutzung der Methode
 der dritte Parameter nicht explizit angegeben werden muss. Sollte der im Typ \inlcode{ArcContainer} enthaltene Typ nicht vom Typ \inlcode{csp::Arc} sein, so definiert
 \inlcode{std::enable_if_t} keinen Typ und der Ausdruck des Standardwerts ist nicht gültig. Dadurch wird diese Überladung von \inlcode{csp::make_csp} durch \ac*{sfinae}
@@ -81,13 +86,31 @@ Mithilfe der zuvor vorgestellten Datenstrukturen lässt sich der eigentliche Lö
 Algorithmus ist quasi eine eins zu eins Implementierung des Pseudocodes aus \cite{ac3}. Der Unterschied ist, dass in der hier vorgestellten Implementierung nur binäre Constraints
 erlaubt sind. Unäre Constraints lassen sich allerdings trivial auf die Wertedomäne einer Variable übertragen, sodass diese Aufgabe an den Nutzer delegiert wurde.
 Die Backtracking-Suche selbst ist in der Methode \inlcode{csp::recursiveSolve} implementiert und ist ebenfalls sehr ähnlich zu der in \cref{sec:ConstrProp} vorgestellten
-Pseudoimplementierung. Ein paar kleine Unterschiede gibt es dennoch:
+Pseudoimplementierung. Sie arbeitet ebenfalls direkt auf einer Referenz des Problems und verändert die Domänen der Variablen über die enthaltenen Pointer. Ob das gegebene
+(Teil-)Problem erfolgreich gelöst werden konnte, wird auch hier durch einen Boolean signalisiert. Ein paar Unterschiede gibt es dennoch:
 \lstinputlisting[linerange={30-36}]{../src/solver.h}
 Zusätzlich zum \ac*{csp} muss ein Strategie-Funktor übergeben werden, der die nächste, noch nicht zugewiesene Variable aus dem \inlcode{csp::Csp} auswählt. Es werden beliebige
 Funktoren akzeptiert, die eine korrekte Signatur besitzen. Somit erhält der Nutzer die Möglichkeit, beliebige, problemspezifische Heuristiken zur Auswahl der nächsten Variablen
 anzugeben. Es wird gefordert, dass die Heuristik immer eine Variable liefert. Im Falle, dass es keine nicht zugewiesene Variable mehr gibt, muss eine beliebige gewählt werden.
-Dadurch vereinfacht sich der Goal-Test zu der einfachen \inlcode{if}-Abfrage in Zeile fünf. Der restliche Algorithmus ist analog zur Pseudoimplementierung aus \cref{sec:ConstrProp}
-aufgebaut.
+Dadurch vereinfacht sich der Goal-Test zu der einfachen \inlcode{if}-Abfrage in Zeile fünf. Danach werden für die aktuelle Variable sukzessive Werte aus ihrer Wertedomänen
+ausprobiert:
+\lstinputlisting[linerange={39-41, 44-57}, firstnumber=8]{../src/solver.h}
+Da die Zuweisung eines Wertes durch \inlcode{assign} die Wertedomäne einer Variable verändert, muss diese zunächst gesichert werden, damit Iterieren weiterhin möglich ist.
+Außerdem werden vor dem Aufruf des \ac*{ac}-3 Algorithmus alle Wertedomänen aller Variablen gesichert, da diese durch das Herstellen von \ac*{ac} oder den folgenden
+Rekursionsschritt verändert werden können. Dies geschieht durch \inlcode{util::makeCspCheckpoint}. Der ursprüngliche Zustand lässt sich danach durch
+\inlcode{util::restoreCspFromCheckpoint} wiederherstellen.
+
+Anstatt einen in-out-Parameter zu verwenden, also das Problem als nicht konstante Referenz zu übergeben, hätte auch ein reiner in-Parameter verwendet werden, der nicht verändert
+werden darf. Eine einfache \inlcode{const}-Referenz reicht dabei nicht aus, da sich die Wertedomänen der Variablen dann trotzdem über die Pointer verändern lassen. Um zu
+gewährleisten, dass das ursprüngliche Problem wirklich unverändert bleibt, muss vor dem Anpassen der Variablen eine Deep-Copy des \inlcode{csp::Csp} erzeugt werden. Dadurch spart
+man sich dann gleichzeitig das Sichern der Wertedomänen durch \inlcode{csp::makeCspCheckpoint}. Das Problem hierbei ist jedoch, dass das Erstellen einer Deep-Copy nicht trivial
+möglich ist, denn es muss nicht nur der Speicher hinter den Variablen-Pointern kopiert werden, sondern auch die zum Problem zugehörigen \inlcode{csp::Arc}s neu erstellt werden. Eine 
+Version des Lösers, die einen in-Parameter verwendet, wurde ebenfalls implementiert \footnote{Der Code findet sich auf \url{https://github.com/Timmifixedit/CSP-Solver/tree/DeepCopy}
+auf dem experimentellen \textit{DeepCopy}-Branch}. Hier liefert die Backtracking-Suche bei Erfolg eine Kopie des Problems zurück, bei der alle Variablen korrekt belegt sind. Auch
+der \ac*{ac}-3 Algorithmus arbeitet nicht mehr direkt auf dem Problem, sondern erstellt ebenfalls eine Kopie, wodurch das Sichern der Wertedomänen nicht mehr benötigt wird. Das
+\inlcode{csp::Csp} besitzt eine Methode \inlcode{clone()}, die die Deep-Copy erstellt. Experimente mit dem Sudokulöser zeigen jedoch, dass diese Version des Lösealgorithmus,
+selbst mit der gcc-Optimierung \inlcode{-O3}, um bis zu Faktor drei langsamer ist, als die Version mit in-out-Parameter und ohne Deep-Copy \footnote{Die Laufzeiten wurden beim
+Lösen des sehr schwierigen Sudokus gemessen, das im Ordner \textit{res} beigefügt ist}. Im Folgenden wird deshalb weiterhin die ursprüngliche Version des Lösers vorgestellt.
 
 Zur einfacheren Verwendung wird mit \inlcode{csp::solve} ein Wrapper für die rekursive Backtracking-Suche bereitgestellt:
 \lstinputlisting[linerange={70-79}]{../src/solver.h}
@@ -95,5 +118,5 @@ Hier wird außerdem mithilfe des \inlcode{static_assert} und \inlcode{std::is_in
 Standardmäßig wird die bereits implementierte Heuristik \inlcode{strategies::Mrv} verwendet. Diese wählt die Variable mit den wenigsten möglichen Werten aus (\inlcode{Mrv} steht
 für \textit{Minimum Remainig Values}). Eine weitere Möglichkeit ist die \inlcode{strategies::First} Heuristik, die einfach die nächstbeste nicht zugewiesene Variable auswählt.
 Darüber hinaus lassen sich aber auch beliebige eigene Heuristiken verwenden, solange die Signatur zulässig ist. Außerdem ruft der Wrapper anfangs einmal den \ac*{ac}-3 Algorithmus
-auf, da die rekursive Suche davon ausgeht, dass das Problem bereits arc consistent ist. Sollte dieser erste Schritt schon fehlschlagen, ist das Problem nicht lösbar und die
+auf, da die rekursive Suche davon ausgeht, dass das Problem bereits arc consistent ist. Sollte schon dieser erste Schritt fehlschlagen, ist das Problem nicht lösbar und die
 Backtracking-Suche ist obsolet.
