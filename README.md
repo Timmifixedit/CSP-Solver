@@ -13,7 +13,7 @@ values the variable might take:
 using MyVar = csp::Variable<int>;
 MyVar a({1, 2, 17, 24});
 ```
-Also possible: Create your own type. This allows you to add functionality to your varaible type. For example you can add a variable name:
+Also possible: Create your own type. This allows you to add functionality to your variable type. For example you can add a variable name:
 ```cpp
 #include <string>
 #include "Variable.h"
