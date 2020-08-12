@@ -1,3 +1,4 @@
+# adapted from https://github.com/SoPra-Team-10/GameLogic/tree/master/Tests
 project(Tests)
 
 enable_testing()
