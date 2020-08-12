@@ -101,17 +101,18 @@ Außerdem werden vor dem Aufruf des \ac*{ac}-3 Algorithmus alle Wertedomänen al
 Rekursionsschritt verändert werden können. Dies geschieht durch \inlcode{util::makeCspCheckpoint}. Der ursprüngliche Zustand lässt sich danach durch
 \inlcode{util::restoreCspFromCheckpoint} wiederherstellen.
 
-Anstatt einen in-out-Parameter zu verwenden, also das Problem als nicht konstante Referenz zu übergeben, hätte auch ein reiner in-Parameter verwendet werden, der nicht verändert
-werden darf. Eine einfache \inlcode{const}-Referenz reicht dabei nicht aus, da sich die Wertedomänen der Variablen dann trotzdem über die Pointer verändern lassen. Um zu
-gewährleisten, dass das ursprüngliche Problem wirklich unverändert bleibt, muss vor dem Anpassen der Variablen eine Deep-Copy des \inlcode{csp::Csp} erzeugt werden. Dadurch spart
-man sich dann gleichzeitig das Sichern der Wertedomänen durch \inlcode{csp::makeCspCheckpoint}. Das Problem hierbei ist jedoch, dass das Erstellen einer Deep-Copy nicht trivial
-möglich ist, denn es muss nicht nur der Speicher hinter den Variablen-Pointern kopiert werden, sondern auch die zum Problem zugehörigen \inlcode{csp::Arc}s neu erstellt werden. Eine 
-Version des Lösers, die einen in-Parameter verwendet, wurde ebenfalls implementiert \footnote{Der Code findet sich auf \url{https://github.com/Timmifixedit/CSP-Solver/tree/DeepCopy}
-auf dem experimentellen \textit{DeepCopy}-Branch}. Hier liefert die Backtracking-Suche bei Erfolg eine Kopie des Problems zurück, bei der alle Variablen korrekt belegt sind. Auch
-der \ac*{ac}-3 Algorithmus arbeitet nicht mehr direkt auf dem Problem, sondern erstellt ebenfalls eine Kopie, wodurch das Sichern der Wertedomänen nicht mehr benötigt wird. Das
-\inlcode{csp::Csp} besitzt eine Methode \inlcode{clone()}, die die Deep-Copy erstellt. Experimente mit dem Sudokulöser zeigen jedoch, dass diese Version des Lösealgorithmus,
-selbst mit der gcc-Optimierung \inlcode{-O3}, um bis zu Faktor drei langsamer ist, als die Version mit in-out-Parameter und ohne Deep-Copy \footnote{Die Laufzeiten wurden beim
-Lösen des sehr schwierigen Sudokus gemessen, das im Ordner \textit{res} beigefügt ist}. Im Folgenden wird deshalb weiterhin die ursprüngliche Version des Lösers vorgestellt.
+Anstatt an \inlcode{csp::recursiveSolve} einen in-out-Parameter zu verwenden, also das Problem als nicht konstante Referenz zu übergeben, hätte auch ein reiner in-Parameter
+verwendet werden, der nicht verändert werden darf. Eine einfache \inlcode{const}-Referenz reicht dabei nicht aus, da sich die Wertedomänen der Variablen dann trotzdem über die
+Pointer verändern lassen. Um zu gewährleisten, dass das ursprüngliche Problem wirklich unverändert bleibt, muss vor dem Anpassen der Variablen eine Deep-Copy des \inlcode{csp::Csp}
+erzeugt werden. Dadurch spart man sich dann gleichzeitig das Sichern der Wertedomänen durch \inlcode{csp::makeCspCheckpoint}. Das Problem hierbei ist jedoch, dass das Erstellen einer
+Deep-Copy nicht trivial möglich ist, denn es muss nicht nur der Speicher hinter den Variablen-Pointern kopiert werden, sondern auch die zum Problem zugehörigen \inlcode{csp::Arc}s
+neu erstellt werden. Eine  Version des Lösers, die einen in-Parameter verwendet, wurde ebenfalls implementiert \footnote{Der Code findet sich auf
+\url{https://github.com/Timmifixedit/CSP-Solver/tree/DeepCopy} auf dem experimentellen \textit{DeepCopy}-Branch}. Hier liefert die Backtracking-Suche bei Erfolg eine Kopie des
+Problems zurück, bei der alle Variablen korrekt belegt sind. Auch der \ac*{ac}-3 Algorithmus arbeitet nicht mehr direkt auf dem Problem, sondern erstellt ebenfalls eine Kopie,
+wodurch das Sichern der Wertedomänen nicht mehr benötigt wird. \inlcode{csp::Csp} besitzt eine Methode \inlcode{clone()}, die die Deep-Copy erstellt. Experimente mit dem
+Sudokulöser zeigen jedoch, dass diese Version des Lösealgorithmus, selbst mit der gcc-Optimierung \inlcode{-O3}, um bis zu Faktor drei langsamer ist, als die Version mit
+in-out-Parameter und ohne Deep-Copy \footnote{Die Laufzeiten wurden beim Lösen des sehr schwierigen Sudokus gemessen, das im Ordner \textit{res} beigefügt ist}. Im Folgenden wird
+deshalb weiterhin die ursprüngliche Version des Lösers vorgestellt.
 
 Zur einfacheren Verwendung wird mit \inlcode{csp::solve} ein Wrapper für die rekursive Backtracking-Suche bereitgestellt:
 \lstinputlisting[linerange={70-79}]{../src/solver.h}
