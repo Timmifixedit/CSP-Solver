@@ -13,7 +13,7 @@ values the variable might take:
 using MyVar = csp::Variable<int>;
 MyVar a({1, 2, 17, 24});
 ```
-Also possible: Create your own type. This allows you to add functionality to your varaible type. For example you can add a varaible name:
+Also possible: Create your own type. This allows you to add functionality to your variable type. For example you can add a variable name:
 ```cpp
 #include <string>
 #include "Variable.h"
@@ -25,7 +25,7 @@ public:
 ```
 ### Specifying Constraints
 `csp::Constraint` or `csp::Arc` specify dependencies between pairs of variables. They contain a pointer type to each variable and a binary predicate specifying the
-constraint. You can use arbitrary pointer types that support the dereference operator as well as -> operator. Example using the custom varaiable type above and shared_ptr (which is recommended over raw pointers):
+constraint. You can use arbitrary pointer types that support the dereference operator as well as -> operator. Example using the custom varaiable type above and shared_ptr (which I recommend over raw pointers):
 ```cpp
 #include <memory>
 #include "Arc.h"
@@ -62,6 +62,7 @@ auto strat = [](const auto & problem) {
 
 bool success = csp::solve(myCsp, strat);
 ```
+Examples on how to create your own strategy can be found in the file `src/strategies.h`.
 
 ## Solving Sudoku Puzzles
 The `src/main.cpp` contains a program that can solve Sudoku puzzles. A Sudoku is defined by a grid of numbers where a 0 indicates, that the respective field is yet
