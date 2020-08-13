@@ -1,7 +1,6 @@
 #include <iostream>
 #include <memory>
 #include <cassert>
-#include <utility>
 #include <fstream>
 #include <iomanip>
 #include <chrono>
@@ -14,8 +13,9 @@
 
 class SudokuNode : public csp::Variable<unsigned int> {
 public:
+    using VarList = csp::Variable<unsigned int>::DomainT;
     explicit SudokuNode(unsigned int val) : csp::Variable<unsigned int>(
-            val == 0 ? std::list<unsigned int>{1, 2, 3, 4, 5, 6, 7, 8, 9} : std::list{val}) {
+            val == 0 ? VarList{1, 2, 3, 4, 5, 6, 7, 8, 9} : VarList{val}) {
         assert(val <= 9);
     }
 

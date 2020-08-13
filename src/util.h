@@ -6,9 +6,7 @@
 
 #ifndef CSP_SOLVER_UTIL_H
 #define CSP_SOLVER_UTIL_H
-#include <unordered_map>
 #include <vector>
-#include <list>
 
 #include "Variable.h"
 #include "Arc.h"
@@ -83,7 +81,7 @@ namespace csp::util {
      * Backs up all value domains of all variables in a CSP
      * @tparam VarPtr Pointer-type to a type derived from csp::Variable
      * @param problem The CSP to be backed up
-     * @return vector of csp::Variable domains (std::list). Domains are ordered according to the variables in the CSP
+     * @return vector of csp::Variable domains. Domains are ordered according to the variables in the CSP
      */
     template<typename VarPtr>
     auto makeCspCheckpoint(const Csp<VarPtr> &problem) -> CspCheckpoint<typename Csp<VarPtr>::VarT::ValueT> {

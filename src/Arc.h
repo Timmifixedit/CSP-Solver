@@ -11,7 +11,6 @@
 #define CSP_SOLVER_ARC_H
 
 #include <type_traits>
-#include <vector>
 #include <cassert>
 #include <utility>
 #include <functional>
