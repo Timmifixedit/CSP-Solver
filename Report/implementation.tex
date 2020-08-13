@@ -37,9 +37,9 @@ erläutert wird.
 
 Mithilfe von \acused{sfinae}\ac*{sfinae}-Techniken lässt sich zur Übersetzzeit überprüfen, ob der gegebene Typparameter die oben genannten Anforderungen erfüllt, also
 dereferenzierbar ist und auf einen Typ zeigt, der aus \inlcode{csp::Variable} erbt:
-\lstinputlisting[linerange={23-36, 41-42, 48-49}]{../src/Arc.h}
+\lstinputlisting[linerange={22-35, 40-41, 47-48}]{../src/Arc.h}
 Durch \inlcode{static_assert} lassen sich dann aussagekräftige Fehlermeldungen zur Übersetzzeit generieren:
-\lstinputlisting[linerange={63-69}]{../src/Arc.h}
+\lstinputlisting[linerange={62-68}]{../src/Arc.h}
 
 Ein \inlcode{csp::Arc} lässt sich identisch zu einem \inlcode{csp::Constraint} konstruieren. Allerdings besitz ein \inlcode{csp::Arc} folgende zusätzliche Member: \inlcode{from()}
 liefert einen (allgemeinen) Pointer auf die Variable, von der der Arc ausgeht. Für den Arc $A \rightarrow B$ wäre dies beispielsweise $A$. Analog würde \inlcode{to()} einen Pointer
@@ -74,7 +74,7 @@ Arcs umgewandelt werden. Dies geschieht durch die Memberfuntion \inlcode{getArcs
 Da beide Überladungen von \inlcode{csp::make_constraint} eine identische Signatur besitzen (bis auf die Namen der Template-Typparameter), muss \ac*{sfinae} eingesetzt werden, damit
 die Wahl der richtigen Methode zur Übersetzzeit eindeutig ist. Dazu besitzen beiden Methoden einen dritten Template-Parameter, der lediglich dazu dient, die unpassende Methode
 auszuschließen:
-\lstinputlisting[linerange={92-95}]{../src/Csp.h}
+\lstinputlisting[linerange={94-97}]{../src/Csp.h}
 Das Konstrukt nutzt \inlcode{std::enable_if_t}, um einen Template-Parameter vom Typ \inlcode{int} mit Standardwert 0 zu deklarieren, sodass bei korrekter Benutzung der Methode
 der dritte Parameter nicht explizit angegeben werden muss. Sollte der im Typ \inlcode{ArcContainer} enthaltene Typ nicht vom Typ \inlcode{csp::Arc} sein, so definiert
 \inlcode{std::enable_if_t} keinen Typ und der Ausdruck des Standardwerts ist nicht gültig. Dadurch wird diese Überladung von \inlcode{csp::make_csp} durch \ac*{sfinae}
@@ -88,14 +88,14 @@ erlaubt sind. Unäre Constraints lassen sich allerdings trivial auf die Wertedom
 Die Backtracking-Suche selbst ist in der Methode \inlcode{csp::recursiveSolve} implementiert und ist ebenfalls sehr ähnlich zu der in \cref{sec:ConstrProp} vorgestellten
 Pseudoimplementierung. Auch sie arbeitet direkt auf einer Referenz des Problems und verändert die Domänen der Variablen über die enthaltenen Pointer. Ob das gegebene
 (Teil-)Problem erfolgreich gelöst werden konnte, wird auch hier durch einen Boolean signalisiert. Ein paar Unterschiede gibt es dennoch:
-\lstinputlisting[linerange={30-36}]{../src/solver.h}
+\lstinputlisting[linerange={28-34}]{../src/solver.h}
 Zusätzlich zum \ac*{csp} muss ein Strategie-Funktor übergeben werden, der die nächste, noch nicht zugewiesene Variable aus dem \inlcode{csp::Csp} auswählt. Es werden beliebige
 Funktoren akzeptiert, die eine korrekte Signatur besitzen. Somit erhält der Nutzer die Möglichkeit, beliebige, problemspezifische Heuristiken zur Auswahl der nächsten Variablen
 anzugeben. Werden eigene Variablentypen verwendet, die aus \inlcode{csp::Variable} ableiten, kann eine benutzerdefinierte Heuristik aufgrund des statischen Polymorphismus auch auf
 dessen zusätzliche Felder und Methoden zugreifen, sodass mehr Informationen bei der Auswahl der nächsten Variable zur Verfügung stehen. Es wird gefordert, dass die Heuristik
 immer eine Variable liefert. Im Falle, dass es keine nicht zugewiesene Variable mehr gibt, muss eine beliebige gewählt werden. Dadurch vereinfacht sich der Goal-Test zu der
 einfachen \inlcode{if}-Abfrage in Zeile fünf. Danach werden für die aktuelle Variable sukzessive Werte aus ihrer Wertedomänen ausprobiert:
-\lstinputlisting[linerange={39-41, 44-57}, firstnumber=8]{../src/solver.h}
+\lstinputlisting[linerange={37-39, 42-55}, firstnumber=8]{../src/solver.h}
 Da die Zuweisung eines Wertes durch \inlcode{assign} die Wertedomäne einer Variable verändert, muss diese zunächst gesichert werden, damit Iterieren weiterhin möglich ist.
 Außerdem werden vor dem Aufruf des \ac*{ac}-3 Algorithmus alle Wertedomänen aller Variablen gesichert, da diese durch das Herstellen von \ac*{ac} oder den folgenden
 Rekursionsschritt verändert werden können. Dies geschieht durch \inlcode{util::makeCspCheckpoint}. Der ursprüngliche Zustand lässt sich danach durch
@@ -114,10 +114,10 @@ mit der gcc-Optimierung \inlcode{-O3}, um bis zu Faktor drei langsamer ist als d
 sehr schwierigen Sudokus gemessen, das im Ordner \textit{res} beigefügt ist}. Im Folgenden wird deshalb weiterhin die ursprüngliche Version des Lösers vorgestellt.
 
 Zur einfacheren Verwendung wird mit \inlcode{csp::solve} ein Wrapper für die rekursive Backtracking-Suche bereitgestellt:
-\lstinputlisting[linerange={70-79}]{../src/solver.h}
+\lstinputlisting[linerange={68-81}]{../src/solver.h}
 Hier wird außerdem mithilfe des \inlcode{static_assert} und \inlcode{std::is_invocable_r_v} zur Übersetzzeit überprüft, ob die angegebene Heuristik eine gültige Signatur besitzt.
 Standardmäßig wird die bereits implementierte Heuristik \inlcode{strategies::Mrv} verwendet. Diese wählt die Variable mit den wenigsten möglichen Werten aus (\inlcode{Mrv} steht
 für \textit{Minimum Remainig Values}). Eine weitere Möglichkeit ist die \inlcode{strategies::First} Heuristik, die einfach die nächstbeste nicht zugewiesene Variable auswählt.
-Darüber hinaus lassen sich aber auch beliebige eigene Heuristiken verwenden, solange die Signatur zulässig ist. Außerdem ruft der Wrapper anfangs einmal den \ac*{ac}-3 Algorithmus
-auf, da die rekursive Suche davon ausgeht, dass das Problem bereits \textit{arc consistent} ist. Sollte schon dieser erste Schritt fehlschlagen, ist das Problem nicht lösbar und die
-Backtracking-Suche obsolet.
+Darüber hinaus lassen sich aber auch beliebige eigene Heuristiken verwenden, solange die Signatur zulässig ist. Außerdem prüft der Wrapper anfangs, ob das Problem leer ist und ruft
+einmal den \ac*{ac}-3 Algorithmus auf, da die rekursive Suche davon ausgeht, dass das Problem bereits \textit{arc consistent} ist. Sollte schon dieser erste Schritt fehlschlagen,
+ist das Problem nicht lösbar und die Backtracking-Suche obsolet.

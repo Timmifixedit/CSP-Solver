@@ -5,7 +5,7 @@ Nachdem ein Überblick über den Aufbau des Lösealgorithmus gegeben wurde, soll
 Die bekannten Sudoku-Rätsel lassen sich recht einfach als \ac*{csp} beschreiben. Dabei stellen die einzelnen Felder die Variablen dar, die mit Zahlen von eins bis neun ausgefüllt
 werden müssen. Die Constraints äußern sich darin, dass Felder in derselben Zeile, Spalte oder im selben $3 \times 3$ Block unterschiedliche Werte haben müssen. Für den Löser wurde
 ein eigener Variablen-Typ erstellt, der im Konstruktor automatisch die Wertedomäne korrekt setzt. Außerdem lässt sich der Wert der Variable bequem mit \inlcode{getValue()} abfragen:
-\lstinputlisting[linerange={15-29}]{../src/main.cpp}
+\lstinputlisting[linerange={14-29}]{../src/main.cpp}
 Um die \inlcode{SudokuNode}s zu verwalten, wurde außerdem die Hilfsklasse \inlcode{Sudoku} implementiert. Deren Konstruktor liest die gegebenen Werte aus einem \inlcode{std::istream}
 ein und instanziiert automatisch alle Variablen mit den korrekten Werten. Der Wert 0 gibt hierbei an, dass ein Sudoku-Feld noch leer ist. Außerdem lässt sich das Sudoku mit
 \inlcode{print()} anzeigen und mit \inlcode{solve()} lösen:
@@ -16,7 +16,7 @@ nicht möglich, da ein \inlcode{csp::Arc} nicht default-konstruierbar ist. Danac
 hat als die \inlcode{csp::strategies::Mrv} Strategie. Nach dem Aufruf von \inlcode{solve()} kann, falls lösbar, die Lösung des Sudokus erneut mit \inlcode{print()} angezeigt werden.
 
 \subsection{Unit-Tests mit Google Test}
-Während der Entwicklung wurden insgesamt 20 Unit-Tests mit dem Google-Test-Framework geschrieben, um die korrekte Funktionalität der einzelnen Komponenten zu gewährleisten.
+Während der Entwicklung wurden insgesamt 21 Unit-Tests mit dem Google-Test-Framework geschrieben, um die korrekte Funktionalität der einzelnen Komponenten zu gewährleisten.
 Der Aufbau eines solchen Unit-Test soll an einem Beispiel kurz dargestellt werden:
 \lstinputlisting[linerange={25-32}]{../Tests/util.cpp}
 Ein einzelner Test wird mit dem Makro \inlcode{TEST} definiert, wobei ein Name für die übergeordnete Testgruppe und ein spezifischer Test-Name angegeben werden muss. Innerhalb des
