@@ -1,8 +1,8 @@
 \section{Testsuite und Beispielanwendung}
-Nachdem ein Überblick über den Aufbau des allgemeinen Lösealgorithmus gegeben wurde, soll nun kurz die Implementierung eines Sudokulösers, sowie die Testsuite vorgestellt werden.
+Nachdem ein Überblick über den Aufbau des Lösealgorithmus gegeben wurde, soll nun kurz die Implementierung eines Sudokulösers, sowie die Testsuite vorgestellt werden.
 
 \subsection{Lösen von Sudokus}
-Die bekannten Sudoku-Rätsel lassen sich recht einfach als \ac*{csp} beschreiben. Dabei stellen die einzelnen Felder die Variablen dar, die mit Zahlen von eins bis neuen ausgefüllt
+Die bekannten Sudoku-Rätsel lassen sich recht einfach als \ac*{csp} beschreiben. Dabei stellen die einzelnen Felder die Variablen dar, die mit Zahlen von eins bis neun ausgefüllt
 werden müssen. Die Constraints äußern sich darin, dass Felder in der selben Zeile, Spalte oder im selben $3 \times 3$ Block unterschiedliche Werte haben müssen. Für den Löser wurde
 ein eigener Variablen-Typ erstellt, der im Konstruktor automatisch die Wertedomäne korrekt setzt. Außerdem lässt sich der Wert der Variable bequem mit \inlcode{getValue()} abfragen:
 \lstinputlisting[linerange={15-29}]{../src/main.cpp}

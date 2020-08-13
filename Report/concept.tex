@@ -14,12 +14,12 @@ für \acp{csp} zu orientieren und Datenstrukturen für Variablen, Wertedomänen 
 zusammenhängen, bietet es sich ebenfalls an, beide Strukturen zu kombinieren, beispielsweise indem Variablen einen Member \textit{domain} bekommen. Bei der Umsetzung der
 Constraints sind mehrere Optionen denkbar: Jede Variable könnte eine Liste mit Verweisen auf andere Variablen besitzen, zu denen eine Abhängigkeit besteht, zusammen mit einem
 Funktionsobjekt, das die konkrete Relation angibt. Dieses Konzept wäre besonders bei der Implementierung des \ac*{ac}-3 Algorithmus vorteilhaft, da hier zu einer Variablen $V$ alle
-eingehenden Arcs $N_i \rightarrow V$ benötigt werden. Hierbei bezeichnet $N_i, \ i \in \{1, \dots, k\}$ einen der $k$ Nachbarn von $V$ im Constraint-Graph. Der Nachteil bei dieser
-Lösung ist allerdings, dass der Nutzer bei der Definition des \ac*{csp} immer beide Richtungen eines Constraints explizit angeben muss. Das kann einerseits aufwendig werden und
-andererseits zu Fehlern führen, wodurch das \ac*{csp} dann nicht wohldefiniert wäre. Deshalb wird in dieser Arbeit ein Ansatz bevorzugt, bei dem lediglich eine Richtung angegeben
-werden muss. Da der \ac*{ac}-3 Algorithmus während eines Durchlaufs mehrmals auf die eingehenden Arcs einer Variablen zugreifen muss, sollte vor Aufruf des eigentlichen
-Lösealgorithmus zunächst eine Tabelle mit Variablen und zugehörigen eingehenden Arcs erstellt werden. Hierfür bietet sich eine assoziative Datenstruktur wie beispielsweise eine
-\inlcode{std::unordered_map} an.
+eingehenden Arcs $N_i \rightarrow V$ benötigt werden. Hierbei bezeichnen $N_i, \ i \in \{1, \dots, k\}$ die $k$ Nachbarn von $V$ im Constraint-Graph. Der Nachteil bei dieser Lösung
+ist allerdings, dass der Nutzer bei der Definition des \ac*{csp} immer beide Richtungen eines Constraints explizit angeben muss. Das kann einerseits aufwendig werden und andererseits
+zu Fehlern führen, wodurch das \ac*{csp} dann nicht wohldefiniert wäre. Deshalb wird in dieser Arbeit ein Ansatz bevorzugt, bei dem lediglich eine Richtung angegeben werden muss.
+Da der \ac*{ac}-3 Algorithmus während eines Durchlaufs mehrmals auf die eingehenden Arcs einer Variablen zugreifen muss, sollte vor Aufruf des eigentlichen Lösealgorithmus zunächst
+eine Tabelle mit Variablen und zugehörigen eingehenden Arcs erstellt werden. Hierfür bietet sich eine assoziative Datenstruktur wie beispielsweise eine \inlcode{std::unordered_map}
+an.
 
 \subsection{Erweiterbarkeit des Algorithmus}
 \label{sec:Extensions}

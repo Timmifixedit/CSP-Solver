@@ -46,6 +46,6 @@ werden kann. So lässt sich beispielsweise der zuvor angegebene naive Backtracki
 \lstinputlisting{solve.cpp}
 Nach der Zuweisung der aktuellen Variable in Zeile acht wird hier durch die Methode \textit{obtainArcConsistency} das Problem auf ein äquivalentes Problem transformiert, wobei
 ggf. Werte aus den Domänen mancher Variablen gelöscht werden. Sollte sich die Domäne einer Variablen auf die leere Menge reduzieren, ist das Problem von diesem Rekursionsschritt
-aus nicht mehr lösbar, sodass direkt der nächste Wert ausprobiert werden kann. In diesem Fall gibt die Methode \inlcode{false} zurück. Ist das Herstellen der \ac*{ac} erfolgreich,
-kann wie zuvor der nächste Rekursionsschritt ausgeführt werden, wobei im Idealfall die Domänen der Variablen reduziert sind. In manchen Fällen lässt sich ein \ac*{csp} sogar
-direkt durch das Herstellen von \ac*{ac} lösen.
+aus nicht mehr lösbar, sodass direkt der nächste Wert ausprobiert werden kann. In diesem Fall gibt \inlcode{obtainArcConsistency} \inlcode{false} zurück. Ist das Herstellen der
+\ac*{ac} erfolgreich, kann wie zuvor der nächste Rekursionsschritt ausgeführt werden, wobei im Idealfall die Domänen der Variablen reduziert sind. In manchen Fällen lässt sich ein
+\ac*{csp} sogar direkt durch das Herstellen von \ac*{ac} lösen.

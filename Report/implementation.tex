@@ -3,7 +3,7 @@ Ausgehend von den in \cref{sec:Concept} beschriebenen Anforderungen wird im folg
 
 \subsection{Zentrale Datenstrukturen}
 Um ein \ac*{csp} zu definieren, muss des Nutzer lediglich zwei Dinge tun: Angegeben werden müssen alle vorhandenen Variablen mit zugehöriger Wertedomäne sowie eine Menge von
-Constraints, die die Abhängigkeiten zwischen den Variablen darstellen. Dafür werden die Template-Klassen \inlcode{csp::Variable} sowie \inlcode{csp::Constraint} oder
+Constraints, die die Abhängigkeiten zwischen den Variablen darstellen. Dafür werden die Template-Klassen \inlcode{csp::Variable} sowie \inlcode{csp::Constraint} und
 \inlcode{csp::Arc} zur Verfügung gestellt.
 
 \subsubsection{csp::Variable}
@@ -29,7 +29,7 @@ zwischen beiden Klassen wurde bereits in \cref{sec:ConstrProp} erläutert: Const
 Beide lassen sich jedoch fast identisch verwenden. Zunächst soll die Klasse \inlcode{csp::Constraint} genauer betrachtet werden. Sie enthält zwei Pointer-Typen, die jeweils auf
 eine \inlcode{csp::Variable} zeigen und das Constraint zwischen den Variablen wird durch ein binäres Prädikat in Form einer \inlcode{std::function} repräsentiert. Der genaue Typ
 des Pointers wird nicht vorgeschrieben und lässt sich über einen Template-Typparameter angeben. Grundsätzlich sind alle Typen zulässig, die den Dereferenzoperator \inlcode{*}
-unterstützen. Möglich sind also beispielsweise einfache "Raw-Pointer" oder auch Smart-Pointer, solange sie den Copy-Constructor unterstützen. Alle weiteren Hilfsklassen und
+unterstützen. Möglich sind also beispielsweise einfache "Raw-Pointer" oder auch Smart-Pointer, solange sie den Copy-Konstruktor unterstützen. Alle weiteren Hilfsklassen und
 -methoden sowie der Lösealgorithmus selbst verwenden alle denselben Pointer-Typ. Der Pointer selbst muss auf einen Typ zeigen, der aus \inlcode{csp::Variable} ableitet. Verwendet
 der Nutzer eine eigene Variablen-Klasse, die aus \inlcode{csp::Variable} erbt und weitere Member besitzt, so ist es weiterhin über den Pointer möglich auf diese Member zuzugreifen,
 auch wenn \inlcode{csp::Variable} selbst nicht polymorph ist. Dies ermöglicht mehr Flexibilität beim Schreiben von eigenen Heuristiken zur Variablenauswahl, wie später noch genauer
@@ -101,12 +101,12 @@ Außerdem werden vor dem Aufruf des \ac*{ac}-3 Algorithmus alle Wertedomänen al
 Rekursionsschritt verändert werden können. Dies geschieht durch \inlcode{util::makeCspCheckpoint}. Der ursprüngliche Zustand lässt sich danach durch
 \inlcode{util::restoreCspFromCheckpoint} wiederherstellen.
 
-Anstatt an \inlcode{csp::recursiveSolve} einen in-out-Parameter zu verwenden, also das Problem als nicht konstante Referenz zu übergeben, hätte auch ein reiner in-Parameter
-verwendet werden, der nicht verändert werden darf. Eine einfache \inlcode{const}-Referenz reicht dabei nicht aus, da sich die Wertedomänen der Variablen dann trotzdem über die
+Anstatt für \inlcode{csp::recursiveSolve} einen in-out-Parameter zu nutzen, also das Problem als nicht konstante Referenz zu übergeben, hätte auch ein reiner in-Parameter verwendet
+werden können, der nicht verändert werden darf. Eine einfache \inlcode{const}-Referenz reicht dabei nicht aus, da sich die Wertedomänen der Variablen dann trotzdem über die
 Pointer verändern lassen. Um zu gewährleisten, dass das ursprüngliche Problem wirklich unverändert bleibt, muss vor dem Anpassen der Variablen eine Deep-Copy des \inlcode{csp::Csp}
 erzeugt werden. Dadurch spart man sich dann gleichzeitig das Sichern der Wertedomänen durch \inlcode{csp::makeCspCheckpoint}. Das Problem hierbei ist jedoch, dass das Erstellen einer
 Deep-Copy nicht trivial möglich ist, denn es muss nicht nur der Speicher hinter den Variablen-Pointern kopiert werden, sondern auch die zum Problem zugehörigen \inlcode{csp::Arc}s
-neu erstellt werden. Eine  Version des Lösers, die einen in-Parameter verwendet, wurde ebenfalls implementiert \footnote{Der Code findet sich auf
+neu erstellt werden. Eine Version des Lösers mit in-Parameter wurde ebenfalls implementiert \footnote{Der Code findet sich auf
 \url{https://github.com/Timmifixedit/CSP-Solver/tree/DeepCopy} auf dem experimentellen \textit{DeepCopy}-Branch}. Hier liefert die Backtracking-Suche bei Erfolg eine Kopie des
 Problems zurück, bei der alle Variablen korrekt belegt sind. Auch der \ac*{ac}-3 Algorithmus arbeitet nicht mehr direkt auf dem Problem, sondern erstellt ebenfalls eine Kopie,
 wodurch das Sichern der Wertedomänen nicht mehr benötigt wird. \inlcode{csp::Csp} besitzt eine Methode \inlcode{clone()}, die die Deep-Copy erstellt. Experimente mit dem
