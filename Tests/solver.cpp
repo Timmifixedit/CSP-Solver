@@ -89,3 +89,8 @@ TEST(solver_test, backtrack) {
     EXPECT_EQ(varC->valueDomain().front(), 3);
     EXPECT_EQ(varD->valueDomain().front(), 1);
 }
+
+TEST(solver_test, empty_problem) {
+    csp::Csp problem = csp::make_csp(std::vector<VarPtr>{}, std::vector<TestArc>{});
+    EXPECT_TRUE(csp::solve(problem));
+}

@@ -71,6 +71,10 @@ namespace csp {
     bool solve(Csp<VarPtr> &problem, const Strategy &strategy = Strategy()) {
         static_assert(std::is_invocable_r_v<VarPtr, Strategy, Csp<VarPtr>>,
                 "Invalid strategy object! Must map from csp::Csp -> VarPtr");
+        if (std::empty(problem.variables)) {
+            return true;
+        }
+
         if (!util::ac3(problem)) {
             return false;
         }
