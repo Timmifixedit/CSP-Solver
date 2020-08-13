@@ -69,6 +69,12 @@ namespace csp {
                       "Type referenced by VarPtr must derive from csp::Variable");
         using VarType = typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::ValueT;
 
+        /**
+         * Ctor
+         * @param v1 Pointer-Type to first variable
+         * @param v2 Pointer-Type to first variable
+         * @param predicate Constraint in form of a binary predicate
+         */
         Constraint(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate) : var1(std::move(v1)), var2(std::move(v2)),
         predicate(std::move(predicate)) {}
 
@@ -101,6 +107,13 @@ namespace csp {
     class Arc : public Constraint<VarPtr> {
     public:
         using VarType = typename Constraint<VarPtr>::VarType;
+        /**
+         * Ctor
+         * @param v1 Pointer-Type to first variable
+         * @param v2 Pointer-Type to first variable
+         * @param predicate Constraint in form of a binary predicate
+         * @param reverse Specifies whether the arc represents v2 -> v1 instead
+         */
         Arc(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate, bool reverse = false) :
                 Constraint<VarPtr>(std::move(v1), std::move(v2), std::move(predicate)), reversed(reverse) {}
 
