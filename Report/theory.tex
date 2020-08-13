@@ -11,11 +11,11 @@ macht sich der Algorithmus noch nicht zunutze, dass alle Constraints binär sind
 besitzen und kein Constraint verletzt ist, liefert die Methode \inlcode{cspSolver} \inlcode{true}. Die gültige Zuweisung ist hier im Argument \inlcode{problem} (mit nicht näher
 definiertem Datentyp \inlcode{CSP}) gespeichert, das als Referenz übergeben wurde. Ist das Problem noch nicht gelöst, wird die nächste nicht zugewiesene Variable ausgewählt und
 alle möglichen Werte der zugehörigen Wertedomäne werden sukzessive ausprobiert. In Zeile 10 wird überprüft, ob die aktuelle Zuweisung erlaubt ist. Im einfachsten Fall erfolgt das
-einfach durch Überprüfen sämtlicher Constraints. Falls der Wert kein Constraint verletzt, wird im nächsten Rekursionsschritt die nächste Variable zugewiesen. Sollte es bei einer 
-Variable keine gültige Zuweisung geben, ist der Algorithmus in eine Sackgasse gelaufen. Im Suchbaum läuft der Algorithmus dann so lange aufwärts, bis wieder eine gültige Zuweisung
-für eine Variable gefunden wird. Gibt es keine solche Variable, dann ist das Problem nicht lösbar, z.B. aufgrund  widersprüchlicher Constraints. 
+durch Überprüfen sämtlicher Constraints. Falls der Wert kein Constraint verletzt, wird im nächsten Rekursionsschritt die nächste Variable zugewiesen. Sollte es bei einer Variable
+keine gültige Zuweisung geben, ist der Algorithmus in eine Sackgasse gelaufen. Im Suchbaum läuft der Algorithmus dann so lange aufwärts, bis wieder eine gültige Zuweisung für eine
+Variable gefunden wird. Gibt es keine solche Variable, dann ist das Problem nicht lösbar, z.B. aufgrund  widersprüchlicher Constraints. 
 
-Wie hier unschwer zu erkennen ist, besitzt diese naive Backtracking-Suche jedoch eine exponentielle Komplexität in der Anzahl der Variablen, was für große \acp*{csp} schnell zu
+Wie hier unschwer zu erkennen ist, besitzt diese naive Backtracking-Suche jedoch eine exponentielle Komplexität in der Anzahl der Variablen, was bei großen \acp*{csp} schnell zu
 sehr langen Laufzeiten führen kann. Tatsächlich ist aktuell kein effizienter Algorithmus (also mit polynomieller Laufzeit) bekannt, der ein \ac*{csp}, selbst mit den oben genannten
 Einschränkungen, effizient lösen kann, da es sich nach wie vor um ein NP-vollständiges Problem handelt \cite{BestCSPSearch}. Deshalb werden in der Praxis häufig zusätzlich
 Heuristiken verwendet, um den Suchraum zu verkleinern und dadurch die Laufzeit zu verringern. Diese Heuristiken können beispielsweise entscheiden, welche Variable als nächstes
@@ -23,7 +23,7 @@ ausgewählt werden soll oder welcher Wert als nächstes ausprobiert wird (siehe 
 
 \subsection{Lösen durch Constraint Propagation}
 \label{sec:ConstrProp}
-Ein Problem des zuvor vorgestellten Algorithmus besteht darin, dass die ungültige Zuweisung einer Variable häufig erst viele Rekursionsschritte später bemerkt wird. Dadurch werden
+Ein Problem des zuvor vorgestellten Algorithmus besteht darin, dass die ungültige Zuweisung einer Variablen häufig erst viele Rekursionsschritte später bemerkt wird. Dadurch werden
 potentiell Äste im Suchbaum verfolgt, die von vornherein schon hätten ausgeschlossen werden könnten. Um dieses Problem zu lösen, bietet sich \textit{Constraint Propagation}
 an. Dabei werden aus bereits bestehenden Constraints neue hergeleitet, um die Wertedomänen von Variablen zusätzlich einzuschränken (in \cite{OrderingHeuristics} auch
 \textit{Consistency Enforcing} genannt). Dies soll an folgendem Beispiel erläutert werden. Angenommen es gibt zwei Variablen $A$ und $B$, die jeweils Werte zwischen einschließlich
@@ -34,7 +34,7 @@ In diesem Beispiel stellt sich nach der erläuterten Anpassung der Wertedomänen
 \paragraph{\acl*{ac}} Ein \ac*{csp} mit ausschließlich binären Constraints lässt 
 sich als Graph darstellen, bei dem die Knoten die Variablen repräsentieren und die Kanten die Constraints. Eine gerichtete Kante zwischen zwei Variablen $A$ und $B$ wird \textit{Arc}
 genannt und im Folgenden mit $A \rightarrow B$ bezeichnet. Dies lässt sich interpretieren als: "$A$ fordert von $B$ die Einhaltung eines Constraints". Ein Constraint an sich lässt
-sich allgemein als binäres Prädikat angeben und definiert immer beide Richtungen, also $A \rightarrow B$ und $B \rightarrow A$. Bei dem Begriff der \acl*{ac} hingegen spielt die
+sich allgemein als binäres Prädikat angeben und definiert immer beide Richtungen, also $A \rightarrow B$ und $B \rightarrow A$. Bei dem Begriff der \eac{ac} hingegen spielt die
 Richtung eine wichtige Rolle, weshalb zwischen Arcs und Constraints unterschieden werden muss. Formell ist eine Variable $A$ mit Wertedomäne $d_A$ \textit{arc consistent} zu einer
 Variablen $B$ mit Wertedomäne $d_B$, wenn $\forall v \in d_A \ \exists w \in d_B$, sodass die Zuweisung $A = v, \ B = w$ keine Constraints zwischen $A$ und $B$ verletzt. Im Folgenden
 wird dies bezeichnet durch $A \consTo B$. Hier ist zu beachten, dass im Allgemeinen aus $A \consTo B$ nicht folgt $B \consTo A$. Sind alle alle Arcs zwischen allen Variablenpaaren
@@ -47,5 +47,5 @@ werden kann. So lässt sich beispielsweise der zuvor angegebene naive Backtracki
 Nach der Zuweisung der aktuellen Variable in Zeile acht wird hier durch die Methode \textit{obtainArcConsistency} das Problem auf ein äquivalentes Problem transformiert, wobei
 ggf. Werte aus den Domänen mancher Variablen gelöscht werden. Sollte sich die Domäne einer Variablen auf die leere Menge reduzieren, ist das Problem von diesem Rekursionsschritt
 aus nicht mehr lösbar, sodass direkt der nächste Wert ausprobiert werden kann. In diesem Fall gibt \inlcode{obtainArcConsistency} \inlcode{false} zurück. Ist das Herstellen der
-\ac*{ac} erfolgreich, kann wie zuvor der nächste Rekursionsschritt ausgeführt werden, wobei im Idealfall die Domänen der Variablen reduziert sind. In manchen Fällen lässt sich ein
+\ac*{ac} erfolgreich, kann wie zuvor der nächste Rekursionsschritt ausgeführt werden, wobei im Idealfall die Domänen der Variablen reduziert wurden. In manchen Fällen lässt sich ein
 \ac*{csp} sogar direkt durch das Herstellen von \ac*{ac} lösen.
