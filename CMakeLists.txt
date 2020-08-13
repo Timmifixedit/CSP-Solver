@@ -1,3 +1,4 @@
+# Adapted from https://github.com/SoPra-Team-10/GameLogic
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 20)
 
