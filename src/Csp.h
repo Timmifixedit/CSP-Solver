@@ -10,6 +10,8 @@
 #define CSP_SOLVER_CSP_H
 
 #include <unordered_map>
+#include <vector>
+#include <list>
 
 #include "Variable.h"
 #include "Arc.h"

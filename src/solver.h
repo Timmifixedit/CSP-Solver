@@ -8,8 +8,6 @@
 #ifndef CSP_SOLVER_SOLVER_H
 #define CSP_SOLVER_SOLVER_H
 
-#include <list>
-#include <algorithm>
 #include <type_traits>
 
 #include "Variable.h"

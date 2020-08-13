@@ -8,7 +8,6 @@
 #ifndef CSP_SOLVER_VARIABLE_H
 #define CSP_SOLVER_VARIABLE_H
 #include <list>
-#include <vector>
 #include <memory>
 
 namespace csp {
