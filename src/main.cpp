@@ -34,9 +34,16 @@ public:
         int index = 0;
         unsigned int val = 0;
         while (input >> val) {
-            assert(val <= 9);
+            if (val > 9) {
+                throw std::runtime_error("Sudo file contains invalid values!");
+            }
+
             fields[index] = std::make_shared<SudokuNode>(val);
             ++index;
+        }
+
+        if (index != 81) {
+            throw std::runtime_error("Sudo file must contain exactly 81 values!");
         }
     }
 
