@@ -11,7 +11,7 @@
 
 #include <unordered_map>
 #include <vector>
-#include <list>
+#include <deque>
 
 #include "Variable.h"
 #include "Arc.h"
@@ -60,7 +60,7 @@ namespace csp {
         using ArcT = Arc<VarPtr>;
         using VarT = std::remove_reference_t<decltype(*std::declval<VarPtr>())>;
         using VarListT = std::vector<VarPtr>;
-        using ArcListT = std::list<ArcT>;
+        using ArcListT = std::deque<ArcT>;
         using NeighbourListT = std::unordered_map<VarPtr, std::vector<ArcT>>;
         const VarListT variables;
         const ArcListT arcs;
