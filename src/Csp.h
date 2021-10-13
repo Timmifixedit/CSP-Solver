@@ -11,7 +11,7 @@
 
 #include <unordered_map>
 #include <vector>
-#include <list>
+#include <deque>
 
 #include "Variable.h"
 #include "Arc.h"
@@ -60,21 +60,17 @@ namespace csp {
         using ArcT = Arc<VarPtr>;
         using VarT = std::remove_reference_t<decltype(*std::declval<VarPtr>())>;
         using VarListT = std::vector<VarPtr>;
-        using ArcListT = std::list<ArcT>;
+        using ArcListT = std::deque<ArcT>;
         using NeighbourListT = std::unordered_map<VarPtr, std::vector<ArcT>>;
         const VarListT variables;
         const ArcListT arcs;
         const NeighbourListT incomingNeighbours;
 
-        template<typename VarContainer, typename ArcContainer, std::enable_if_t<
-                type_traits::is_arc<std::remove_reference_t<decltype(
-                        *std::begin(std::declval<ArcContainer>())
-                        )>>::value, int>>
-        friend auto make_csp(const VarContainer &variables, const ArcContainer &arcs) -> Csp<std::decay_t<decltype(
-                        std::end(arcs),
-                        std::end(variables),
-                        *std::begin(variables)
-                )>>;
+        template<typename VarIt, typename ArcIt, std::enable_if_t<type_traits::is_arc<
+                std::remove_reference_t<decltype(*std::declval<ArcIt>())>>::value, int>>
+        friend auto make_csp(VarIt vBegin, VarIt vEnd, ArcIt aBegin, ArcIt aEnd)
+        -> Csp<std::decay_t<decltype(*++aBegin, aBegin == aEnd, ++vBegin, vBegin == vEnd, *vBegin)>>;
+
     private:
         Csp(VarListT variables, ArcListT arcs, NeighbourListT neighbours) :
                 variables(std::move(variables)), arcs(std::move(arcs)), incomingNeighbours(std::move(neighbours)) {}
@@ -99,22 +95,7 @@ namespace csp {
                     std::end(variables),
                     *std::begin(variables)
             )>> {
-
-        using VarPtr = std::decay_t<decltype(*std::begin(variables))>;
-        using VarListT = typename Csp<VarPtr>::VarListT;
-        using ArcListT = typename Csp<VarPtr>::ArcListT;
-        using NeighbourListT = typename Csp<VarPtr>::NeighbourListT;
-        VarListT vars;
-        ArcListT cspArcs;
-        NeighbourListT neighbours;
-        std::copy(std::begin(variables), std::end(variables), std::back_inserter(vars));
-        std::copy(std::begin(arcs), std::end(arcs), std::back_inserter(cspArcs));
-
-        for (const auto &arc : cspArcs) {
-            neighbours[arc.to()].emplace_back(arc);
-        }
-
-        return Csp<VarPtr>(std::move(vars), std::move(cspArcs), std::move(neighbours));
+        return make_csp(std::begin(variables), std::end(variables), std::begin(arcs), std::end(arcs));
     }
     /**
      * Creates a CSP from a container of variable-pointers and a container of csp::Constraints
@@ -134,16 +115,73 @@ namespace csp {
                     std::end(variables),
                     *std::begin(variables)
             )>> {
-        using VarPtr = std::decay_t<decltype(*std::begin(variables))>;
+        return make_csp(std::begin(variables), std::end(variables), std::begin(constraints), std::end(constraints));
+    }
+
+    /**
+     * Creates a CSP from a container of variable-pointers and a container of csp::Constraint using iterators. Variables
+     * and constraints are taken from the respective range [begin, end)
+     * @tparam VarIt Iterator type of variable container
+     * @tparam ConstrIt Iterator type of constraint container
+     * @param vBegin start of range of variables
+     * @param vEnd end of range of variables (exclusive)
+     * @param cBegin start of range of constraints
+     * @param cEnd start of range of constraints (exclusive)
+     * @return csp::Csp representing the problem induced by the given variables and constraints
+     * @note When using csp::Constraints to specify the constraints, specify them only once. A csp::Constraint for
+     * e.g. A < B fully represents the constraint between the csp::Variable A and B. Specifying A < B and B > A
+     * may lead to performance loss during search!
+     */
+    template<typename VarIt, typename ConstrIt, std::enable_if_t<type_traits::is_constraint<
+            std::remove_reference_t<decltype(*std::declval<ConstrIt>())>>::value, int> = 0>
+    auto make_csp(VarIt vBegin, VarIt vEnd, ConstrIt cBegin, ConstrIt cEnd)
+    -> Csp<std::decay_t<decltype(*++cBegin, cBegin == cEnd, ++vBegin, vBegin == vEnd, *vBegin)>> {
+        using VarPtr = std::decay_t<decltype(*vBegin)>;
         using ArcT = typename Csp<VarPtr>::ArcT;
         std::vector<ArcT> arcs;
-        for (const auto &constraint : constraints) {
-            auto[normal, reverse] = constraint.getArcs();
+        while (cBegin != cEnd) {
+            auto[normal, reverse] = cBegin->getArcs();
             arcs.emplace_back(std::move(normal));
             arcs.emplace_back(std::move(reverse));
+            ++cBegin;
         }
 
-        return make_csp(variables, arcs);
+        return make_csp(vBegin, vEnd, std::begin(arcs), std::end(arcs));
+
+    }
+
+    /**
+     * Creates a CSP from a container of variable-pointers and a container of csp::Arc using iterators. Variables and
+     * arcs are taken from the respective range [begin, end)
+     * @tparam VarIt Iterator type of variable container
+     * @tparam ArcIt Iterator type of arc container
+     * @param vBegin start of range of variables
+     * @param vEnd end of range of variables (exclusive)
+     * @param aBegin start of range of arcs
+     * @param aEnd start of range of arcs (exclusive)
+     * @return csp::Csp representing the problem induced by the given variables and arcs
+     * @note When using csp::Arcs to specify the constraints, make sure that if you have a constraint e.g. A < B,
+     * you specify both csp::Arcs representing A < B and B > A! Otherwise the problem is malformed and may lead to
+     * invalid solutions!
+     */
+    template<typename VarIt, typename ArcIt, std::enable_if_t<type_traits::is_arc<
+            std::remove_reference_t<decltype(*std::declval<ArcIt>())>>::value, int> = 0>
+    auto make_csp(VarIt vBegin, VarIt vEnd, ArcIt aBegin, ArcIt aEnd)
+        -> Csp<std::decay_t<decltype(*++aBegin, aBegin == aEnd, ++vBegin, vBegin == vEnd, *vBegin)>> {
+        using VarPtr = std::decay_t<decltype(*vBegin)>;
+        using VarListT = typename Csp<VarPtr>::VarListT;
+        using ArcListT = typename Csp<VarPtr>::ArcListT;
+        using NeighbourListT = typename Csp<VarPtr>::NeighbourListT;
+        VarListT vars;
+        ArcListT cspArcs;
+        NeighbourListT neighbours;
+        std::copy(vBegin, vEnd, std::back_inserter(vars));
+        std::copy(aBegin, aEnd, std::back_inserter(cspArcs));
+        for (const auto &arc : cspArcs) {
+            neighbours[arc.to()].emplace_back(arc);
+        }
+
+        return Csp<VarPtr>(std::move(vars), std::move(cspArcs), std::move(neighbours));
     }
 }
 
