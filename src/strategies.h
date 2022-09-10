@@ -1,4 +1,5 @@
 /**
+ * @file strategies.h
  * @author Tim Luchterhand
  * @date 25.07.20
  * @brief This file contains different variable choosing strategies that can be used to solve a CSP. Apart from these
@@ -15,6 +16,11 @@
 #include "Variable.h"
 
 
+/**
+ * @brief contains different variable choosing strategies that can be used to solve a CSP. Apart from these
+ * strategies, custom strategies can be used. A strategy must return one of the pointers to a variable stored in the
+ * given CSP.
+ */
 namespace csp::strategies {
     /**
      * Minimum remaining values strategy for variable selection during search. Chooses the variable with the fewest

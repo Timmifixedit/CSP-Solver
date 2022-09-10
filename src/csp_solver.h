@@ -1,12 +1,13 @@
 /**
+ * @file solver.h
  * @author Tim Luchterhand
  * @date 25.07.20
  * @brief This file contains the solving algorithm for CSPs. It consists of a recursive backtracking search which
  * repeatedly uses the AC-3 algorithm to reduce the search space. Use the csp::solve wrapper method.
  */
 
-#ifndef CSP_SOLVER_SOLVER_H
-#define CSP_SOLVER_SOLVER_H
+#ifndef CSP_SOLVER_CSP_SOLVER_H
+#define CSP_SOLVER_CSP_SOLVER_H
 
 #include <type_traits>
 
@@ -81,4 +82,4 @@ namespace csp {
     }
 }
 
-#endif //CSP_SOLVER_SOLVER_H
+#endif //CSP_SOLVER_CSP_SOLVER_H

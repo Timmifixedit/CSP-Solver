@@ -1,7 +1,11 @@
 # CSP-Solver
 Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm University. Solves arbitrary binary constraint
-satisfaction problems (CSP) using the[AC-3 algorithm](https://en.wikipedia.org/wiki/AC-3_algorithm) and backtracking
+satisfaction problems (CSP) using the [AC-3 algorithm](https://en.wikipedia.org/wiki/AC-3_algorithm) and backtracking
 search.
+
+## Doxygen Documentation
+* [HTML](https://timmifixedit.github.io/CSP-Solver/html/index.html)
+* [PDF](https://timmifixedit.github.io/CSP-Solver/CSPSolverDocs.pdf)
 
 ## How To
 A CPS consists of a set of variables, represented by `csp::Variable` and a set of constraints (dependencies between

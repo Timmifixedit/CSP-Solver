@@ -1,4 +1,5 @@
 /**
+ * @file Csp.h
  * @author Tim Luchterhand
  * @date 25.07.20
  * @brief This file contains the csp::Csp class which represents a complete definition of a constraint satisfaction
@@ -16,6 +17,9 @@
 #include "Variable.h"
 #include "Arc.h"
 
+/**
+ * @brief Contains all relevant datastructures and functions for defining and solving a constraint satisfaction problem
+ */
 namespace csp {
 
     namespace type_traits {

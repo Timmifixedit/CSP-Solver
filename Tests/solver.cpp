@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "TestTypes.h"
-#include "solver.h"
+#include "csp_solver.h"
 
 class NamedVar : public csp::Variable<int> {
 public:
