@@ -1,4 +1,4 @@
-Source :=	$(wildcard *.tex)
+Source :=	report.tex
 PDF :=		$(patsubst %.tex,%.pdf,$(Source))
 BiberFile :=	$(patsubst %.tex,%.bcf,$(Source))
 Class :=	cpp-hmwk.cls
