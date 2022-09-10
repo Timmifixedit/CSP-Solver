@@ -1,0 +1,109 @@
+\hypertarget{namespacecsp_1_1util}{}\doxysubsection{csp\+::util Namespace Reference}
+\label{namespacecsp_1_1util}\index{csp::util@{csp::util}}
+
+
+contains utility functions used by the search algorithm  
+
+
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacecsp_1_1util_aca9f60bcfd981f17f748a828f957ce9e}\label{namespacecsp_1_1util_aca9f60bcfd981f17f748a828f957ce9e}} 
+{\footnotesize template$<$typename VarT $>$ }\\using {\bfseries Csp\+Checkpoint} = std\+::vector$<$ typename Var\+T\+::\+DomainT $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Var\+Ptr $>$ }\\bool \mbox{\hyperlink{namespacecsp_1_1util_a383e277d8c3bab1f860f94df316aa7fa}{remove\+Inconsistent}} (const \mbox{\hyperlink{classcsp_1_1Arc}{Arc}}$<$ Var\+Ptr $>$ \&arc)
+\item 
+{\footnotesize template$<$typename Var\+Ptr $>$ }\\bool \mbox{\hyperlink{namespacecsp_1_1util_a99b131208bb5e46644bceede49c96bc9}{ac3}} (\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem)
+\item 
+{\footnotesize template$<$typename Var\+Ptr $>$ }\\auto \mbox{\hyperlink{namespacecsp_1_1util_a53871dce283fca47d673d09bffa97618}{make\+Csp\+Checkpoint}} (const \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem) -\/$>$ Csp\+Checkpoint$<$ typename \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$\+::VarT $>$
+\item 
+{\footnotesize template$<$typename Var\+Ptr $>$ }\\void \mbox{\hyperlink{namespacecsp_1_1util_af5238bc755c5b1873d118a6410d9df97}{restore\+Csp\+From\+Checkpoint}} (\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem, const Csp\+Checkpoint$<$ typename \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$\+::VarT $>$ \&checkpoint)
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+contains utility functions used by the search algorithm 
+
+\doxysubsubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecsp_1_1util_a99b131208bb5e46644bceede49c96bc9}\label{namespacecsp_1_1util_a99b131208bb5e46644bceede49c96bc9}} 
+\index{csp::util@{csp::util}!ac3@{ac3}}
+\index{ac3@{ac3}!csp::util@{csp::util}}
+\doxyparagraph{\texorpdfstring{ac3()}{ac3()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+bool csp\+::util\+::ac3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&}]{problem }\end{DoxyParamCaption})}
+
+Obtains arc consistency in a C\+SP using the A\+C3-\/algorithm 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em problem} & The C\+SP to be processed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if arc consistency was obtained, false if not possible 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecsp_1_1util_a53871dce283fca47d673d09bffa97618}\label{namespacecsp_1_1util_a53871dce283fca47d673d09bffa97618}} 
+\index{csp::util@{csp::util}!makeCspCheckpoint@{makeCspCheckpoint}}
+\index{makeCspCheckpoint@{makeCspCheckpoint}!csp::util@{csp::util}}
+\doxyparagraph{\texorpdfstring{makeCspCheckpoint()}{makeCspCheckpoint()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+auto csp\+::util\+::make\+Csp\+Checkpoint (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&}]{problem }\end{DoxyParamCaption}) -\/$>$ Csp\+Checkpoint$<$typename \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$Var\+Ptr$>$\+::VarT$>$ }
+
+Backs up all value domains of all variables in a C\+SP 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em problem} & The C\+SP to be backed up \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector of \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} domains. Domains are ordered according to the variables in the C\+SP 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecsp_1_1util_a383e277d8c3bab1f860f94df316aa7fa}\label{namespacecsp_1_1util_a383e277d8c3bab1f860f94df316aa7fa}} 
+\index{csp::util@{csp::util}!removeInconsistent@{removeInconsistent}}
+\index{removeInconsistent@{removeInconsistent}!csp::util@{csp::util}}
+\doxyparagraph{\texorpdfstring{removeInconsistent()}{removeInconsistent()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+bool csp\+::util\+::remove\+Inconsistent (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classcsp_1_1Arc}{Arc}}$<$ Var\+Ptr $>$ \&}]{arc }\end{DoxyParamCaption})}
+
+Removes all inconsistent values from the source node of the given \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}}. As a result, the source node\textquotesingle{}s value domain only contains values for which a valid value in the domain of the destination node exists. 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em arc} & \mbox{\hyperlink{classcsp_1_1Arc}{Arc}} to be processed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the value domain of the source node was modified, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecsp_1_1util_af5238bc755c5b1873d118a6410d9df97}\label{namespacecsp_1_1util_af5238bc755c5b1873d118a6410d9df97}} 
+\index{csp::util@{csp::util}!restoreCspFromCheckpoint@{restoreCspFromCheckpoint}}
+\index{restoreCspFromCheckpoint@{restoreCspFromCheckpoint}!csp::util@{csp::util}}
+\doxyparagraph{\texorpdfstring{restoreCspFromCheckpoint()}{restoreCspFromCheckpoint()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+void csp\+::util\+::restore\+Csp\+From\+Checkpoint (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&}]{problem,  }\item[{const Csp\+Checkpoint$<$ typename \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$\+::VarT $>$ \&}]{checkpoint }\end{DoxyParamCaption})}
+
+Restores the value domains of all csp\+::\+Variables in a C\+SP from the given checkpoint 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em problem} & The C\+PS to be restored \\
+\hline
+{\em checkpoint} & Checkpoint to load the value domains from \\
+\hline
+\end{DoxyParams}

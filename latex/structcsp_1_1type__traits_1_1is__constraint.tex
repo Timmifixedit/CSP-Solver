@@ -1,0 +1,43 @@
+\hypertarget{structcsp_1_1type__traits_1_1is__constraint}{}\doxysubsection{csp\+::type\+\_\+traits\+::is\+\_\+constraint$<$ T $>$ Struct Template Reference}
+\label{structcsp_1_1type__traits_1_1is__constraint}\index{csp::type\_traits::is\_constraint$<$ T $>$@{csp::type\_traits::is\_constraint$<$ T $>$}}
+
+
+{\ttfamily \#include $<$Csp.\+h$>$}
+
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr bool {\bfseries value}
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+struct csp\+::type\+\_\+traits\+::is\+\_\+constraint$<$ T $>$}
+
+Used to check if type is of template type \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}} 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Type to be checked \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsubsection{Field Documentation}
+\mbox{\Hypertarget{structcsp_1_1type__traits_1_1is__constraint_af1cfcf72fc984d43ffb6905c959cccf8}\label{structcsp_1_1type__traits_1_1is__constraint_af1cfcf72fc984d43ffb6905c959cccf8}} 
+\index{csp::type\_traits::is\_constraint$<$ T $>$@{csp::type\_traits::is\_constraint$<$ T $>$}!value@{value}}
+\index{value@{value}!csp::type\_traits::is\_constraint$<$ T $>$@{csp::type\_traits::is\_constraint$<$ T $>$}}
+\doxyparagraph{\texorpdfstring{value}{value}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+constexpr bool \mbox{\hyperlink{structcsp_1_1type__traits_1_1is__constraint}{csp\+::type\+\_\+traits\+::is\+\_\+constraint}}$<$ T $>$\+::value\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= decltype(implementations::constraintTest(std::declval<T>()))::value}
+\DoxyCodeLine{                    \&\& ! is\_arc<T>::value}
+
+\end{DoxyCode}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{Csp_8h}{Csp.\+h}}\end{DoxyCompactItemize}
