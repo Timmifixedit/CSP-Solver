@@ -2,7 +2,7 @@ name: report
 
 on:
   push:
-    branches: [ "ReportInCI" ]
+    branches: [ "Report" ]
   workflow_dispatch:
 
 jobs:
