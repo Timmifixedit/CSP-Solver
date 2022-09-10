@@ -1,4 +1,5 @@
 /**
+ * @file solver.h
  * @author Tim Luchterhand
  * @date 25.07.20
  * @brief This file contains the solving algorithm for CSPs. It consists of a recursive backtracking search which

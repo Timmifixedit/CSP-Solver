@@ -1,4 +1,5 @@
 /**
+ * @file strategies.h
  * @author Tim Luchterhand
  * @date 25.07.20
  * @brief This file contains different variable choosing strategies that can be used to solve a CSP. Apart from these

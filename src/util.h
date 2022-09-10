@@ -1,4 +1,5 @@
 /**
+ * @file util.h
  * @author Tim Luchterhand
  * @date 11.07.20
  * @brief This file contains utility functions used by the search algorithm.

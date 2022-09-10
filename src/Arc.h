@@ -1,4 +1,5 @@
 /**
+ * @file Arc.h
  * @author Tim Luchterhand
  * @date 22.07.20
  * @brief This file contains the the csp::Arc and the csp::Constraint class. Both can be used to specify constraints

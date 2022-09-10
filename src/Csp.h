@@ -1,4 +1,5 @@
 /**
+ * @file Csp.h
  * @author Tim Luchterhand
  * @date 25.07.20
  * @brief This file contains the csp::Csp class which represents a complete definition of a constraint satisfaction

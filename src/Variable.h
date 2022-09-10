@@ -1,4 +1,5 @@
 /**
+ * @file Variable.h
  * @author Tim Luchterhand
  * @date 11.07.20
  * @brief This file contains the definition of a variable which is used to describe a CSP. Custom variable types can
