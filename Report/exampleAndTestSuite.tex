@@ -5,11 +5,11 @@ Nachdem ein Überblick über den Aufbau des Lösealgorithmus gegeben wurde, soll
 Die bekannten Sudoku-Rätsel lassen sich recht einfach als \ac*{csp} beschreiben. Dabei stellen die einzelnen Felder die Variablen dar, die mit Zahlen von eins bis neun ausgefüllt
 werden müssen. Die Constraints äußern sich darin, dass Felder in derselben Zeile, Spalte oder im selben $3 \times 3$ Block unterschiedliche Werte haben müssen. Für den Löser wurde
 ein eigener Variablen-Typ erstellt, der im Konstruktor automatisch die Wertedomäne korrekt setzt. Außerdem lässt sich der Wert der Variable bequem mit \inlcode{getValue()} abfragen:
-\lstinputlisting[linerange={14-29}]{../src/main.cpp}
+\lstinputlisting[linerange={11-27}]{../src/main.cpp}
 Um die \inlcode{SudokuNode}s zu verwalten, wurde außerdem die Hilfsklasse \inlcode{Sudoku} implementiert. Deren Konstruktor liest die gegebenen Werte aus einem \inlcode{std::istream}
 ein und instanziiert automatisch alle Variablen mit den korrekten Werten. Der Wert 0 gibt hierbei an, dass ein Sudoku-Feld noch leer ist. Außerdem lässt sich das Sudoku mit
 \inlcode{print()} anzeigen und mit \inlcode{solve()} lösen:
-\lstinputlisting[linerange={94-106}]{../src/main.cpp}
+\lstinputlisting[linerange={99-110}]{../src/main.cpp}
 Zunächst müssen alle Abhängigkeiten zwischen den Feldern angegeben werden. Diese werden im \inlcode{std::vector arcs} gespeichert. Das Verwenden eines \inlcode{std::array} ist
 nicht möglich, da ein \inlcode{csp::Arc} nicht default-konstruierbar ist. Danach wird das zu lösende Problem durch \inlcode{csp::make_csp} definiert und anschließende durch
 \inlcode{csp::solve} gelöst. Hier wird explizit die Heuristik \inlcode{csp::strategies::First} verwendet, die bei Experimenten mit verschiedenen Sudokus bessere Performance gezeigt

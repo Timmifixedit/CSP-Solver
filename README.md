@@ -1,7 +1,7 @@
 # CSP-Solver
 Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm University. Solves arbitrary binary constraint
 satisfaction problems (CSP) using the [AC-3 algorithm](https://en.wikipedia.org/wiki/AC-3_algorithm) and backtracking
-search.
+search. The seminar paper (German) for this project can be found [here](https://timmifixedit.github.io/CSP-Solver/Report/report.pdf).
 
 ## Doxygen Documentation
 * [HTML](https://timmifixedit.github.io/CSP-Solver/html/index.html)
