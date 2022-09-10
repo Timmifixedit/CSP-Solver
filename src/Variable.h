@@ -15,6 +15,7 @@ namespace csp {
     /**
      * Represents a variable in a constraint satisfaction problem
      * @tparam T Type of the contained value
+     * @tparam DomainType Type of container used for the variables domain (default is std::list)
      */
     template<typename T, template<typename...> typename DomainType = std::list>
     class Variable {
@@ -26,6 +27,12 @@ namespace csp {
          * @param domain list of possible values
          */
         explicit Variable(DomainT domain) : domain(std::move(domain)) {}
+
+        /**
+         * Ctor using initializer list
+         * @param init
+         */
+        Variable(std::initializer_list<T> init) : domain(init) {}
 
         /**
          * Sets the variable to the specified value (by reducing the value domain to said value)
@@ -40,7 +47,7 @@ namespace csp {
          * Checks if the variable is assigned
          * @return True if the variable's domain contains exactly one value, false otherwise
          */
-        [[nodiscard]] bool isAssigned() const noexcept {
+        [[nodiscard]] constexpr bool isAssigned() const noexcept(noexcept(std::declval<DomainT>().size())) {
             return domain.size() == 1;
         }
 
@@ -70,7 +77,7 @@ namespace csp {
          * Gets the value domain
          * @return
          */
-        [[nodiscard]] auto valueDomain() const noexcept -> const DomainT& {
+        [[nodiscard]] constexpr auto valueDomain() const noexcept -> const DomainT& {
             return domain;
         }
 
@@ -78,7 +85,7 @@ namespace csp {
          * Gets the value domain
          * @return
          */
-        [[nodiscard]] auto valueDomain() noexcept -> DomainT & {
+        [[nodiscard]] constexpr auto valueDomain() noexcept -> DomainT & {
             return domain;
         }
     private:

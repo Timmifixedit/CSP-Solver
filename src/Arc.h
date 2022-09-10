@@ -67,6 +67,10 @@ namespace csp {
         static_assert(type_traits::is_derived_from_var<decltype(*std::declval<VarPtr>())>::value,
                       "Type referenced by VarPtr must derive from csp::Variable");
         using VarType = typename std::remove_reference_t<decltype(*std::declval<VarPtr>())>::ValueT;
+    protected:
+        static constexpr bool nothrow_construcible = std::is_nothrow_move_constructible_v<VarPtr> &&
+                                                     std::is_nothrow_move_constructible_v<BinaryPredicate < VarType>>;
+    public:
 
         /**
          * Ctor
@@ -74,8 +78,8 @@ namespace csp {
          * @param v2 Pointer-Type to first variable
          * @param predicate Constraint in form of a binary predicate
          */
-        Constraint(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate) : var1(std::move(v1)), var2(std::move(v2)),
-        predicate(std::move(predicate)) {}
+        Constraint(VarPtr v1, VarPtr v2, BinaryPredicate <VarType> predicate) noexcept(nothrow_construcible): var1(
+                std::move(v1)), var2(std::move(v2)), predicate(std::move(predicate)) {}
 
         using ArcT = Arc<VarPtr>;
 
@@ -83,11 +87,11 @@ namespace csp {
          * Create the two equivalent directed csp::Arcs
          * @return Pair of equivalent csp::Arcs
          */
-        auto getArcs() const noexcept -> std::pair<ArcT, ArcT> {
+        auto getArcs() const -> std::pair<ArcT, ArcT> {
             ArcT normal(var1, var2, predicate);
             ArcT reversed = normal;
             reversed.reverse();
-            return {normal, reversed};
+            return {std::move(normal), std::move(reversed)};
         }
 
     protected:
@@ -113,13 +117,14 @@ namespace csp {
          * @param predicate Constraint in form of a binary predicate
          * @param reverse Specifies whether the arc represents v2 -> v1 instead
          */
-        Arc(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate, bool reverse = false) :
-                Constraint<VarPtr>(std::move(v1), std::move(v2), std::move(predicate)), reversed(reverse) {}
+        Arc(VarPtr v1, VarPtr v2, BinaryPredicate<VarType> predicate, bool reverse = false)
+            noexcept(Constraint<VarPtr>::nothrow_construcible) :
+            Constraint<VarPtr>(std::move(v1), std::move(v2), std::move(predicate)), reversed(reverse) {}
 
         /**
          * Reverses the arc (switches from() and to() members)
          */
-        void reverse() noexcept {
+        constexpr void reverse() noexcept {
             reversed = !reversed;
         }
 
@@ -127,7 +132,7 @@ namespace csp {
          * Gets the source node of the arc
          * @return Always returns the pointer to the source node of the arc, taking into account if the arc is reversed
          */
-        VarPtr from() const noexcept {
+        constexpr VarPtr from() const noexcept {
             return reversed ? this->var2 : this->var1;
         }
 
@@ -136,7 +141,7 @@ namespace csp {
          * @return Always returns the pointer to the destination node of the arc, taking into account if the arc is
          * reversed
          */
-        VarPtr to() const noexcept {
+        constexpr VarPtr to() const noexcept {
             return reversed ? this->var1 : this->var2;
         }
 
@@ -147,8 +152,7 @@ namespace csp {
          * @param valTo value of the destination node
          * @return true if constraint is satisfied, false otherwise
          */
-        bool constraintSatisfied(const VarType &valFrom, const VarType &valTo) const noexcept(
-                noexcept(std::declval<BinaryPredicate<VarType>>()(valFrom, valTo))) {
+        bool constraintSatisfied(const VarType &valFrom, const VarType &valTo) const {
             return reversed ? this->predicate(valTo, valFrom) : this->predicate(valFrom, valTo);
         }
 
