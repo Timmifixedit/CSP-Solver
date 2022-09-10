@@ -230,7 +230,7 @@
 	 }%
 
 	 {%
-	    \usekomafont{date}\today\par
+	    \usekomafont{date}14. August 2020\par
 	 }%
       \end{center}%
    \end{minipage}
