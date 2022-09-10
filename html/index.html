@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CSP-Solver: CSP-Solver</title>
+<title>CSP-Solver: Main Page</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,21 +69,24 @@ $(function() {
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">CSP-Solver </div>  </div>
+<div class="title">CSP-Solver Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm University. Solves arbitrary binary constraint satisfaction problems (CSP) using the <a href="https://en.wikipedia.org/wiki/AC-3_algorithm">AC-3 algorithm</a> and backtracking search. The seminar paper (German) for this project can be found <a href="https://timmifixedit.github.io/CSP-Solver/Report/report.pdf">here</a>.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
-Doxygen Documentation</h1>
+<div class="textblock"><p><a href="https://github.com/Timmifixedit/CSP-solver/actions/workflows/unit_tests.yml"><object type="image/svg+xml" data="https://github.com/Timmifixedit/CSP-Solver/actions/workflows/unit_tests.yml/badge.svg" style="pointer-events: none;">unit tests</object></a> </p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+CSP-Solver</h1>
+<p>Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm University. Solves arbitrary binary constraint satisfaction problems (CSP) using the <a href="https://en.wikipedia.org/wiki/AC-3_algorithm">AC-3 algorithm</a> and backtracking search. The seminar paper (German) for this project can be found <a href="https://timmifixedit.github.io/CSP-Solver/Report/report.pdf">here</a>.</p>
+<h2><a class="anchor" id="autotoc_md1"></a>
+Doxygen Documentation</h2>
 <ul>
 <li><a href="https://timmifixedit.github.io/CSP-Solver/html/index.html">HTML</a></li>
 <li><a href="https://timmifixedit.github.io/CSP-Solver/CSPSolverDocs.pdf">PDF</a></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md2"></a>
-How To</h1>
+<h2><a class="anchor" id="autotoc_md2"></a>
+How To</h2>
 <p>A CPS consists of a set of variables, represented by <code><a class="el" href="classcsp_1_1Variable.html">csp::Variable</a></code> and a set of constraints (dependencies between pairs of variables) represented by <code><a class="el" href="classcsp_1_1Constraint.html">csp::Constraint</a></code> or <code><a class="el" href="classcsp_1_1Arc.html">csp::Arc</a></code>. You can use your own variable type by deriving from <code><a class="el" href="classcsp_1_1Variable.html">csp::Variable</a></code>.</p>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Creating Variables</h2>
+<h3><a class="anchor" id="autotoc_md3"></a>
+Creating Variables</h3>
 <p>To create a variable, a domain of values has to be given, representing all possible values the variable might take: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="Variable_8h.html">Variable.h</a>&quot;</span></div>
 <div class="line"><span class="keyword">using</span> MyVar = <a class="code" href="classcsp_1_1Variable.html">csp::Variable&lt;int&gt;</a>;</div>
 <div class="line">MyVar a({1, 2, 17, 24});</div>
@@ -94,24 +97,24 @@ Creating Variables</h2>
 <div class="line">  <span class="keyword">explicit</span> MyVar(std::string name) : <a class="code" href="namespacecsp.html">csp</a>::Variable&lt;int&gt;({1, 2, 3, 4}), name(std::move(name)) {}</div>
 <div class="line">  <span class="keyword">const</span> std::string name;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
-Specifying Constraints</h2>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md4"></a>
+Specifying Constraints</h3>
 <p><code><a class="el" href="classcsp_1_1Constraint.html">csp::Constraint</a></code> or <code><a class="el" href="classcsp_1_1Arc.html">csp::Arc</a></code> specify dependencies between pairs of variables. They contain a pointer type to each variable and a binary predicate specifying the constraint. You can use arbitrary pointer types that support the dereference-operator as well as -&gt; operator. Example using the custom variable type above and shared_ptr (which I recommend over raw pointers): </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="Arc_8h.html">Arc.h</a>&quot;</span></div>
 <div class="line"><span class="keyword">auto</span> varA = std::make_shared&lt;MyVar&gt;(<span class="stringliteral">&quot;A&quot;</span>);</div>
 <div class="line"><span class="keyword">auto</span> varB = std::make_shared&lt;MyVar&gt;(<span class="stringliteral">&quot;B&quot;</span>);</div>
 <div class="line"><a class="code" href="classcsp_1_1Constraint.html">csp::Constraint</a> aLessB(varA, varB, std::less&lt;&gt;());</div>
 </div><!-- fragment --><p>You can also use <code><a class="el" href="classcsp_1_1Arc.html">csp::Arc</a></code> to specify the relation between variables. The difference is, that an arc describes a directed constraint. Even if A &lt; B is equivalent to B &gt; A, two arcs describing both relations respectively are not. When defining your CSP using arcs, make sure that always both directions are specified explicitly. When using <code><a class="el" href="classcsp_1_1Constraint.html">csp::Constraint</a></code> only one direction suffices. In some situations, it is easier to specify the CSP using arcs than using constraints or vice versa. You cannot mix arcs and constraints when creating a CSP but you can convert a <code><a class="el" href="classcsp_1_1Constraint.html">csp::Constraint</a></code> to two equivalent <code><a class="el" href="classcsp_1_1Arc.html">csp::Arc</a></code>.</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
-Creating the CSP</h2>
+<h3><a class="anchor" id="autotoc_md5"></a>
+Creating the CSP</h3>
 <p>Once you specified all variables and the respective constraints, create your CSP using: </p><div class="fragment"><div class="line"><a class="code" href="structcsp_1_1Csp.html">csp::Csp</a> myCsp = <a class="code" href="namespacecsp.html#a5b0c471349dfa5acdd14ead986119ca8">csp::make_csp</a>(std::array{varA, varB}, std::array{aLessB});</div>
 </div><!-- fragment --><p>You can use arbitrary containers that support iteration.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
-Solving the CSP</h2>
+<h3><a class="anchor" id="autotoc_md6"></a>
+Solving the CSP</h3>
 <p>An instance of <code><a class="el" href="structcsp_1_1Csp.html">csp::Csp</a></code> can be solved using: </p><div class="fragment"><div class="line"><span class="keywordtype">bool</span> success = <a class="code" href="namespacecsp.html#a2aa8e8d0fa01e590f1bd072968d197bc">csp::solve</a>(myCsp);</div>
 </div><!-- fragment --><p>If solving the CSP is possible all domains of all variables will be reduced to exactly one value. The algorithm will find a solution if one exists (given engough time). If multiple exist, it is unspecified which exact solution is found. If the CSP cannot be solved, the function returns <code>false</code> but might still modify the variables' value domains. </p>
-<h3><a class="anchor" id="autotoc_md7"></a>
-Specifying a Solving Strategy</h3>
+<h4><a class="anchor" id="autotoc_md7"></a>
+Specifying a Solving Strategy</h4>
 <p>By default, <code><a class="el" href="namespacecsp.html#a2aa8e8d0fa01e590f1bd072968d197bc">csp::solve</a></code> uses the minimum remaining values strategy, meaning that the algorithm chooses the variable with the fewest remaining values in its domain to be assigned next. You can also use a different (even custom) strategy e.g.: </p><div class="fragment"><div class="line"><span class="keyword">auto</span> strat = [](<span class="keyword">const</span> <span class="keyword">auto</span> &amp; problem) {</div>
 <div class="line">  <span class="comment">// Your code here -&gt; return the desired unassigned variable from the CSP</span></div>
 <div class="line">  <span class="keywordflow">return</span> theNextVar;</div>
@@ -119,8 +122,8 @@ Specifying a Solving Strategy</h3>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">bool</span> success = <a class="code" href="namespacecsp.html#a2aa8e8d0fa01e590f1bd072968d197bc">csp::solve</a>(myCsp, strat);</div>
 </div><!-- fragment --><p>Examples on how to create your own strategy can be found in the file <code><a class="el" href="strategies_8h.html" title="This file contains different variable choosing strategies that can be used to solve a CSP....">src/strategies.h</a></code>.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
-Solving Sudoku Puzzles</h1>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Solving Sudoku Puzzles</h2>
 <p>The <code>src/main.cpp</code> contains a program that can solve Sudoku puzzles. A Sudoku is defined by a grid of numbers where a 0 indicates, that the respective field is yet to be assigned. Some examples are provided in the <code>res</code> directory. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->

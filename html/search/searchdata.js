@@ -5,8 +5,7 @@ var indexSectionsWithContent =
   2: "c",
   3: "acsuv",
   4: "acfgimrstv",
-  5: "m",
-  6: "c"
+  5: "m"
 };
 
 var indexSectionNames =
@@ -16,8 +15,7 @@ var indexSectionNames =
   2: "namespaces",
   3: "files",
   4: "functions",
-  5: "related",
-  6: "pages"
+  5: "related"
 };
 
 var indexSectionLabels =
@@ -27,7 +25,6 @@ var indexSectionLabels =
   2: "Namespaces",
   3: "Files",
   4: "Functions",
-  5: "Friends",
-  6: "Pages"
+  5: "Friends"
 };
 
