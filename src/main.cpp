@@ -6,10 +6,7 @@
 #include <chrono>
 #include <optional>
 
-#include "Variable.h"
-#include "Arc.h"
-#include "Csp.h"
-#include "solver.h"
+#include "csp_solver.h"
 
 using VariableBase = csp::Variable<unsigned int, std::deque>;
 class SudokuNode : public  VariableBase {
