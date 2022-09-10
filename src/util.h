@@ -74,8 +74,8 @@ namespace csp::util {
         return true;
     }
 
-    template<typename T>
-    using CspCheckpoint = std::vector<typename Variable<T>::DomainT>;
+    template<typename VarT>
+    using CspCheckpoint = std::vector<typename VarT::DomainT>;
 
     /**
      * Backs up all value domains of all variables in a CSP
@@ -84,9 +84,9 @@ namespace csp::util {
      * @return vector of csp::Variable domains. Domains are ordered according to the variables in the CSP
      */
     template<typename VarPtr>
-    auto makeCspCheckpoint(const Csp<VarPtr> &problem) -> CspCheckpoint<typename Csp<VarPtr>::VarT::ValueT> {
-        using ValType = typename Csp<VarPtr>::VarT::ValueT;
-        CspCheckpoint<ValType> ret;
+    auto makeCspCheckpoint(const Csp<VarPtr> &problem) -> CspCheckpoint<typename Csp<VarPtr>::VarT> {
+        using VarType = typename Csp<VarPtr>::VarT;
+        CspCheckpoint<VarType> ret;
         ret.reserve(problem.variables.size());
         for (const auto &var : problem.variables) {
             ret.emplace_back(var->valueDomain());
@@ -103,7 +103,7 @@ namespace csp::util {
      */
     template<typename VarPtr>
     void restoreCspFromCheckpoint(Csp<VarPtr> &problem,
-                                  const CspCheckpoint<typename Csp<VarPtr>::VarT::ValueT> &checkpoint) {
+                                  const CspCheckpoint<typename Csp<VarPtr>::VarT> &checkpoint) {
         assert(checkpoint.size() == problem.variables.size());
         for (std::size_t i = 0; i < checkpoint.size(); ++i) {
             problem.variables[i]->setValueDomain(std::move(checkpoint[i]));

@@ -16,10 +16,10 @@ namespace csp {
      * Represents a variable in a constraint satisfaction problem
      * @tparam T Type of the contained value
      */
-    template<typename T>
+    template<typename T, template<typename...> typename DomainType = std::list>
     class Variable {
     public:
-        using DomainT = std::list<T>;
+        using DomainT = DomainType<T>;
         using ValueT = T;
         /**
          * CTor

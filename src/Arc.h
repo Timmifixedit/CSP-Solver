@@ -27,8 +27,8 @@ namespace csp {
             template<typename T>
             std::false_type pointerTest(...);
 
-            template<typename VarType>
-            std::true_type derivedTest(Variable<VarType> *);
+            template<typename VarType, template<typename...>typename Domain>
+            std::true_type derivedTest(Variable<VarType, Domain> *);
 
             std::false_type derivedTest(...);
         }

@@ -11,10 +11,11 @@
 #include "Csp.h"
 #include "solver.h"
 
-class SudokuNode : public csp::Variable<unsigned int> {
+using VariableBase = csp::Variable<unsigned int, std::deque>;
+class SudokuNode : public  VariableBase {
 public:
-    using Domain = csp::Variable<unsigned int>::DomainT;
-    explicit SudokuNode(unsigned int val) : csp::Variable<unsigned int>(
+    using Domain = VariableBase::DomainT;
+    explicit SudokuNode(unsigned int val) : VariableBase(
             val == 0 ? Domain{1, 2, 3, 4, 5, 6, 7, 8, 9} : Domain{val}) {
         assert(val <= 9);
     }
