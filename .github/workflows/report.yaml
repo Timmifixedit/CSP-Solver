@@ -19,3 +19,4 @@ jobs:
         with:
           folder: Report
           branch: gh-pages
+          target-folder: Report
