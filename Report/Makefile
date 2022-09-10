@@ -1,4 +1,5 @@
-Source :=	report.tex
+Source :=	$(wildcard *.tex)
+MainFile := report.tex
 PDF :=		$(patsubst %.tex,%.pdf,$(Source))
 BiberFile :=	$(patsubst %.tex,%.bcf,$(Source))
 Class :=	cpp-hmwk.cls
@@ -11,9 +12,9 @@ Temporaries :=	$(patsubst %.tex,%.aux,$(Source)) \
 		$(patsubst %.tex,%.run.xml,$(Source))
 
 $(PDF):		$(Source) $(Class)
-		lualatex $(Source)
+		lualatex $(MainFile)
 		biber $(BiberFile)
-		lualatex $(Source)
+		lualatex $(MainFile)
 
 .PHONY:		clean realclean
 clean:
