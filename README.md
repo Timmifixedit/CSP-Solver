@@ -1,3 +1,4 @@
+[![unit tests](https://github.com/Timmifixedit/CSP-Solver/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Timmifixedit/CSP-solver/actions/workflows/unit_tests.yml)
 # CSP-Solver
 Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm University. Solves arbitrary binary constraint
 satisfaction problems (CSP) using the [AC-3 algorithm](https://en.wikipedia.org/wiki/AC-3_algorithm) and backtracking
