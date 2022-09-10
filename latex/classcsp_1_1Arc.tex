@@ -1,0 +1,112 @@
+\hypertarget{classcsp_1_1Arc}{}\doxysubsection{csp\+::Arc$<$ Var\+Ptr $>$ Class Template Reference}
+\label{classcsp_1_1Arc}\index{csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}}
+
+
+{\ttfamily \#include $<$Arc.\+h$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcsp_1_1Arc_a2e2fe53353bcad4b1b80f0dca38d0c24}\label{classcsp_1_1Arc_a2e2fe53353bcad4b1b80f0dca38d0c24}} 
+using {\bfseries Var\+Type} = typename \mbox{\hyperlink{classcsp_1_1Constraint}{Constraint}}$<$ Var\+Ptr $>$\+::Var\+Type
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcsp_1_1Arc_a56a96a6bd42737a7dcda89de7b85e81f}{Arc}} (Var\+Ptr v1, Var\+Ptr v2, Binary\+Predicate$<$ Var\+Type $>$ predicate, bool \mbox{\hyperlink{classcsp_1_1Arc_a8940157a576f7976f6b6b38cc8cfc6ec}{reverse}}=false) noexcept(\mbox{\hyperlink{classcsp_1_1Constraint}{Constraint}}$<$ Var\+Ptr $>$\+::nothrow\+\_\+construcible)
+\item 
+constexpr void \mbox{\hyperlink{classcsp_1_1Arc_a8940157a576f7976f6b6b38cc8cfc6ec}{reverse}} () noexcept
+\item 
+constexpr Var\+Ptr \mbox{\hyperlink{classcsp_1_1Arc_a7b285267adc64697d43a7ec03da8a200}{from}} () const noexcept
+\item 
+constexpr Var\+Ptr \mbox{\hyperlink{classcsp_1_1Arc_aedef2c9eea4dcf2fc167cc4d12264e25}{to}} () const noexcept
+\item 
+bool \mbox{\hyperlink{classcsp_1_1Arc_a25ea5289248c25c4de92f508ab68e64d}{constraint\+Satisfied}} (const Var\+Type \&val\+From, const Var\+Type \&val\+To) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+\subsubsection*{template$<$typename Var\+Ptr$>$\newline
+class csp\+::\+Arc$<$ Var\+Ptr $>$}
+
+Represents a binary constraint as directed arc in a constraint satisfaction problem. Is mainly used during solving to obtain arc consistency 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyNote}{Note}
+Constraints implicitly specify two directed arcs. For example\+: A constraint A $<$ B is equivalent to two arcs A $<$ B and B $>$ A 
+\end{DoxyNote}
+
+
+\doxysubsubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcsp_1_1Arc_a56a96a6bd42737a7dcda89de7b85e81f}\label{classcsp_1_1Arc_a56a96a6bd42737a7dcda89de7b85e81f}} 
+\index{csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}!Arc@{Arc}}
+\index{Arc@{Arc}!csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{Arc()}{Arc()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+\mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}}$<$ Var\+Ptr $>$\+::\mbox{\hyperlink{classcsp_1_1Arc}{Arc}} (\begin{DoxyParamCaption}\item[{Var\+Ptr}]{v1,  }\item[{Var\+Ptr}]{v2,  }\item[{Binary\+Predicate$<$ Var\+Type $>$}]{predicate,  }\item[{bool}]{reverse = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Ctor 
+\begin{DoxyParams}{Parameters}
+{\em v1} & Pointer-\/\+Type to first variable \\
+\hline
+{\em v2} & Pointer-\/\+Type to first variable \\
+\hline
+{\em predicate} & \mbox{\hyperlink{classcsp_1_1Constraint}{Constraint}} in form of a binary predicate \\
+\hline
+{\em reverse} & Specifies whether the arc represents v2 -\/$>$ v1 instead \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcsp_1_1Arc_a25ea5289248c25c4de92f508ab68e64d}\label{classcsp_1_1Arc_a25ea5289248c25c4de92f508ab68e64d}} 
+\index{csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}!constraintSatisfied@{constraintSatisfied}}
+\index{constraintSatisfied@{constraintSatisfied}!csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{constraintSatisfied()}{constraintSatisfied()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+bool \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}}$<$ Var\+Ptr $>$\+::constraint\+Satisfied (\begin{DoxyParamCaption}\item[{const Var\+Type \&}]{val\+From,  }\item[{const Var\+Type \&}]{val\+To }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Checks if the binary constraint between source and destination is satisfied. If values are chosen from the domains of \mbox{\hyperlink{classcsp_1_1Arc_a7b285267adc64697d43a7ec03da8a200}{from()}} and \mbox{\hyperlink{classcsp_1_1Arc_aedef2c9eea4dcf2fc167cc4d12264e25}{to()}} respectively, makes sure the constraint predicate is evaluated correctly 
+\begin{DoxyParams}{Parameters}
+{\em val\+From} & value of the source node \\
+\hline
+{\em val\+To} & value of the destination node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if constraint is satisfied, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcsp_1_1Arc_a7b285267adc64697d43a7ec03da8a200}\label{classcsp_1_1Arc_a7b285267adc64697d43a7ec03da8a200}} 
+\index{csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}!from@{from}}
+\index{from@{from}!csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{from()}{from()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+constexpr Var\+Ptr \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}}$<$ Var\+Ptr $>$\+::from (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+Gets the source node of the arc \begin{DoxyReturn}{Returns}
+Always returns the pointer to the source node of the arc, taking into account if the arc is reversed 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcsp_1_1Arc_a8940157a576f7976f6b6b38cc8cfc6ec}\label{classcsp_1_1Arc_a8940157a576f7976f6b6b38cc8cfc6ec}} 
+\index{csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}!reverse@{reverse}}
+\index{reverse@{reverse}!csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{reverse()}{reverse()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+constexpr void \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}}$<$ Var\+Ptr $>$\+::reverse (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+Reverses the arc (switches \mbox{\hyperlink{classcsp_1_1Arc_a7b285267adc64697d43a7ec03da8a200}{from()}} and \mbox{\hyperlink{classcsp_1_1Arc_aedef2c9eea4dcf2fc167cc4d12264e25}{to()}} members) \mbox{\Hypertarget{classcsp_1_1Arc_aedef2c9eea4dcf2fc167cc4d12264e25}\label{classcsp_1_1Arc_aedef2c9eea4dcf2fc167cc4d12264e25}} 
+\index{csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}!to@{to}}
+\index{to@{to}!csp::Arc$<$ VarPtr $>$@{csp::Arc$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{to()}{to()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+constexpr Var\+Ptr \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}}$<$ Var\+Ptr $>$\+::to (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+Gets the destination node of the arc \begin{DoxyReturn}{Returns}
+Always returns the pointer to the destination node of the arc, taking into account if the arc is reversed 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{Arc_8h}{Arc.\+h}}\end{DoxyCompactItemize}

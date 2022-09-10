@@ -1,0 +1,92 @@
+\hypertarget{structcsp_1_1Csp}{}\doxysubsection{csp\+::Csp$<$ Var\+Ptr $>$ Struct Template Reference}
+\label{structcsp_1_1Csp}\index{csp::Csp$<$ VarPtr $>$@{csp::Csp$<$ VarPtr $>$}}
+
+
+{\ttfamily \#include $<$Csp.\+h$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structcsp_1_1Csp_acc97e0228702894e5b44c00eac1733af}\label{structcsp_1_1Csp_acc97e0228702894e5b44c00eac1733af}} 
+using {\bfseries ArcT} = \mbox{\hyperlink{classcsp_1_1Arc}{Arc}}$<$ Var\+Ptr $>$
+\item 
+\mbox{\Hypertarget{structcsp_1_1Csp_af87ac5455a5fecf686a9cc55b1a3ae96}\label{structcsp_1_1Csp_af87ac5455a5fecf686a9cc55b1a3ae96}} 
+using {\bfseries VarT} = std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Var\+Ptr $>$())$>$
+\item 
+\mbox{\Hypertarget{structcsp_1_1Csp_a669aef6b4bfcbea0adc35df67c4fb195}\label{structcsp_1_1Csp_a669aef6b4bfcbea0adc35df67c4fb195}} 
+using {\bfseries Var\+ListT} = std\+::vector$<$ Var\+Ptr $>$
+\item 
+\mbox{\Hypertarget{structcsp_1_1Csp_af6c24d5feeadbbc86f356b39414187db}\label{structcsp_1_1Csp_af6c24d5feeadbbc86f356b39414187db}} 
+using {\bfseries Arc\+ListT} = std\+::deque$<$ \mbox{\hyperlink{classcsp_1_1Arc}{ArcT}} $>$
+\item 
+\mbox{\Hypertarget{structcsp_1_1Csp_ad353ba584d77ab9fc1a7edbfb4e71e43}\label{structcsp_1_1Csp_ad353ba584d77ab9fc1a7edbfb4e71e43}} 
+using {\bfseries Neighbour\+ListT} = std\+::unordered\+\_\+map$<$ Var\+Ptr, std\+::vector$<$ \mbox{\hyperlink{classcsp_1_1Arc}{ArcT}} $>$ $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structcsp_1_1Csp_a80fc82ecb94732d8832e0e089e146ce6}\label{structcsp_1_1Csp_a80fc82ecb94732d8832e0e089e146ce6}} 
+const Var\+ListT {\bfseries variables}
+\item 
+\mbox{\Hypertarget{structcsp_1_1Csp_ac3c54a61ddb025c522c7e0d93c102a51}\label{structcsp_1_1Csp_ac3c54a61ddb025c522c7e0d93c102a51}} 
+const Arc\+ListT {\bfseries arcs}
+\item 
+\mbox{\Hypertarget{structcsp_1_1Csp_af22794075368099f92f528d4aa8ece97}\label{structcsp_1_1Csp_af22794075368099f92f528d4aa8ece97}} 
+const Neighbour\+ListT {\bfseries incoming\+Neighbours}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Var\+It , typename Arc\+It , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Arc\+It $>$())$>$$>$\+::value $>$ }\\auto \mbox{\hyperlink{structcsp_1_1Csp_adfde30f2117436887a29fb8c23d1fa70}{make\+\_\+csp}} (Var\+It v\+Begin, Var\+It v\+End, Arc\+It a\+Begin, Arc\+It a\+End) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ std\+::decay\+\_\+t$<$ decltype($\ast$++a\+Begin, a\+Begin==a\+End,++v\+Begin, v\+Begin==v\+End, $\ast$v\+Begin)$>$$>$
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+\subsubsection*{template$<$typename Var\+Ptr$>$\newline
+struct csp\+::\+Csp$<$ Var\+Ptr $>$}
+
+Represents a constraint satisfaction problem (C\+SP) 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Var\+Ptr Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{structcsp_1_1Csp_adfde30f2117436887a29fb8c23d1fa70}\label{structcsp_1_1Csp_adfde30f2117436887a29fb8c23d1fa70}} 
+\index{csp::Csp$<$ VarPtr $>$@{csp::Csp$<$ VarPtr $>$}!make\_csp@{make\_csp}}
+\index{make\_csp@{make\_csp}!csp::Csp$<$ VarPtr $>$@{csp::Csp$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{make\_csp}{make\_csp}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+template$<$typename Var\+It , typename Arc\+It , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Arc\+It $>$())$>$$>$\+::value $>$ \\
+auto make\+\_\+csp (\begin{DoxyParamCaption}\item[{Var\+It}]{v\+Begin,  }\item[{Var\+It}]{v\+End,  }\item[{Arc\+It}]{a\+Begin,  }\item[{Arc\+It}]{a\+End }\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$std\+::decay\+\_\+t$<$decltype($\ast$++a\+Begin, a\+Begin == a\+End, ++v\+Begin, v\+Begin == v\+End, $\ast$v\+Begin)$>$$>$\hspace{0.3cm}{\ttfamily [friend]}}
+
+Creates a C\+SP from a container of variable-\/pointers and a container of \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}} using iterators. Variables and arcs are taken from the respective range \mbox{[}begin, end) 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+It} & Iterator type of variable container \\
+\hline
+{\em Arc\+It} & Iterator type of arc container \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em v\+Begin} & start of range of variables \\
+\hline
+{\em v\+End} & end of range of variables (exclusive) \\
+\hline
+{\em a\+Begin} & start of range of arcs \\
+\hline
+{\em a\+End} & start of range of arcs (exclusive) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} representing the problem induced by the given variables and arcs 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+When using csp\+::\+Arcs to specify the constraints, make sure that if you have a constraint e.\+g. A $<$ B, you specify both csp\+::\+Arcs representing A $<$ B and B $>$ A! Otherwise the problem is malformed and may lead to invalid solutions! 
+\end{DoxyNote}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{Csp_8h}{Csp.\+h}}\end{DoxyCompactItemize}

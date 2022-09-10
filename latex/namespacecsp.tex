@@ -1,0 +1,222 @@
+\hypertarget{namespacecsp}{}\doxysubsection{csp Namespace Reference}
+\label{namespacecsp}\index{csp@{csp}}
+
+
+Contains all relevant datastructures and functions for defining and solving a constraint satisfaction problem.  
+
+
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecsp_1_1strategies}{strategies}}
+\begin{DoxyCompactList}\small\item\em contains different variable choosing strategies that can be used to solve a C\+SP. Apart from these strategies, custom strategies can be used. A strategy must return one of the pointers to a variable stored in the given C\+SP. \end{DoxyCompactList}\item 
+ \mbox{\hyperlink{namespacecsp_1_1util}{util}}
+\begin{DoxyCompactList}\small\item\em contains utility functions used by the search algorithm \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classcsp_1_1Arc}{Arc}}
+\item 
+class \mbox{\hyperlink{classcsp_1_1Constraint}{Constraint}}
+\item 
+struct \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}
+\item 
+class \mbox{\hyperlink{classcsp_1_1Variable}{Variable}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacecsp_ad8fcf085f4571634ecbae5958681130c}\label{namespacecsp_ad8fcf085f4571634ecbae5958681130c}} 
+{\footnotesize template$<$typename T $>$ }\\using {\bfseries Binary\+Predicate} = std\+::function$<$ bool(const T \&, const T \&)$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Var\+Ptr , typename Strategy $>$ }\\bool \mbox{\hyperlink{namespacecsp_a7c4b7405c9322942b4fd268d19d03267}{recursive\+Solve}} (\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem, const Strategy \&strategy)
+\item 
+{\footnotesize template$<$typename Var\+Ptr , typename Strategy  = strategies\+::\+Mrv$<$\+Var\+Ptr$>$$>$ }\\bool \mbox{\hyperlink{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}{solve}} (\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem, const Strategy \&strategy=Strategy())
+\item 
+{\footnotesize template$<$typename Var\+Container , typename Arc\+Container , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Arc\+Container $>$()))$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_a5b0c471349dfa5acdd14ead986119ca8}{make\+\_\+csp}} (const Var\+Container \&variables, const Arc\+Container \&arcs) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ std\+::decay\+\_\+t$<$ decltype(std\+::end(arcs), std\+::end(variables), $\ast$std\+::begin(variables))$>$$>$
+\item 
+{\footnotesize template$<$typename Var\+Container , typename Contraint\+Container , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+constraint$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Contraint\+Container $>$()))$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_a09854faeef3daad91bc3e47d662eea13}{make\+\_\+csp}} (const Var\+Container \&variables, const Contraint\+Container \&constraints) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ std\+::decay\+\_\+t$<$ decltype(std\+::end(constraints), std\+::end(variables), $\ast$std\+::begin(variables))$>$$>$
+\item 
+{\footnotesize template$<$typename Var\+It , typename Constr\+It , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+constraint$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Constr\+It $>$())$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_a79f98b60bab0c0e9da221974b40e18a6}{make\+\_\+csp}} (Var\+It v\+Begin, Var\+It v\+End, Constr\+It c\+Begin, Constr\+It c\+End) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ std\+::decay\+\_\+t$<$ decltype($\ast$++c\+Begin, c\+Begin==c\+End,++v\+Begin, v\+Begin==v\+End, $\ast$v\+Begin)$>$$>$
+\item 
+{\footnotesize template$<$typename Var\+It , typename Arc\+It , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Arc\+It $>$())$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_aa367d3ee0272c7fe406f0cf892bc3e0d}{make\+\_\+csp}} (Var\+It v\+Begin, Var\+It v\+End, Arc\+It a\+Begin, Arc\+It a\+End) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ std\+::decay\+\_\+t$<$ decltype($\ast$++a\+Begin, a\+Begin==a\+End,++v\+Begin, v\+Begin==v\+End, $\ast$v\+Begin)$>$$>$
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+Contains all relevant datastructures and functions for defining and solving a constraint satisfaction problem. 
+
+\doxysubsubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecsp_a5b0c471349dfa5acdd14ead986119ca8}\label{namespacecsp_a5b0c471349dfa5acdd14ead986119ca8}} 
+\index{csp@{csp}!make\_csp@{make\_csp}}
+\index{make\_csp@{make\_csp}!csp@{csp}}
+\doxyparagraph{\texorpdfstring{make\_csp()}{make\_csp()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily template$<$typename Var\+Container , typename Arc\+Container , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Arc\+Container $>$()))$>$$>$\+::value , int $>$ \\
+auto csp\+::make\+\_\+csp (\begin{DoxyParamCaption}\item[{const Var\+Container \&}]{variables,  }\item[{const Arc\+Container \&}]{arcs }\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$std\+::decay\+\_\+t$<$decltype(
+                    std\+::end(arcs),
+                    std\+::end(variables),
+                    $\ast$std\+::begin(variables)
+            )$>$$>$ }
+
+Creates a C\+SP from a container of variable-\/pointer and a container of csp\+::\+Arcs 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Container} & Container-\/\+Type containing pointer-\/types to a type derived of \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+{\em Arc\+Container} & Container-\/\+Type containing csp\+::\+Arcs \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em variables} & Container of all variables in the C\+SP \\
+\hline
+{\em arcs} & Container of all directed csp\+::\+Arcs in the C\+SP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} representing the problem induced by the given variables and arcs 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+When using csp\+::\+Arcs to specify the constraints, make sure that if you have a constraint e.\+g. A $<$ B, you specify both csp\+::\+Arcs representing A $<$ B and B $>$ A! Otherwise the problem is malformed and may lead to invalid solutions! 
+\end{DoxyNote}
+\mbox{\Hypertarget{namespacecsp_a09854faeef3daad91bc3e47d662eea13}\label{namespacecsp_a09854faeef3daad91bc3e47d662eea13}} 
+\index{csp@{csp}!make\_csp@{make\_csp}}
+\index{make\_csp@{make\_csp}!csp@{csp}}
+\doxyparagraph{\texorpdfstring{make\_csp()}{make\_csp()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily template$<$typename Var\+Container , typename Contraint\+Container , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+constraint$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Contraint\+Container $>$()))$>$$>$\+::value , int $>$ \\
+auto csp\+::make\+\_\+csp (\begin{DoxyParamCaption}\item[{const Var\+Container \&}]{variables,  }\item[{const Contraint\+Container \&}]{constraints }\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$std\+::decay\+\_\+t$<$decltype(
+                    std\+::end(constraints),
+                    std\+::end(variables),
+                    $\ast$std\+::begin(variables)
+            )$>$$>$ }
+
+Creates a C\+SP from a container of variable-\/pointers and a container of csp\+::\+Constraints 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Container} & Container-\/\+Type containing pointer-\/types to a type derived of \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+{\em Arc\+Container} & Container-\/\+Type containing csp\+::\+Constraints \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em variables} & Container of all variables in the C\+SP \\
+\hline
+{\em arcs} & Container of all undirected csp\+::\+Constraints in the C\+SP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} representing the problem induced by the given variables and constraints 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+When using csp\+::\+Constraints to specify the constraints, specify them only once. A \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}} for e.\+g. A $<$ B fully represents the constraint between the \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} A and B. Specifying A $<$ B and B $>$ A may lead to performance loss during search! 
+\end{DoxyNote}
+\mbox{\Hypertarget{namespacecsp_aa367d3ee0272c7fe406f0cf892bc3e0d}\label{namespacecsp_aa367d3ee0272c7fe406f0cf892bc3e0d}} 
+\index{csp@{csp}!make\_csp@{make\_csp}}
+\index{make\_csp@{make\_csp}!csp@{csp}}
+\doxyparagraph{\texorpdfstring{make\_csp()}{make\_csp()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily template$<$typename Var\+It , typename Arc\+It , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Arc\+It $>$())$>$$>$\+::value , int $>$ \\
+auto csp\+::make\+\_\+csp (\begin{DoxyParamCaption}\item[{Var\+It}]{v\+Begin,  }\item[{Var\+It}]{v\+End,  }\item[{Arc\+It}]{a\+Begin,  }\item[{Arc\+It}]{a\+End }\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$std\+::decay\+\_\+t$<$decltype($\ast$++a\+Begin, a\+Begin == a\+End, ++v\+Begin, v\+Begin == v\+End, $\ast$v\+Begin)$>$$>$ }
+
+Creates a C\+SP from a container of variable-\/pointers and a container of \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}} using iterators. Variables and arcs are taken from the respective range \mbox{[}begin, end) 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+It} & Iterator type of variable container \\
+\hline
+{\em Arc\+It} & Iterator type of arc container \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em v\+Begin} & start of range of variables \\
+\hline
+{\em v\+End} & end of range of variables (exclusive) \\
+\hline
+{\em a\+Begin} & start of range of arcs \\
+\hline
+{\em a\+End} & start of range of arcs (exclusive) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} representing the problem induced by the given variables and arcs 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+When using csp\+::\+Arcs to specify the constraints, make sure that if you have a constraint e.\+g. A $<$ B, you specify both csp\+::\+Arcs representing A $<$ B and B $>$ A! Otherwise the problem is malformed and may lead to invalid solutions! 
+\end{DoxyNote}
+\mbox{\Hypertarget{namespacecsp_a79f98b60bab0c0e9da221974b40e18a6}\label{namespacecsp_a79f98b60bab0c0e9da221974b40e18a6}} 
+\index{csp@{csp}!make\_csp@{make\_csp}}
+\index{make\_csp@{make\_csp}!csp@{csp}}
+\doxyparagraph{\texorpdfstring{make\_csp()}{make\_csp()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily template$<$typename Var\+It , typename Constr\+It , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+constraint$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Constr\+It $>$())$>$$>$\+::value , int $>$ \\
+auto csp\+::make\+\_\+csp (\begin{DoxyParamCaption}\item[{Var\+It}]{v\+Begin,  }\item[{Var\+It}]{v\+End,  }\item[{Constr\+It}]{c\+Begin,  }\item[{Constr\+It}]{c\+End }\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$std\+::decay\+\_\+t$<$decltype($\ast$++c\+Begin, c\+Begin == c\+End, ++v\+Begin, v\+Begin == v\+End, $\ast$v\+Begin)$>$$>$ }
+
+Creates a C\+SP from a container of variable-\/pointers and a container of \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}} using iterators. Variables and constraints are taken from the respective range \mbox{[}begin, end) 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+It} & Iterator type of variable container \\
+\hline
+{\em Constr\+It} & Iterator type of constraint container \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em v\+Begin} & start of range of variables \\
+\hline
+{\em v\+End} & end of range of variables (exclusive) \\
+\hline
+{\em c\+Begin} & start of range of constraints \\
+\hline
+{\em c\+End} & start of range of constraints (exclusive) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} representing the problem induced by the given variables and constraints 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+When using csp\+::\+Constraints to specify the constraints, specify them only once. A \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}} for e.\+g. A $<$ B fully represents the constraint between the \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} A and B. Specifying A $<$ B and B $>$ A may lead to performance loss during search! 
+\end{DoxyNote}
+\mbox{\Hypertarget{namespacecsp_a7c4b7405c9322942b4fd268d19d03267}\label{namespacecsp_a7c4b7405c9322942b4fd268d19d03267}} 
+\index{csp@{csp}!recursiveSolve@{recursiveSolve}}
+\index{recursiveSolve@{recursiveSolve}!csp@{csp}}
+\doxyparagraph{\texorpdfstring{recursiveSolve()}{recursiveSolve()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr , typename Strategy $>$ \\
+bool csp\+::recursive\+Solve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&}]{problem,  }\item[{const Strategy \&}]{strategy }\end{DoxyParamCaption})}
+
+Recursive backtracking search for csp\+::\+Csps. Prefer using the wrapper function \mbox{\hyperlink{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}{csp\+::solve}} 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+{\em Strategy} & Type of value selection strategy during search \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em problem} & C\+SP to be solved \\
+\hline
+{\em strategy} & value selection strategy object used during during search \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if problem was solved, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}\label{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}} 
+\index{csp@{csp}!solve@{solve}}
+\index{solve@{solve}!csp@{csp}}
+\doxyparagraph{\texorpdfstring{solve()}{solve()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr , typename Strategy  = strategies\+::\+Mrv$<$\+Var\+Ptr$>$$>$ \\
+bool csp\+::solve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&}]{problem,  }\item[{const Strategy \&}]{strategy = {\ttfamily Strategy()} }\end{DoxyParamCaption})}
+
+Solves a C\+SP. If a solution exists, the value domains of each variable in the given \mbox{\hyperlink{structcsp_1_1Csp}{Csp}} will be reduced to exactly one value. If multiple solutions exist, it is unspecified which is found. If no solution exists, false is returned but the value domains of the variables might still be altered 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+{\em Strategy} & Type of value selection strategy during search (default\+: minimum remaining values strategy). Has to provide ()-\/Operator and return Var\+Ptr from given \mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em problem} & C\+SP to be solved \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if problem was solved, false otherwise 
+\end{DoxyReturn}
