@@ -1,6 +1,6 @@
 # CSP-Solver
 Project for the lecture "Objektorientierte Programmierung mit C++" at Ulm University. Solves arbitrary binary constraint
-satisfaction problems (CSP) using the[AC-3 algorithm](https://en.wikipedia.org/wiki/AC-3_algorithm) and backtracking
+satisfaction problems (CSP) using the [AC-3 algorithm](https://en.wikipedia.org/wiki/AC-3_algorithm) and backtracking
 search.
 
 ## How To
