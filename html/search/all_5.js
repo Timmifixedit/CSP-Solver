@@ -1,6 +1,0 @@
-var searchData=
-[
-  ['make_5fcsp_19',['make_csp',['../structcsp_1_1Csp.html#adfde30f2117436887a29fb8c23d1fa70',1,'csp::Csp::make_csp()'],['../namespacecsp.html#a5b0c471349dfa5acdd14ead986119ca8',1,'csp::make_csp(const VarContainer &amp;variables, const ArcContainer &amp;arcs) -&gt; Csp&lt; std::decay_t&lt; decltype(std::end(arcs), std::end(variables), *std::begin(variables))&gt;&gt;'],['../namespacecsp.html#a09854faeef3daad91bc3e47d662eea13',1,'csp::make_csp(const VarContainer &amp;variables, const ContraintContainer &amp;constraints) -&gt; Csp&lt; std::decay_t&lt; decltype(std::end(constraints), std::end(variables), *std::begin(variables))&gt;&gt;'],['../namespacecsp.html#a79f98b60bab0c0e9da221974b40e18a6',1,'csp::make_csp(VarIt vBegin, VarIt vEnd, ConstrIt cBegin, ConstrIt cEnd) -&gt; Csp&lt; std::decay_t&lt; decltype(*++cBegin, cBegin==cEnd,++vBegin, vBegin==vEnd, *vBegin)&gt;&gt;'],['../namespacecsp.html#aa367d3ee0272c7fe406f0cf892bc3e0d',1,'csp::make_csp(VarIt vBegin, VarIt vEnd, ArcIt aBegin, ArcIt aEnd) -&gt; Csp&lt; std::decay_t&lt; decltype(*++aBegin, aBegin==aEnd,++vBegin, vBegin==vEnd, *vBegin)&gt;&gt;']]],
-  ['makecspcheckpoint_20',['makeCspCheckpoint',['../namespacecsp_1_1util.html#a53871dce283fca47d673d09bffa97618',1,'csp::util']]],
-  ['mrv_21',['Mrv',['../structcsp_1_1strategies_1_1Mrv.html',1,'csp::strategies']]]
-];

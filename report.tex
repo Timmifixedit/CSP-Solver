@@ -1,0 +1,22 @@
+\documentclass[german]{cpp-hmwk}
+\usepackage{acronym}
+\usepackage{cleveref}[german]
+
+\newcommand{\inlcode}[1]{\lstinline[breaklines=true]|#1|}
+\newcommand{\eac}[1]{\acused{#1}\textit{\acl{#1}} (\acs{#1})}
+\newcommand{\eacp}[1]{\acused{#1}\textit{\aclp{#1}} (\acsp{#1})}
+\newcommand{\consTo}{\stackrel{\text{ac}}{\rightarrow}}
+
+\begin{document}
+   \Homework{Lösen von Constraint Satisfaction Problemen mit C++}{Tim Luchterhand}
+   \input{intro.tex}
+   \input{theory.tex}
+   \input{concept.tex}
+   \input{implementation.tex}
+   \input{exampleAndTestSuite.tex}
+   \input{conclusion.tex}
+
+   \printbibliography
+   \section*{Abkürzungsverzeichnis}
+   \input{acronyms.tex}
+\end{document}
