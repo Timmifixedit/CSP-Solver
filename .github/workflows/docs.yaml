@@ -2,7 +2,7 @@ name: documentation
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "CI" ]
   workflow_dispatch:
 
 env:
