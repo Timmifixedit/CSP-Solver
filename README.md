@@ -5,8 +5,8 @@ satisfaction problems (CSP) using the [AC-3 algorithm](https://en.wikipedia.org/
 search. The seminar paper (German) for this project can be found [here](https://timmifixedit.github.io/CSP-Solver/Report/report.pdf).
 
 ## Doxygen Documentation
-* [HTML](https://timmifixedit.github.io/CSP-Solver/html/index.html)
-* [PDF](https://timmifixedit.github.io/CSP-Solver/CSPSolverDocs.pdf)
+* [HTML](https://timmifixedit.github.io/CSP-Solver/docs/html/index.html)
+* [PDF](https://timmifixedit.github.io/CSP-Solver/docs/CSPSolverDocs.pdf)
 
 ## How To
 A CPS consists of a set of variables, represented by `csp::Variable` and a set of constraints (dependencies between

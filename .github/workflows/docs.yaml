@@ -30,3 +30,4 @@ jobs:
         with:
           folder: ${{ env.DOCS_OUT_DIR }}
           branch: gh-pages
+          target-folder: ${{ env.DOCS_OUT_DIR }}
