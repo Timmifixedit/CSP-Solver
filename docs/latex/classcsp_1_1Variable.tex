@@ -1,0 +1,167 @@
+\hypertarget{classcsp_1_1Variable}{}\doxysubsection{csp\+::Variable$<$ T, Domain\+Type $>$ Class Template Reference}
+\label{classcsp_1_1Variable}\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+
+
+{\ttfamily \#include $<$Variable.\+h$>$}
+
+
+
+Inherited by Sudoku\+Node.
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcsp_1_1Variable_a2f7739a1751a3d5e984f5b9c6e6a9584}\label{classcsp_1_1Variable_a2f7739a1751a3d5e984f5b9c6e6a9584}} 
+using {\bfseries DomainT} = Domain\+Type$<$ T $>$
+\item 
+\mbox{\Hypertarget{classcsp_1_1Variable_ac388c91b85370e6087fb652936168c0a}\label{classcsp_1_1Variable_ac388c91b85370e6087fb652936168c0a}} 
+using {\bfseries ValueT} = T
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcsp_1_1Variable_a057075affe8a44fe7e0cc36bd3c6902a}{Variable}} (DomainT domain)
+\item 
+\mbox{\hyperlink{classcsp_1_1Variable_a105fdbcc194716782ec1ac8b066df15e}{Variable}} (std\+::initializer\+\_\+list$<$ T $>$ init)
+\item 
+void \mbox{\hyperlink{classcsp_1_1Variable_a0ddb052c0ba25343ce0e60ab2f2988b2}{assign}} (T val)
+\item 
+constexpr bool \mbox{\hyperlink{classcsp_1_1Variable_a264f9ea4fe7fabd9453f855fb3f69a5a}{is\+Assigned}} () const noexcept(noexcept(std\+::declval$<$ DomainT $>$().size()))
+\item 
+{\footnotesize template$<$typename Container , std\+::enable\+\_\+if\+\_\+t$<$ std\+::is\+\_\+convertible\+\_\+v$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Container $>$())), T $>$ , int $>$ }\\void \mbox{\hyperlink{classcsp_1_1Variable_a078dad1b30d5c1d4fc076c1d013ad61c}{set\+Value\+Domain}} (const Container \&container)
+\item 
+void \mbox{\hyperlink{classcsp_1_1Variable_a1a5addca2aa6a32a67af1ba50f30a8f5}{set\+Value\+Domain}} (DomainT values)
+\item 
+constexpr auto \mbox{\hyperlink{classcsp_1_1Variable_a202d244051fc33865602bd4570837bcb}{value\+Domain}} () const noexcept -\/$>$ const DomainT \&
+\item 
+constexpr auto \mbox{\hyperlink{classcsp_1_1Variable_a02ecff6690efdc0bbf3af90078e021f0}{value\+Domain}} () noexcept -\/$>$ DomainT \&
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+\subsubsection*{template$<$typename T, template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$\newline
+class csp\+::\+Variable$<$ T, Domain\+Type $>$}
+
+Represents a variable in a constraint satisfaction problem 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Type of the contained value \\
+\hline
+{\em Domain\+Type} & Type of container used for the variables domain (default is std\+::list) \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcsp_1_1Variable_a057075affe8a44fe7e0cc36bd3c6902a}\label{classcsp_1_1Variable_a057075affe8a44fe7e0cc36bd3c6902a}} 
+\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}!Variable@{Variable}}
+\index{Variable@{Variable}!csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+\doxyparagraph{\texorpdfstring{Variable()}{Variable()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$ \\
+\mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}$<$ T, Domain\+Type $>$\+::\mbox{\hyperlink{classcsp_1_1Variable}{Variable}} (\begin{DoxyParamCaption}\item[{DomainT}]{domain }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+C\+Tor 
+\begin{DoxyParams}{Parameters}
+{\em domain} & list of possible values \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classcsp_1_1Variable_a105fdbcc194716782ec1ac8b066df15e}\label{classcsp_1_1Variable_a105fdbcc194716782ec1ac8b066df15e}} 
+\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}!Variable@{Variable}}
+\index{Variable@{Variable}!csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+\doxyparagraph{\texorpdfstring{Variable()}{Variable()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$ \\
+\mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}$<$ T, Domain\+Type $>$\+::\mbox{\hyperlink{classcsp_1_1Variable}{Variable}} (\begin{DoxyParamCaption}\item[{std\+::initializer\+\_\+list$<$ T $>$}]{init }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Ctor using initializer list 
+\begin{DoxyParams}{Parameters}
+{\em init} & \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcsp_1_1Variable_a0ddb052c0ba25343ce0e60ab2f2988b2}\label{classcsp_1_1Variable_a0ddb052c0ba25343ce0e60ab2f2988b2}} 
+\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}!assign@{assign}}
+\index{assign@{assign}!csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+\doxyparagraph{\texorpdfstring{assign()}{assign()}}
+{\footnotesize\ttfamily template$<$typename T , template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$ \\
+void \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}$<$ T, Domain\+Type $>$\+::assign (\begin{DoxyParamCaption}\item[{T}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Sets the variable to the specified value (by reducing the value domain to said value) 
+\begin{DoxyParams}{Parameters}
+{\em val} & The desired value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The value does not have to be in the variable\textquotesingle{}s value domain. No checks are performed. 
+\end{DoxyNote}
+\mbox{\Hypertarget{classcsp_1_1Variable_a264f9ea4fe7fabd9453f855fb3f69a5a}\label{classcsp_1_1Variable_a264f9ea4fe7fabd9453f855fb3f69a5a}} 
+\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}!isAssigned@{isAssigned}}
+\index{isAssigned@{isAssigned}!csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+\doxyparagraph{\texorpdfstring{isAssigned()}{isAssigned()}}
+{\footnotesize\ttfamily template$<$typename T , template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$ \\
+constexpr bool \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}$<$ T, Domain\+Type $>$\+::is\+Assigned (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+Checks if the variable is assigned \begin{DoxyReturn}{Returns}
+True if the variable\textquotesingle{}s domain contains exactly one value, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcsp_1_1Variable_a078dad1b30d5c1d4fc076c1d013ad61c}\label{classcsp_1_1Variable_a078dad1b30d5c1d4fc076c1d013ad61c}} 
+\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}!setValueDomain@{setValueDomain}}
+\index{setValueDomain@{setValueDomain}!csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+\doxyparagraph{\texorpdfstring{setValueDomain()}{setValueDomain()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$ \\
+template$<$typename Container , std\+::enable\+\_\+if\+\_\+t$<$ std\+::is\+\_\+convertible\+\_\+v$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Container $>$())), T $>$ , int $>$ \\
+void \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}$<$ T, Domain\+Type $>$\+::set\+Value\+Domain (\begin{DoxyParamCaption}\item[{const Container \&}]{container }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Sets the value domain accepting arbitrary containers that support iteration 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Container} & Type of the container \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em container} & desired values \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+Avoid duplicates! No checks are performed. Duplicates can lead to performance losses. 
+\end{DoxyNote}
+\mbox{\Hypertarget{classcsp_1_1Variable_a1a5addca2aa6a32a67af1ba50f30a8f5}\label{classcsp_1_1Variable_a1a5addca2aa6a32a67af1ba50f30a8f5}} 
+\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}!setValueDomain@{setValueDomain}}
+\index{setValueDomain@{setValueDomain}!csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+\doxyparagraph{\texorpdfstring{setValueDomain()}{setValueDomain()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$ \\
+void \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}$<$ T, Domain\+Type $>$\+::set\+Value\+Domain (\begin{DoxyParamCaption}\item[{DomainT}]{values }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Sets the value domain 
+\begin{DoxyParams}{Parameters}
+{\em values} & desired values. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+Avoid duplicates! No checks are performed. Duplicates can lead to performance losses. 
+\end{DoxyNote}
+\mbox{\Hypertarget{classcsp_1_1Variable_a202d244051fc33865602bd4570837bcb}\label{classcsp_1_1Variable_a202d244051fc33865602bd4570837bcb}} 
+\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}!valueDomain@{valueDomain}}
+\index{valueDomain@{valueDomain}!csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+\doxyparagraph{\texorpdfstring{valueDomain()}{valueDomain()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T , template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$ \\
+constexpr auto \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}$<$ T, Domain\+Type $>$\+::value\+Domain (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$ const DomainT\& \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+Gets the value domain \begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcsp_1_1Variable_a02ecff6690efdc0bbf3af90078e021f0}\label{classcsp_1_1Variable_a02ecff6690efdc0bbf3af90078e021f0}} 
+\index{csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}!valueDomain@{valueDomain}}
+\index{valueDomain@{valueDomain}!csp::Variable$<$ T, DomainType $>$@{csp::Variable$<$ T, DomainType $>$}}
+\doxyparagraph{\texorpdfstring{valueDomain()}{valueDomain()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T , template$<$ typename... $>$ typename Domain\+Type = std\+::list$>$ \\
+constexpr auto \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}$<$ T, Domain\+Type $>$\+::value\+Domain (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) -\/$>$ DomainT \& \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+Gets the value domain \begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{Variable_8h}{Variable.\+h}}\end{DoxyCompactItemize}

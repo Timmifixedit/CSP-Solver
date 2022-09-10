@@ -1,0 +1,78 @@
+\hypertarget{Arc_8h}{}\doxysubsection{src/\+Arc.h File Reference}
+\label{Arc_8h}\index{src/Arc.h@{src/Arc.h}}
+
+
+This file contains the the \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}} and the \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}} class. Both can be used to specify constraints (dependencies) between two \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} pointers. An Arc is directed (specifying a constraint that a Variable X X imposes on a Variable Y, e.\+g. A $<$ B but not B $>$ A). A Constraint implicitly defines both directions (e.\+g. if A $<$ B $<$=$>$ B $>$ A). The actual constraint is given as a binary predicate.  
+
+
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+{\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include \char`\"{}Variable.\+h\char`\"{}}\newline
+Include dependency graph for Arc.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{Arc_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=267pt]{Arc_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcsp_1_1type__traits_1_1is__dereferencable}{csp\+::type\+\_\+traits\+::is\+\_\+dereferencable$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{structcsp_1_1type__traits_1_1is__derived__from__var}{csp\+::type\+\_\+traits\+::is\+\_\+derived\+\_\+from\+\_\+var$<$ T $>$}}
+\item 
+class \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc$<$ Var\+Ptr $>$}}
+\item 
+class \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint$<$ Var\+Ptr $>$}}
+\item 
+class \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc$<$ Var\+Ptr $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecsp}{csp}}
+\begin{DoxyCompactList}\small\item\em Contains all relevant datastructures and functions for defining and solving a constraint satisfaction problem. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacecsp_ad8fcf085f4571634ecbae5958681130c}\label{namespacecsp_ad8fcf085f4571634ecbae5958681130c}} 
+{\footnotesize template$<$typename T $>$ }\\using {\bfseries csp\+::\+Binary\+Predicate} = std\+::function$<$ bool(const T \&, const T \&)$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{Arc_8h_a4954ab9744566595f5759c5993480219}\label{Arc_8h_a4954ab9744566595f5759c5993480219}} 
+{\footnotesize template$<$typename T $>$ }\\std\+::true\+\_\+type {\bfseries csp\+::type\+\_\+traits\+::implementations\+::pointer\+Test} (decltype($\ast$std\+::declval$<$ T $>$(), std\+::declval$<$ T $>$()))
+\item 
+\mbox{\Hypertarget{Arc_8h_a6dc25d266dbe477bf8585885e8735360}\label{Arc_8h_a6dc25d266dbe477bf8585885e8735360}} 
+{\footnotesize template$<$typename T $>$ }\\std\+::false\+\_\+type {\bfseries csp\+::type\+\_\+traits\+::implementations\+::pointer\+Test} (...)
+\item 
+\mbox{\Hypertarget{Arc_8h_ae71cad0ba5c764fc50ca344cdc5c3b0e}\label{Arc_8h_ae71cad0ba5c764fc50ca344cdc5c3b0e}} 
+{\footnotesize template$<$typename Var\+Type , template$<$ typename... $>$typename Domain$>$ }\\std\+::true\+\_\+type {\bfseries csp\+::type\+\_\+traits\+::implementations\+::derived\+Test} (Variable$<$ Var\+Type, Domain $>$ $\ast$)
+\item 
+\mbox{\Hypertarget{Arc_8h_aff8f3e4d193b0a68d0279c8af259b51b}\label{Arc_8h_aff8f3e4d193b0a68d0279c8af259b51b}} 
+std\+::false\+\_\+type {\bfseries csp\+::type\+\_\+traits\+::implementations\+::derived\+Test} (...)
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+This file contains the the \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}} and the \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}} class. Both can be used to specify constraints (dependencies) between two \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} pointers. An Arc is directed (specifying a constraint that a Variable X X imposes on a Variable Y, e.\+g. A $<$ B but not B $>$ A). A Constraint implicitly defines both directions (e.\+g. if A $<$ B $<$=$>$ B $>$ A). The actual constraint is given as a binary predicate. 
+
+\begin{DoxyAuthor}{Author}
+Tim Luchterhand 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+22.\+07.\+20 
+\end{DoxyDate}

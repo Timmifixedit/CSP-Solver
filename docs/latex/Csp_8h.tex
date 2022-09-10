@@ -1,0 +1,76 @@
+\hypertarget{Csp_8h}{}\doxysubsection{src/\+Csp.h File Reference}
+\label{Csp_8h}\index{src/Csp.h@{src/Csp.h}}
+
+
+This file contains the \mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} class which represents a complete definition of a constraint satisfaction problem. The class contains a list of Variable pointers, a list of all arcs and a map that specifies incoming arcs of each variable. The \mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} should be created using the provided function \mbox{\hyperlink{namespacecsp_a5b0c471349dfa5acdd14ead986119ca8}{csp\+::make\+\_\+csp}}.  
+
+
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$deque$>$}\newline
+{\ttfamily \#include \char`\"{}Variable.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Arc.\+h\char`\"{}}\newline
+Include dependency graph for Csp.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{Csp_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=250pt]{Csp_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcsp_1_1type__traits_1_1is__arc}{csp\+::type\+\_\+traits\+::is\+\_\+arc$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{structcsp_1_1type__traits_1_1is__constraint}{csp\+::type\+\_\+traits\+::is\+\_\+constraint$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp$<$ Var\+Ptr $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecsp}{csp}}
+\begin{DoxyCompactList}\small\item\em Contains all relevant datastructures and functions for defining and solving a constraint satisfaction problem. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{Csp_8h_a076d8e14cfdcd03af07b9f2ee0f1025b}\label{Csp_8h_a076d8e14cfdcd03af07b9f2ee0f1025b}} 
+{\footnotesize template$<$typename Var\+Ptr $>$ }\\std\+::true\+\_\+type {\bfseries csp\+::type\+\_\+traits\+::implementations\+::arc\+Test} (Arc$<$ Var\+Ptr $>$)
+\item 
+\mbox{\Hypertarget{Csp_8h_af437ad73e314f2022a542fbffc5bf97e}\label{Csp_8h_af437ad73e314f2022a542fbffc5bf97e}} 
+std\+::false\+\_\+type {\bfseries csp\+::type\+\_\+traits\+::implementations\+::arc\+Test} (...)
+\item 
+\mbox{\Hypertarget{Csp_8h_a1299134e675073ef04a48ef8894eb562}\label{Csp_8h_a1299134e675073ef04a48ef8894eb562}} 
+{\footnotesize template$<$typename Var\+Ptr $>$ }\\std\+::true\+\_\+type {\bfseries csp\+::type\+\_\+traits\+::implementations\+::constraint\+Test} (Constraint$<$ Var\+Ptr $>$)
+\item 
+\mbox{\Hypertarget{Csp_8h_a160aa3026ad1eb2884c2a2fe4a0c783c}\label{Csp_8h_a160aa3026ad1eb2884c2a2fe4a0c783c}} 
+std\+::false\+\_\+type {\bfseries csp\+::type\+\_\+traits\+::implementations\+::constraint\+Test} (...)
+\item 
+{\footnotesize template$<$typename Var\+Container , typename Arc\+Container , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Arc\+Container $>$()))$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_a5b0c471349dfa5acdd14ead986119ca8}{csp\+::make\+\_\+csp}} (const Var\+Container \&variables, const Arc\+Container \&arcs) -\/$>$ Csp$<$ std\+::decay\+\_\+t$<$ decltype(std\+::end(arcs), std\+::end(variables), $\ast$std\+::begin(variables))$>$$>$
+\item 
+{\footnotesize template$<$typename Var\+Container , typename Contraint\+Container , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+constraint$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Contraint\+Container $>$()))$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_a09854faeef3daad91bc3e47d662eea13}{csp\+::make\+\_\+csp}} (const Var\+Container \&variables, const Contraint\+Container \&constraints) -\/$>$ Csp$<$ std\+::decay\+\_\+t$<$ decltype(std\+::end(constraints), std\+::end(variables), $\ast$std\+::begin(variables))$>$$>$
+\item 
+{\footnotesize template$<$typename Var\+It , typename Constr\+It , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+constraint$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Constr\+It $>$())$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_a79f98b60bab0c0e9da221974b40e18a6}{csp\+::make\+\_\+csp}} (Var\+It v\+Begin, Var\+It v\+End, Constr\+It c\+Begin, Constr\+It c\+End) -\/$>$ Csp$<$ std\+::decay\+\_\+t$<$ decltype($\ast$++c\+Begin, c\+Begin==c\+End,++v\+Begin, v\+Begin==v\+End, $\ast$v\+Begin)$>$$>$
+\item 
+{\footnotesize template$<$typename Var\+It , typename Arc\+It , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Arc\+It $>$())$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_aa367d3ee0272c7fe406f0cf892bc3e0d}{csp\+::make\+\_\+csp}} (Var\+It v\+Begin, Var\+It v\+End, Arc\+It a\+Begin, Arc\+It a\+End) -\/$>$ Csp$<$ std\+::decay\+\_\+t$<$ decltype($\ast$++a\+Begin, a\+Begin==a\+End,++v\+Begin, v\+Begin==v\+End, $\ast$v\+Begin)$>$$>$
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+This file contains the \mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} class which represents a complete definition of a constraint satisfaction problem. The class contains a list of Variable pointers, a list of all arcs and a map that specifies incoming arcs of each variable. The \mbox{\hyperlink{structcsp_1_1Csp}{csp\+::\+Csp}} should be created using the provided function \mbox{\hyperlink{namespacecsp_a5b0c471349dfa5acdd14ead986119ca8}{csp\+::make\+\_\+csp}}. 
+
+\begin{DoxyAuthor}{Author}
+Tim Luchterhand 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+25.\+07.\+20 
+\end{DoxyDate}

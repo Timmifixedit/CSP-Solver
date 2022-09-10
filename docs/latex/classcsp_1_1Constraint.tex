@@ -1,0 +1,103 @@
+\hypertarget{classcsp_1_1Constraint}{}\doxysubsection{csp\+::Constraint$<$ Var\+Ptr $>$ Class Template Reference}
+\label{classcsp_1_1Constraint}\index{csp::Constraint$<$ VarPtr $>$@{csp::Constraint$<$ VarPtr $>$}}
+
+
+{\ttfamily \#include $<$Arc.\+h$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcsp_1_1Constraint_a3034cbd0f257fd273851504c34d28cf7}\label{classcsp_1_1Constraint_a3034cbd0f257fd273851504c34d28cf7}} 
+using {\bfseries Var\+Type} = typename std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::declval$<$ Var\+Ptr $>$())$>$\+::ValueT
+\item 
+\mbox{\Hypertarget{classcsp_1_1Constraint_a15ccab61cc00deba0cf9653e2c67781e}\label{classcsp_1_1Constraint_a15ccab61cc00deba0cf9653e2c67781e}} 
+using {\bfseries ArcT} = \mbox{\hyperlink{classcsp_1_1Arc}{Arc}}$<$ Var\+Ptr $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcsp_1_1Constraint_a139a050c482ec3f7580b82cd70ef9f7d}{Constraint}} (Var\+Ptr v1, Var\+Ptr v2, Binary\+Predicate$<$ Var\+Type $>$ predicate) noexcept(nothrow\+\_\+construcible)
+\item 
+auto \mbox{\hyperlink{classcsp_1_1Constraint_a5f6871c36ec93a3ac94ab0a875366586}{get\+Arcs}} () const -\/$>$ std\+::pair$<$ \mbox{\hyperlink{classcsp_1_1Arc}{ArcT}}, \mbox{\hyperlink{classcsp_1_1Arc}{ArcT}} $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcsp_1_1Constraint_a93f72cba0e8c53da0e4b1c94aa2d3f78}\label{classcsp_1_1Constraint_a93f72cba0e8c53da0e4b1c94aa2d3f78}} 
+Var\+Ptr {\bfseries var1}
+\item 
+\mbox{\Hypertarget{classcsp_1_1Constraint_a453387a80329606d9be2a3f24370c9ac}\label{classcsp_1_1Constraint_a453387a80329606d9be2a3f24370c9ac}} 
+Var\+Ptr {\bfseries var2}
+\item 
+\mbox{\Hypertarget{classcsp_1_1Constraint_a1afbf042e9f4620b02dd8ef7e8c1da3d}\label{classcsp_1_1Constraint_a1afbf042e9f4620b02dd8ef7e8c1da3d}} 
+Binary\+Predicate$<$ Var\+Type $>$ {\bfseries predicate}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr bool {\bfseries nothrow\+\_\+construcible}
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+\subsubsection*{template$<$typename Var\+Ptr$>$\newline
+class csp\+::\+Constraint$<$ Var\+Ptr $>$}
+
+Represents a binary undirected constraint in a constraint satisfaction problem 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcsp_1_1Constraint_a139a050c482ec3f7580b82cd70ef9f7d}\label{classcsp_1_1Constraint_a139a050c482ec3f7580b82cd70ef9f7d}} 
+\index{csp::Constraint$<$ VarPtr $>$@{csp::Constraint$<$ VarPtr $>$}!Constraint@{Constraint}}
+\index{Constraint@{Constraint}!csp::Constraint$<$ VarPtr $>$@{csp::Constraint$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{Constraint()}{Constraint()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+\mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}}$<$ Var\+Ptr $>$\+::\mbox{\hyperlink{classcsp_1_1Constraint}{Constraint}} (\begin{DoxyParamCaption}\item[{Var\+Ptr}]{v1,  }\item[{Var\+Ptr}]{v2,  }\item[{Binary\+Predicate$<$ Var\+Type $>$}]{predicate }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Ctor 
+\begin{DoxyParams}{Parameters}
+{\em v1} & Pointer-\/\+Type to first variable \\
+\hline
+{\em v2} & Pointer-\/\+Type to first variable \\
+\hline
+{\em predicate} & \mbox{\hyperlink{classcsp_1_1Constraint}{Constraint}} in form of a binary predicate \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcsp_1_1Constraint_a5f6871c36ec93a3ac94ab0a875366586}\label{classcsp_1_1Constraint_a5f6871c36ec93a3ac94ab0a875366586}} 
+\index{csp::Constraint$<$ VarPtr $>$@{csp::Constraint$<$ VarPtr $>$}!getArcs@{getArcs}}
+\index{getArcs@{getArcs}!csp::Constraint$<$ VarPtr $>$@{csp::Constraint$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{getArcs()}{getArcs()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+auto \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}}$<$ Var\+Ptr $>$\+::get\+Arcs (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$ std\+::pair$<$\mbox{\hyperlink{classcsp_1_1Arc}{ArcT}}, \mbox{\hyperlink{classcsp_1_1Arc}{ArcT}}$>$ \hspace{0.3cm}{\ttfamily [inline]}}
+
+Create the two equivalent directed csp\+::\+Arcs \begin{DoxyReturn}{Returns}
+Pair of equivalent csp\+::\+Arcs 
+\end{DoxyReturn}
+
+
+\doxysubsubsection{Field Documentation}
+\mbox{\Hypertarget{classcsp_1_1Constraint_aa954039b7974f4960d1659960ef652ca}\label{classcsp_1_1Constraint_aa954039b7974f4960d1659960ef652ca}} 
+\index{csp::Constraint$<$ VarPtr $>$@{csp::Constraint$<$ VarPtr $>$}!nothrow\_construcible@{nothrow\_construcible}}
+\index{nothrow\_construcible@{nothrow\_construcible}!csp::Constraint$<$ VarPtr $>$@{csp::Constraint$<$ VarPtr $>$}}
+\doxyparagraph{\texorpdfstring{nothrow\_construcible}{nothrow\_construcible}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr $>$ \\
+constexpr bool \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}}$<$ Var\+Ptr $>$\+::nothrow\+\_\+construcible\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [protected]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= std::is\_nothrow\_move\_constructible\_v<VarPtr> \&\&}
+\DoxyCodeLine{                                                     std::is\_nothrow\_move\_constructible\_v<BinaryPredicate < VarType>>}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{Arc_8h}{Arc.\+h}}\end{DoxyCompactItemize}
