@@ -1,6 +1,0 @@
-<map id="src/Csp.h" name="src/Csp.h">
-<area shape="rect" id="node1" title="This file contains the csp::Csp class which represents a complete definition of a constraint satisfac..." alt="" coords="67,5,148,32"/>
-<area shape="rect" id="node2" href="$util_8h.html" title="This file contains utility functions used by the search algorithm." alt="" coords="5,80,84,107"/>
-<area shape="rect" id="node4" href="$strategies_8h.html" title="This file contains different variable choosing strategies that can be used to solve a CSP...." alt="" coords="109,80,231,107"/>
-<area shape="rect" id="node3" href="$csp__solver_8h_source.html" title=" " alt="" coords="45,155,170,181"/>
-</map>
