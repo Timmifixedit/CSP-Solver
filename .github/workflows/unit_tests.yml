@@ -47,7 +47,7 @@ jobs:
         cmake -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.build }} ..
     - name: build
       run: |
-        cd build
+        cd build/Tests
         make -j$(nproc)
     - name: run tests
-      run: ./build/Test/Tests --gtest_color=yes
+      run: ./build/Tests/Tests --gtest_color=yes
