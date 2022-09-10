@@ -17,6 +17,9 @@
 #include "Variable.h"
 #include "Arc.h"
 
+/**
+ * @brief Contains all relevant datastructures and functions for defining and solving a constraint satisfaction problem
+ */
 namespace csp {
 
     namespace type_traits {

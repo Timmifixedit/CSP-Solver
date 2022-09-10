@@ -13,6 +13,9 @@
 #include "Arc.h"
 #include "Csp.h"
 
+/**
+ * @brief contains utility functions used by the search algorithm
+ */
 namespace csp::util {
 
     /**
