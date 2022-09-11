@@ -17,20 +17,32 @@ pairs of variables) represented by `csp::Constraint` or `csp::Arc`. You can use 
 To create a variable, a domain of values has to be given, representing all possible
 values the variable might take:
 ```cpp
-#include "Variable.h"
-using MyVar = csp::Variable<int>;
-MyVar a({1, 2, 17, 24});
+#include "csp_solver.h"
+csp::Variable a{1, 2, 17, 24};
 ```
-Also possible: Create your own type. This allows you to add functionality to your variable type. For example, you can
-add a variable name:
+A variable can be defined on any domain type. Also, you can change the underlying container used for the domain:
+```cpp
+#include "csp_solver.h"
+#include <vector>
+using MyVar = csp::Variable<double, std::vector>;
+MyVar a{0.2, 4, 1.7};
+```
+The default container used as domain storage is `std::list`. This is due to the fact that during solving, values need to
+be erased from the domain. When your variables have domains with many values, a data storage that supports efficient
+removal from any position might be advantageous. When your domains only contain a few values (and / or when your values
+can be copied / moved efficiently), a container like `std::vector` or `std::deque` which supports efficient iteration
+might be the better choice.
+
+Furthermore, you can create your own variable type. This allows you to add functionality to your variable type. For
+example, you can add a variable name:
 ```cpp
 #include <string>
-#include "Variable.h"
+#include "csp_solver.h"
 class MyVar : public csp::Variable<int> {
 public:
-  explicit MyVar(std::string name) : csp::Variable<int>({1, 2, 3, 4}), name(std::move(name)) {}
+  explicit MyVar(std::string name) : csp::Variable<int>{1, 2, 3, 4}, name(std::move(name)) {}
   const std::string name;
-}
+};
 ```
 ### Specifying Constraints
 `csp::Constraint` or `csp::Arc` specify dependencies between pairs of variables. They contain a pointer type to each
@@ -39,7 +51,7 @@ dereference-operator as well as -> operator. Example using the custom variable t
 recommend over raw pointers):
 ```cpp
 #include <memory>
-#include "Arc.h"
+#include "csp_solver.h"
 auto varA = std::make_shared<MyVar>("A");
 auto varB = std::make_shared<MyVar>("B");
 csp::Constraint aLessB(varA, varB, std::less<>());
