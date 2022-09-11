@@ -32,8 +32,6 @@ class \mbox{\hyperlink{classcsp_1_1Variable}{Variable}}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-{\footnotesize template$<$typename Var\+Ptr , typename Strategy $>$ }\\bool \mbox{\hyperlink{namespacecsp_a7c4b7405c9322942b4fd268d19d03267}{recursive\+Solve}} (\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem, const Strategy \&strategy)
-\item 
 {\footnotesize template$<$typename Var\+Ptr , typename Strategy  = strategies\+::\+Mrv$<$\+Var\+Ptr$>$$>$ }\\bool \mbox{\hyperlink{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}{solve}} (\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem, const Strategy \&strategy=Strategy())
 \item 
 {\footnotesize template$<$typename Var\+Container , typename Arc\+Container , std\+::enable\+\_\+if\+\_\+t$<$ type\+\_\+traits\+::is\+\_\+arc$<$ std\+::remove\+\_\+reference\+\_\+t$<$ decltype($\ast$std\+::begin(std\+::declval$<$ Arc\+Container $>$()))$>$$>$\+::value , int $>$ }\\auto \mbox{\hyperlink{namespacecsp_a5b0c471349dfa5acdd14ead986119ca8}{make\+\_\+csp}} (const Var\+Container \&variables, const Arc\+Container \&arcs) -\/$>$ \mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ std\+::decay\+\_\+t$<$ decltype(std\+::end(arcs), std\+::end(variables), $\ast$std\+::begin(variables))$>$$>$
@@ -174,30 +172,6 @@ Creates a C\+SP from a container of variable-\/pointers and a container of \mbox
 \begin{DoxyNote}{Note}
 When using csp\+::\+Constraints to specify the constraints, specify them only once. A \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}} for e.\+g. A $<$ B fully represents the constraint between the \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} A and B. Specifying A $<$ B and B $>$ A may lead to performance loss during search! 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecsp_a7c4b7405c9322942b4fd268d19d03267}\label{namespacecsp_a7c4b7405c9322942b4fd268d19d03267}} 
-\index{csp@{csp}!recursiveSolve@{recursiveSolve}}
-\index{recursiveSolve@{recursiveSolve}!csp@{csp}}
-\doxyparagraph{\texorpdfstring{recursiveSolve()}{recursiveSolve()}}
-{\footnotesize\ttfamily template$<$typename Var\+Ptr , typename Strategy $>$ \\
-bool csp\+::recursive\+Solve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&}]{problem,  }\item[{const Strategy \&}]{strategy }\end{DoxyParamCaption})}
-
-Recursive backtracking search for csp\+::\+Csps. Prefer using the wrapper function \mbox{\hyperlink{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}{csp\+::solve}} 
-\begin{DoxyTemplParams}{Template Parameters}
-{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
-\hline
-{\em Strategy} & Type of value selection strategy during search \\
-\hline
-\end{DoxyTemplParams}
-
-\begin{DoxyParams}{Parameters}
-{\em problem} & C\+SP to be solved \\
-\hline
-{\em strategy} & value selection strategy object used during during search \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-True if problem was solved, false otherwise 
-\end{DoxyReturn}
 \mbox{\Hypertarget{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}\label{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}} 
 \index{csp@{csp}!solve@{solve}}
 \index{solve@{solve}!csp@{csp}}

@@ -1,6 +1,6 @@
 <map id="src/Variable.h" name="src/Variable.h">
 <area shape="rect" id="node1" title="This file contains the definition of a variable which is used to describe a CSP. Custom variable type..." alt="" coords="25,5,135,32"/>
-<area shape="rect" id="node2" href="$csp__solver_8h_source.html" title=" " alt="" coords="5,304,131,331"/>
+<area shape="rect" id="node2" href="$csp__solver_8h.html" title="This file contains the solving algorithm for CSPs. It consists of a recursive backtracking search whi..." alt="" coords="5,304,131,331"/>
 <area shape="rect" id="node3" href="$Arc_8h.html" title="This file contains the the csp::Arc and the csp::Constraint class. Both can be used to specify constr..." alt="" coords="41,80,119,107"/>
 <area shape="rect" id="node4" href="$util_8h.html" title="This file contains utility functions used by the search algorithm." alt="" coords="67,229,146,256"/>
 <area shape="rect" id="node5" href="$Csp_8h.html" title="This file contains the csp::Csp class which represents a complete definition of a constraint satisfac..." alt="" coords="118,155,199,181"/>

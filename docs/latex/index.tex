@@ -8,27 +8,37 @@ Project for the lecture \char`\"{}\+Objektorientierte Programmierung mit C++\cha
 A C\+PS consists of a set of variables, represented by {\ttfamily \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}} and a set of constraints (dependencies between pairs of variables) represented by {\ttfamily \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}}} or {\ttfamily \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}}}. You can use your own variable type by deriving from {\ttfamily \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}}}.\hypertarget{index_autotoc_md3}{}\doxyparagraph{Creating Variables}\label{index_autotoc_md3}
 To create a variable, a domain of values has to be given, representing all possible values the variable might take\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\textcolor{preprocessor}{\#include "\mbox{\hyperlink{Variable_8h}{Variable.h}}"}}
-\DoxyCodeLine{\textcolor{keyword}{using} MyVar = \mbox{\hyperlink{classcsp_1_1Variable}{csp::Variable<int>}};}
-\DoxyCodeLine{MyVar a(\{1, 2, 17, 24\});}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "\mbox{\hyperlink{csp__solver_8h}{csp\_solver.h}}"}}
+\DoxyCodeLine{\mbox{\hyperlink{classcsp_1_1Variable}{csp::Variable}} a\{1, 2, 17, 24\};}
 \end{DoxyCode}
 
 
-Also possible\+: Create your own type. This allows you to add functionality to your variable type. For example, you can add a variable name\+: 
+A variable can be defined on any domain type. Also, you can change the underlying container used for the domain\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "\mbox{\hyperlink{csp__solver_8h}{csp\_solver.h}}"}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{\textcolor{keyword}{using} MyVar = \mbox{\hyperlink{classcsp_1_1Variable}{csp::Variable<double, std::vector>}};}
+\DoxyCodeLine{MyVar a\{0.2, 4, 1.7\};}
+\end{DoxyCode}
+
+
+The default container used as domain storage is {\ttfamily std\+::list}. This is due to the fact that during solving, values need to be erased from the domain. When your variables have domains with many values, a data storage that supports efficient removal from any position might be advantageous. When your domains only contain a few values (and / or when your values can be copied / moved efficiently), a container like {\ttfamily std\+::vector} or {\ttfamily std\+::deque} which supports efficient iteration might be the better choice.
+
+Furthermore, you can create your own variable type. This allows you to add functionality to your variable type. For example, you can add a variable name\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{preprocessor}{\#include <string>}}
-\DoxyCodeLine{\textcolor{preprocessor}{\#include "\mbox{\hyperlink{Variable_8h}{Variable.h}}"}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "\mbox{\hyperlink{csp__solver_8h}{csp\_solver.h}}"}}
 \DoxyCodeLine{\textcolor{keyword}{class }MyVar : \textcolor{keyword}{public} \mbox{\hyperlink{classcsp_1_1Variable}{csp::Variable}}<int> \{}
 \DoxyCodeLine{\textcolor{keyword}{public}:}
-\DoxyCodeLine{  \textcolor{keyword}{explicit} MyVar(std::string name) : \mbox{\hyperlink{namespacecsp}{csp}}::Variable<int>(\{1, 2, 3, 4\}), name(std::move(name)) \{\}}
+\DoxyCodeLine{  \textcolor{keyword}{explicit} MyVar(std::string name) : \mbox{\hyperlink{namespacecsp}{csp}}::Variable<int>\{1, 2, 3, 4\}, name(std::move(name)) \{\}}
 \DoxyCodeLine{  \textcolor{keyword}{const} std::string name;}
-\DoxyCodeLine{\}}
+\DoxyCodeLine{\};}
 \end{DoxyCode}
 \hypertarget{index_autotoc_md4}{}\doxyparagraph{Specifying Constraints}\label{index_autotoc_md4}
 {\ttfamily \mbox{\hyperlink{classcsp_1_1Constraint}{csp\+::\+Constraint}}} or {\ttfamily \mbox{\hyperlink{classcsp_1_1Arc}{csp\+::\+Arc}}} specify dependencies between pairs of variables. They contain a pointer type to each variable and a binary predicate specifying the constraint. You can use arbitrary pointer types that support the dereference-\/operator as well as -\/$>$ operator. Example using the custom variable type above and shared\+\_\+ptr (which I recommend over raw pointers)\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{preprocessor}{\#include <memory>}}
-\DoxyCodeLine{\textcolor{preprocessor}{\#include "\mbox{\hyperlink{Arc_8h}{Arc.h}}"}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "\mbox{\hyperlink{csp__solver_8h}{csp\_solver.h}}"}}
 \DoxyCodeLine{\textcolor{keyword}{auto} varA = std::make\_shared<MyVar>(\textcolor{stringliteral}{"A"});}
 \DoxyCodeLine{\textcolor{keyword}{auto} varB = std::make\_shared<MyVar>(\textcolor{stringliteral}{"B"});}
 \DoxyCodeLine{\mbox{\hyperlink{classcsp_1_1Constraint}{csp::Constraint}} aLessB(varA, varB, std::less<>());}

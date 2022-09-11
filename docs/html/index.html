@@ -87,20 +87,24 @@ How To</h2>
 <p>A CPS consists of a set of variables, represented by <code><a class="el" href="classcsp_1_1Variable.html">csp::Variable</a></code> and a set of constraints (dependencies between pairs of variables) represented by <code><a class="el" href="classcsp_1_1Constraint.html">csp::Constraint</a></code> or <code><a class="el" href="classcsp_1_1Arc.html">csp::Arc</a></code>. You can use your own variable type by deriving from <code><a class="el" href="classcsp_1_1Variable.html">csp::Variable</a></code>.</p>
 <h3><a class="anchor" id="autotoc_md3"></a>
 Creating Variables</h3>
-<p>To create a variable, a domain of values has to be given, representing all possible values the variable might take: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="Variable_8h.html">Variable.h</a>&quot;</span></div>
-<div class="line"><span class="keyword">using</span> MyVar = <a class="code" href="classcsp_1_1Variable.html">csp::Variable&lt;int&gt;</a>;</div>
-<div class="line">MyVar a({1, 2, 17, 24});</div>
-</div><!-- fragment --><p>Also possible: Create your own type. This allows you to add functionality to your variable type. For example, you can add a variable name: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="Variable_8h.html">Variable.h</a>&quot;</span></div>
+<p>To create a variable, a domain of values has to be given, representing all possible values the variable might take: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="csp__solver_8h.html">csp_solver.h</a>&quot;</span></div>
+<div class="line"><a class="code" href="classcsp_1_1Variable.html">csp::Variable</a> a{1, 2, 17, 24};</div>
+</div><!-- fragment --><p>A variable can be defined on any domain type. Also, you can change the underlying container used for the domain: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="csp__solver_8h.html">csp_solver.h</a>&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><span class="keyword">using</span> MyVar = <a class="code" href="classcsp_1_1Variable.html">csp::Variable&lt;double, std::vector&gt;</a>;</div>
+<div class="line">MyVar a{0.2, 4, 1.7};</div>
+</div><!-- fragment --><p>The default container used as domain storage is <code>std::list</code>. This is due to the fact that during solving, values need to be erased from the domain. When your variables have domains with many values, a data storage that supports efficient removal from any position might be advantageous. When your domains only contain a few values (and / or when your values can be copied / moved efficiently), a container like <code>std::vector</code> or <code>std::deque</code> which supports efficient iteration might be the better choice.</p>
+<p>Furthermore, you can create your own variable type. This allows you to add functionality to your variable type. For example, you can add a variable name: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="csp__solver_8h.html">csp_solver.h</a>&quot;</span></div>
 <div class="line"><span class="keyword">class </span>MyVar : <span class="keyword">public</span> <a class="code" href="classcsp_1_1Variable.html">csp::Variable</a>&lt;int&gt; {</div>
 <div class="line"><span class="keyword">public</span>:</div>
-<div class="line">  <span class="keyword">explicit</span> MyVar(std::string name) : <a class="code" href="namespacecsp.html">csp</a>::Variable&lt;int&gt;({1, 2, 3, 4}), name(std::move(name)) {}</div>
+<div class="line">  <span class="keyword">explicit</span> MyVar(std::string name) : <a class="code" href="namespacecsp.html">csp</a>::Variable&lt;int&gt;{1, 2, 3, 4}, name(std::move(name)) {}</div>
 <div class="line">  <span class="keyword">const</span> std::string name;</div>
-<div class="line">}</div>
+<div class="line">};</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md4"></a>
 Specifying Constraints</h3>
 <p><code><a class="el" href="classcsp_1_1Constraint.html">csp::Constraint</a></code> or <code><a class="el" href="classcsp_1_1Arc.html">csp::Arc</a></code> specify dependencies between pairs of variables. They contain a pointer type to each variable and a binary predicate specifying the constraint. You can use arbitrary pointer types that support the dereference-operator as well as -&gt; operator. Example using the custom variable type above and shared_ptr (which I recommend over raw pointers): </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="Arc_8h.html">Arc.h</a>&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="csp__solver_8h.html">csp_solver.h</a>&quot;</span></div>
 <div class="line"><span class="keyword">auto</span> varA = std::make_shared&lt;MyVar&gt;(<span class="stringliteral">&quot;A&quot;</span>);</div>
 <div class="line"><span class="keyword">auto</span> varB = std::make_shared&lt;MyVar&gt;(<span class="stringliteral">&quot;B&quot;</span>);</div>
 <div class="line"><a class="code" href="classcsp_1_1Constraint.html">csp::Constraint</a> aLessB(varA, varB, std::less&lt;&gt;());</div>
@@ -130,11 +134,10 @@ Solving Sudoku Puzzles</h2>
 <div class="ttc" id="aclasscsp_1_1Constraint_html"><div class="ttname"><a href="classcsp_1_1Constraint.html">csp::Constraint</a></div><div class="ttdef"><b>Definition:</b> Arc.h:64</div></div>
 <div class="ttc" id="astructcsp_1_1Csp_html"><div class="ttname"><a href="structcsp_1_1Csp.html">csp::Csp</a></div><div class="ttdef"><b>Definition:</b> Csp.h:63</div></div>
 <div class="ttc" id="aclasscsp_1_1Variable_html"><div class="ttname"><a href="classcsp_1_1Variable.html">csp::Variable</a></div><div class="ttdef"><b>Definition:</b> Variable.h:22</div></div>
-<div class="ttc" id="aArc_8h_html"><div class="ttname"><a href="Arc_8h.html">Arc.h</a></div><div class="ttdoc">This file contains the the csp::Arc and the csp::Constraint class. Both can be used to specify constr...</div></div>
+<div class="ttc" id="acsp__solver_8h_html"><div class="ttname"><a href="csp__solver_8h.html">csp_solver.h</a></div><div class="ttdoc">This file contains the solving algorithm for CSPs. It consists of a recursive backtracking search whi...</div></div>
 <div class="ttc" id="anamespacecsp_html"><div class="ttname"><a href="namespacecsp.html">csp</a></div><div class="ttdoc">Contains all relevant datastructures and functions for defining and solving a constraint satisfaction...</div><div class="ttdef"><b>Definition:</b> csp_solver.h:19</div></div>
 <div class="ttc" id="anamespacecsp_html_a5b0c471349dfa5acdd14ead986119ca8"><div class="ttname"><a href="namespacecsp.html#a5b0c471349dfa5acdd14ead986119ca8">csp::make_csp</a></div><div class="ttdeci">auto make_csp(const VarContainer &amp;variables, const ArcContainer &amp;arcs) -&gt; Csp&lt; std::decay_t&lt; decltype(std::end(arcs), std::end(variables), *std::begin(variables))&gt;&gt;</div><div class="ttdef"><b>Definition:</b> Csp.h:97</div></div>
-<div class="ttc" id="aVariable_8h_html"><div class="ttname"><a href="Variable_8h.html">Variable.h</a></div><div class="ttdoc">This file contains the definition of a variable which is used to describe a CSP. Custom variable type...</div></div>
-<div class="ttc" id="anamespacecsp_html_a2aa8e8d0fa01e590f1bd072968d197bc"><div class="ttname"><a href="namespacecsp.html#a2aa8e8d0fa01e590f1bd072968d197bc">csp::solve</a></div><div class="ttdeci">bool solve(Csp&lt; VarPtr &gt; &amp;problem, const Strategy &amp;strategy=Strategy())</div><div class="ttdef"><b>Definition:</b> csp_solver.h:70</div></div>
+<div class="ttc" id="anamespacecsp_html_a2aa8e8d0fa01e590f1bd072968d197bc"><div class="ttname"><a href="namespacecsp.html#a2aa8e8d0fa01e590f1bd072968d197bc">csp::solve</a></div><div class="ttdeci">bool solve(Csp&lt; VarPtr &gt; &amp;problem, const Strategy &amp;strategy=Strategy())</div><div class="ttdef"><b>Definition:</b> csp_solver.h:72</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

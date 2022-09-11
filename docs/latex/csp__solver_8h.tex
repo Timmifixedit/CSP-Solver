@@ -1,0 +1,45 @@
+\hypertarget{csp__solver_8h}{}\doxysubsection{src/csp\+\_\+solver.h File Reference}
+\label{csp__solver_8h}\index{src/csp\_solver.h@{src/csp\_solver.h}}
+
+
+This file contains the solving algorithm for C\+S\+Ps. It consists of a recursive backtracking search which repeatedly uses the A\+C-\/3 algorithm to reduce the search space. Use the \mbox{\hyperlink{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}{csp\+::solve}} wrapper method.  
+
+
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+{\ttfamily \#include \char`\"{}Variable.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Arc.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}strategies.\+h\char`\"{}}\newline
+Include dependency graph for csp\+\_\+solver.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{csp__solver_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecsp}{csp}}
+\begin{DoxyCompactList}\small\item\em Contains all relevant datastructures and functions for defining and solving a constraint satisfaction problem. \end{DoxyCompactList}\item 
+ \mbox{\hyperlink{namespacecsp_1_1util}{csp\+::util}}
+\begin{DoxyCompactList}\small\item\em contains utility functions used by the search algorithm \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Var\+Ptr , typename Strategy $>$ }\\bool \mbox{\hyperlink{namespacecsp_1_1util_a67f099683ee32bda48084286359c11a7}{csp\+::util\+::recursive\+Solve}} (Csp$<$ Var\+Ptr $>$ \&problem, const Strategy \&strategy)
+\item 
+{\footnotesize template$<$typename Var\+Ptr , typename Strategy  = strategies\+::\+Mrv$<$\+Var\+Ptr$>$$>$ }\\bool \mbox{\hyperlink{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}{csp\+::solve}} (Csp$<$ Var\+Ptr $>$ \&problem, const Strategy \&strategy=Strategy())
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+This file contains the solving algorithm for C\+S\+Ps. It consists of a recursive backtracking search which repeatedly uses the A\+C-\/3 algorithm to reduce the search space. Use the \mbox{\hyperlink{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}{csp\+::solve}} wrapper method. 
+
+\begin{DoxyAuthor}{Author}
+Tim Luchterhand 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+25.\+07.\+20 
+\end{DoxyDate}

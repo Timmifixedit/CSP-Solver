@@ -92,6 +92,9 @@ template&lt;typename VarT &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a67f099683ee32bda48084286359c11a7"><td class="memTemplParams" colspan="2">template&lt;typename VarPtr , typename Strategy &gt; </td></tr>
+<tr class="memitem:a67f099683ee32bda48084286359c11a7"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecsp_1_1util.html#a67f099683ee32bda48084286359c11a7">recursiveSolve</a> (<a class="el" href="structcsp_1_1Csp.html">Csp</a>&lt; VarPtr &gt; &amp;problem, const Strategy &amp;strategy)</td></tr>
+<tr class="separator:a67f099683ee32bda48084286359c11a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a383e277d8c3bab1f860f94df316aa7fa"><td class="memTemplParams" colspan="2">template&lt;typename VarPtr &gt; </td></tr>
 <tr class="memitem:a383e277d8c3bab1f860f94df316aa7fa"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecsp_1_1util.html#a383e277d8c3bab1f860f94df316aa7fa">removeInconsistent</a> (const <a class="el" href="classcsp_1_1Arc.html">Arc</a>&lt; VarPtr &gt; &amp;arc)</td></tr>
 <tr class="separator:a383e277d8c3bab1f860f94df316aa7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,6 +174,51 @@ template&lt;typename VarPtr &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>vector of <a class="el" href="classcsp_1_1Variable.html">csp::Variable</a> domains. Domains are ordered according to the variables in the CSP </dd></dl>
+
+</div>
+</div>
+<a id="a67f099683ee32bda48084286359c11a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67f099683ee32bda48084286359c11a7">&#9670;&nbsp;</a></span>recursiveSolve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VarPtr , typename Strategy &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool csp::util::recursiveSolve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcsp_1_1Csp.html">Csp</a>&lt; VarPtr &gt; &amp;&#160;</td>
+          <td class="paramname"><em>problem</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Strategy &amp;&#160;</td>
+          <td class="paramname"><em>strategy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Recursive backtracking search for csp::Csps. Prefer using the wrapper function <a class="el" href="namespacecsp.html#a2aa8e8d0fa01e590f1bd072968d197bc">csp::solve</a> </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">VarPtr</td><td>Pointer-type to a type derived from <a class="el" href="classcsp_1_1Variable.html">csp::Variable</a> </td></tr>
+    <tr><td class="paramname">Strategy</td><td>Type of value selection strategy during search </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">problem</td><td>CSP to be solved </td></tr>
+    <tr><td class="paramname">strategy</td><td>value selection strategy object used during during search </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if problem was solved, false otherwise </dd></dl>
 
 </div>
 </div>

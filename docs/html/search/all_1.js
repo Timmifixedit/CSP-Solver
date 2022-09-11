@@ -4,6 +4,7 @@ var searchData=
   ['constraintsatisfied_5',['constraintSatisfied',['../classcsp_1_1Arc.html#a25ea5289248c25c4de92f508ab68e64d',1,'csp::Arc']]],
   ['csp_6',['Csp',['../structcsp_1_1Csp.html',1,'csp::Csp&lt; VarPtr &gt;'],['../namespacecsp.html',1,'csp']]],
   ['csp_2eh_7',['Csp.h',['../Csp_8h.html',1,'']]],
-  ['strategies_8',['strategies',['../namespacecsp_1_1strategies.html',1,'csp']]],
-  ['util_9',['util',['../namespacecsp_1_1util.html',1,'csp']]]
+  ['csp_5fsolver_2eh_8',['csp_solver.h',['../csp__solver_8h.html',1,'']]],
+  ['strategies_9',['strategies',['../namespacecsp_1_1strategies.html',1,'csp']]],
+  ['util_10',['util',['../namespacecsp_1_1util.html',1,'csp']]]
 ];

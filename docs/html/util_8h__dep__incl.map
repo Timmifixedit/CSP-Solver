@@ -1,4 +1,4 @@
 <map id="src/util.h" name="src/util.h">
 <area shape="rect" id="node1" title="This file contains utility functions used by the search algorithm." alt="" coords="29,5,107,32"/>
-<area shape="rect" id="node2" href="$csp__solver_8h_source.html" title=" " alt="" coords="5,80,131,107"/>
+<area shape="rect" id="node2" href="$csp__solver_8h.html" title="This file contains the solving algorithm for CSPs. It consists of a recursive backtracking search whi..." alt="" coords="5,80,131,107"/>
 </map>

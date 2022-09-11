@@ -14,6 +14,8 @@ contains utility functions used by the search algorithm
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+{\footnotesize template$<$typename Var\+Ptr , typename Strategy $>$ }\\bool \mbox{\hyperlink{namespacecsp_1_1util_a67f099683ee32bda48084286359c11a7}{recursive\+Solve}} (\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem, const Strategy \&strategy)
+\item 
 {\footnotesize template$<$typename Var\+Ptr $>$ }\\bool \mbox{\hyperlink{namespacecsp_1_1util_a383e277d8c3bab1f860f94df316aa7fa}{remove\+Inconsistent}} (const \mbox{\hyperlink{classcsp_1_1Arc}{Arc}}$<$ Var\+Ptr $>$ \&arc)
 \item 
 {\footnotesize template$<$typename Var\+Ptr $>$ }\\bool \mbox{\hyperlink{namespacecsp_1_1util_a99b131208bb5e46644bceede49c96bc9}{ac3}} (\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&problem)
@@ -67,6 +69,30 @@ Backs up all value domains of all variables in a C\+SP
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 vector of \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} domains. Domains are ordered according to the variables in the C\+SP 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecsp_1_1util_a67f099683ee32bda48084286359c11a7}\label{namespacecsp_1_1util_a67f099683ee32bda48084286359c11a7}} 
+\index{csp::util@{csp::util}!recursiveSolve@{recursiveSolve}}
+\index{recursiveSolve@{recursiveSolve}!csp::util@{csp::util}}
+\doxyparagraph{\texorpdfstring{recursiveSolve()}{recursiveSolve()}}
+{\footnotesize\ttfamily template$<$typename Var\+Ptr , typename Strategy $>$ \\
+bool csp\+::util\+::recursive\+Solve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcsp_1_1Csp}{Csp}}$<$ Var\+Ptr $>$ \&}]{problem,  }\item[{const Strategy \&}]{strategy }\end{DoxyParamCaption})}
+
+Recursive backtracking search for csp\+::\+Csps. Prefer using the wrapper function \mbox{\hyperlink{namespacecsp_a2aa8e8d0fa01e590f1bd072968d197bc}{csp\+::solve}} 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var\+Ptr} & Pointer-\/type to a type derived from \mbox{\hyperlink{classcsp_1_1Variable}{csp\+::\+Variable}} \\
+\hline
+{\em Strategy} & Type of value selection strategy during search \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em problem} & C\+SP to be solved \\
+\hline
+{\em strategy} & value selection strategy object used during during search \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if problem was solved, false otherwise 
 \end{DoxyReturn}
 \mbox{\Hypertarget{namespacecsp_1_1util_a383e277d8c3bab1f860f94df316aa7fa}\label{namespacecsp_1_1util_a383e277d8c3bab1f860f94df316aa7fa}} 
 \index{csp::util@{csp::util}!removeInconsistent@{removeInconsistent}}
