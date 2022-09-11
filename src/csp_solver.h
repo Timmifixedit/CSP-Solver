@@ -17,43 +17,45 @@
 #include "strategies.h"
 
 namespace csp {
-
-    /**
-     * Recursive backtracking search for csp::Csps. Prefer using the wrapper function csp::solve
-     * @tparam VarPtr Pointer-type to a type derived from csp::Variable
-     * @tparam Strategy Type of value selection strategy during search
-     * @param problem CSP to be solved
-     * @param strategy value selection strategy object used during during search
-     * @return True if problem was solved, false otherwise
-     */
-    template<typename VarPtr, typename Strategy>
-    bool recursiveSolve(Csp<VarPtr> &problem, const Strategy &strategy) {
-        using Domain = typename Csp<VarPtr>::VarT::DomainT;
-        VarPtr nextVar = strategy(problem);
-        if (nextVar->isAssigned()) {
-            return true;
-        }
-
-        //Moving storage as it will be overwritten by assign() anyway
-        Domain valueDomain = std::move(nextVar->valueDomain());
-        for (auto &val : valueDomain) {
-            nextVar->assign(std::move(val));
-            // Back up value domains of all variables. This is considerably faster than creating a deep copy of the
-            // whole Csp
-            auto cp = util::makeCspCheckpoint(problem);
-            if (!util::ac3(problem)) {
-                util::restoreCspFromCheckpoint(problem, cp);
-                continue;
-            }
-
-            if (recursiveSolve(problem, strategy)) {
+    namespace util {
+        /**
+         * Recursive backtracking search for csp::Csps. Prefer using the wrapper function csp::solve
+         * @tparam VarPtr Pointer-type to a type derived from csp::Variable
+         * @tparam Strategy Type of value selection strategy during search
+         * @param problem CSP to be solved
+         * @param strategy value selection strategy object used during during search
+         * @return True if problem was solved, false otherwise
+         */
+        template<typename VarPtr, typename Strategy>
+        bool recursiveSolve(Csp<VarPtr> &problem, const Strategy &strategy) {
+            using Domain = typename Csp<VarPtr>::VarT::DomainT;
+            VarPtr nextVar = strategy(problem);
+            if (nextVar->isAssigned()) {
                 return true;
             }
 
-            util::restoreCspFromCheckpoint(problem, cp);
+            //Moving storage as it will be overwritten by assign() anyway
+            Domain valueDomain = std::move(nextVar->valueDomain());
+            for (auto &val : valueDomain) {
+                nextVar->assign(std::move(val));
+                // Back up value domains of all variables. This is considerably faster than creating a deep copy of the
+                // whole Csp
+                auto cp = util::makeCspCheckpoint(problem);
+                if (!util::ac3(problem)) {
+                    util::restoreCspFromCheckpoint(problem, cp);
+                    continue;
+                }
+
+                if (recursiveSolve(problem, strategy)) {
+                    return true;
+                }
+
+                util::restoreCspFromCheckpoint(problem, cp);
+            }
+
+            return false;
         }
 
-        return false;
     }
 
     /**
@@ -78,7 +80,7 @@ namespace csp {
             return false;
         }
 
-        return recursiveSolve(problem, strategy);
+        return util::recursiveSolve(problem, strategy);
     }
 }
 
